@@ -1,0 +1,47 @@
+<div class="user-profile-card"
+*ngIf="user">
+    <div class="user-main-info">
+        <div class="user-profile-img">
+            <img [src]="user.avatar_url">
+        </div>
+        <div class="user-profile-info">
+            <h3>{{ user.name }} <span class="badge bg-secondary">{{ user.type }}</span></h3>
+            <p class="mb-0">{{ user.email || 'Unpublished' }}</p>
+            <p class="mb-0">{{ user.company || 'Unpublished' }}</p>
+            <p class="flex-column-justify-self-end mb-0"><a [href]="user.html_url" target="_blank">Visit profile</a></p>
+        </div>
+    </div>
+    <div class="user-details">
+        <div class="stats public-repos" 
+        #publicrepos
+        (click)="onChangeDisplayInfoSelection(publicrepos, CASE_REPOS)">
+            <p class="mb-0">Repositories: {{ user.public_repos }}</p>
+        </div>
+        <div class="stats public-gists" 
+        #publicgists
+        (click)="onChangeDisplayInfoSelection(publicgists, CASE_GISTS)">
+            <p class="mb-0">Gists: {{ user.public_gists }}</p>
+        </div>
+        <div class="stats followers" 
+        #followers
+        (click)="onChangeDisplayInfoSelection(followers, CASE_FOLLOWERS)">
+            <p class="mb-0">Followers: {{ user.followers }}</p>
+        </div>
+        <div class="stats following" 
+        #following
+        (click)="onChangeDisplayInfoSelection(following, CASE_FOLLOWING)">
+            <p class="mb-0">Following: {{ user.following }}</p>
+        </div>
+    </div>
+
+</div>
+
+<div
+*ngIf="error" 
+class="search-user-error alert alert-danger">
+    <p>Error al buscar el usuario.</p>
+    <!-- TODO: error personalizado (?) forzar errores en URL para ver posibles errores -->
+</div>
+
+<!-- Se muestra un componente u otro según la selección del usuario -->
+<app-git-hub-user-repositories *ngIf="lastCase === CASE_REPOS"></app-git-hub-user-repositories>

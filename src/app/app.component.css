@@ -1,0 +1,10 @@
+.content {
+    width: calc(100vw - 70px);
+    margin-left: 70px !important;
+    padding: 1em;
+}
+
+main {
+    margin: 0 auto;
+    max-width: 1000px;
+}
