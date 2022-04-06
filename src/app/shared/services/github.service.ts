@@ -7,13 +7,25 @@ import { GitHubRepoInterface } from 'src/app/shared/interfaces/github-repo.inter
 import { GitHubUserInterface } from 'src/app/shared/interfaces/github-user.interface';
 
 import { GitHubConstants as GHC } from 'src/app/shared/constants/github-constants';
+import { SortDirection } from '@angular/material/sort';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GitHubService {
 
+  // Usuario ya buscado
   username: string = '';
+  // Selección ya realizada
+  selectedSection: number = 0;
+  // Configuración paginator
+  pageIndex: number = 0;
+  // Configuración orden
+  filtro_active: string = 'updated_at';
+  filtro_direction: SortDirection = 'desc';
+  // Repositorio seleccionado para mostrar su info en el diálogo
+  selectedRepository: GitHubRepoInterface = null;
+  selectedRepositoryContributors: any = null;
 
   user?: GitHubUserInterface = {
     login: "DanielTamargo",
@@ -51,8 +63,8 @@ export class GitHubService {
   };
   repos: GitHubRepoInterface[] = [];
 
-  userSubject$ = new BehaviorSubject(this.user);
-  userReposSubject$ = new Subject<GitHubRepoInterface[]>();
+  userSubject$ = new BehaviorSubject<GitHubUserInterface>(this.user);
+  userReposSubject$ = new BehaviorSubject<GitHubRepoInterface[]>(this.repos);
   usernameSubject$ = new BehaviorSubject(this.username);
 
   constructor(private http: HttpClient) { }
@@ -65,7 +77,9 @@ export class GitHubService {
     ajax<GitHubUserInterface>(url)
       .pipe(pluck('response')) // <- si trabajamos con ajax de rxjs en vez de httpclient lo recibimos distinto
       .subscribe({
-        next: this.onUserResult,
+        next: user => {
+          this.onUserResult(user);
+        },
         error: err => { // TODO
           console.log(err);
         }
@@ -74,8 +88,27 @@ export class GitHubService {
 
   // Recibe el usuario, lo guarda como variable y lo emite a sus observers
   onUserResult(user: GitHubUserInterface): void {
-    // Cargar todo (?) o solo repos (?) Plantear este apartado
-    console.log(user);
+    this.userSubject$.next(user);
+
+    // Notificamos spinner loading
+    if (this.selectedSection > 0) {
+
+    }
+
+    // Utilizamos if else porque el rendimiento es mejor que switch y buscamos la respuesta más rápida
+    if (this.selectedSection == 1) { // Actualizamos repos
+      this.repos = [];
+
+
+
+      this.userReposSubject$.next(this.repos);
+    } else if (this.selectedSection == 2) { // Actualizamos gists
+      // TODO
+    } else if (this.selectedSection == 3) { // Actualizamos followers
+      // TODO
+    } else { // Actualizamos following
+      // TODO 
+    }
   }
 
 
@@ -99,16 +132,25 @@ export class GitHubService {
     // Generamos un observable con cada página
     const observables: Observable<GitHubRepoInterface[]>[] = [];
     for (let page of pages) {
-      observables.push(ajax<GitHubRepoInterface[]>(url + '?per_page=' + perPage + '&page=' + page).pipe(pluck('response'))); 
+      observables.push(ajax<GitHubRepoInterface[]>({
+        url: url,
+        queryParams: {
+          per_page: perPage,
+          page: page
+        }
+      }).pipe(pluck('response'))); 
     }
     
     // Combinamos todos los resultados
     // TODO implementar errores
     combineLatest([...observables]).subscribe(results => {
+      // Recogemos y juntamos las respuestas
       this.repos = []
       for (let result of results) {
         this.repos.push(...result);
       }
+
+      // Emitimos la lista actualizada
       this.userReposSubject$.next(this.repos);
     })
   }

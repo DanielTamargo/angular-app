@@ -35,6 +35,8 @@ export class GitHubUserProfileComponent implements OnInit, OnDestroy {
     this.userSubscription$ = this.gitHubService.userSubject$.subscribe(user => {
       this.user = user;
     });
+
+    this.lastCase = this.gitHubService.selectedSection;
   }
 
   /**
@@ -49,6 +51,9 @@ export class GitHubUserProfileComponent implements OnInit, OnDestroy {
     // Evitamos el spam al seleccionar múltiples veces el mismo botón
     if (this.lastCase == caseNumber) return;
     
+    // Actualizamos la selección en el servicio
+    this.gitHubService.selectedSection = caseNumber;
+
     this.lastCase = caseNumber;
     this.loading = true;
 

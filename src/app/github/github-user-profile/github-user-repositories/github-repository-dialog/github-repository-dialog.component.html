@@ -1,0 +1,40 @@
+
+<h2 mat-dialog-title><a target="_blank" [href]="repo.html_url">{{ repo.name }}</a></h2>
+<mat-dialog-content class="mat-typography">
+  <h3 class="text-muted mb-1">Description</h3>
+  <p class="mb-0">{{ repo.description }}</p>
+  <hr class="mt-2 mb-3">
+
+  <p class="mb-0">Created at: <b>{{ repo.created_at | date:'MM/dd/yyyy' }}</b> | Last update: <b>{{ repo.updated_at | date:'MM/dd/yyyy' }}</b></p>
+  <hr class="mt-2 mb-3">
+
+  <h3 class="text-muted mb-1">Contributors</h3>
+  <div class="contributions" *ngIf="repoContributors.length > 0">
+    <p class="mb-0" *ngFor="let contributor of repoContributors">
+      <a target="_blank" [href]="contributor.html_url"><b>{{ contributor.login }}</b></a> ({{ contributor.contributions }} commits)
+    </p>
+    <br>
+    <div class="total-commits">
+      <p class="mb-0"><b>Total commits: {{ totalCommits }}</b></p>
+      <p class="mb-0"><a target="_blank" href="{{ repo.html_url }}/network">Check the timeline</a></p>
+    </div>
+  </div>
+  <div class="no-contributions" *ngIf="repoContributors.length <= 0">
+    <p class="mb-0">There are no contributions to this project 🤣</p>
+  </div>
+  <hr class="mt-2 mb-3">
+
+  <h3 class="text-muted mb-1">Stats</h3>
+  <mat-chip-list class="user-select-none" aria-label="Repository's stats">
+    <mat-chip color="primary" selected>Forks: <b>&nbsp;{{ repo.forks_count }}</b></mat-chip>
+    <mat-chip color="primary" selected>Watchers: <b>&nbsp;{{ repo.watchers_count }}</b></mat-chip>
+    <mat-chip color="primary" selected>Allows forking: <b>&nbsp;{{ repo.allow_forking ? 'Yes' : 'No' }}</b></mat-chip>
+    <mat-chip color="primary" selected>Open Issues: <b>&nbsp;{{ repo.open_issues }}</b></mat-chip>
+    <mat-chip color="primary" selected>Main language used: <b>&nbsp;{{ repo.language }}</b></mat-chip>
+    <mat-chip color="primary" selected>Size: <b>&nbsp;{{ repo.size | sizeFormatter:1 }}</b></mat-chip>
+  </mat-chip-list>
+
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Go back</button>
+</mat-dialog-actions>

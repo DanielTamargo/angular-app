@@ -1,0 +1,15 @@
+.column-name {
+    width: 60%;
+}
+
+@media (min-width: 708px) and (max-width: 1050px) {
+    .column-name {
+        width: 50%;
+    }
+}
+
+@media (max-width: 708px) {
+    .column-hide-sm {
+        display: none;
+    }
+}

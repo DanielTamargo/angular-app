@@ -5,21 +5,21 @@
             <img [src]="user.avatar_url">
         </div>
         <div class="user-profile-info">
-            <h3>{{ user.name }} <span class="badge bg-secondary">{{ user.type }}</span></h3>
+            <h3>{{ user.name || user.login }} <span class="badge bg-secondary">{{ user.type }}</span></h3>
             <div class="svg-with-text mb-1">
                 <svg xmlns="http://www.w3.org/2000/svg" class="svg-info-icon" viewBox="0 0 512 512">
-                    <title>Mail</title>
+                    <title>Email</title>
                     <path d="M424 80H88a56.06 56.06 0 00-56 56v240a56.06 56.06 0 0056 56h336a56.06 56.06 0 0056-56V136a56.06 56.06 0 00-56-56zm-14.18 92.63l-144 112a16 16 0 01-19.64 0l-144-112a16 16 0 1119.64-25.26L256 251.73l134.18-104.36a16 16 0 0119.64 25.26z"/>
                 </svg>
-                <label>{{ user.email || 'Unpublished' }}</label>
+                <label>{{ user.email || 'Email unpublished' }}</label>
             </div>
-            <div class="svg-with-text">
+            <div class="svg-with-text mb-3">
                 <svg xmlns="http://www.w3.org/2000/svg" class="svg-info-icon" viewBox="0 0 512 512">
                     <title>Company</title>
                     <path d="M336 80H176a16 16 0 00-16 16v16h192V96a16 16 0 00-16-16z" fill="none"/>
                     <path d="M496 176a64.07 64.07 0 00-64-64h-48V96a48.05 48.05 0 00-48-48H176a48.05 48.05 0 00-48 48v16H80a64.07 64.07 0 00-64 64v48h480zm-144-64H160V96a16 16 0 0116-16h160a16 16 0 0116 16zM336 264a24 24 0 01-24 24H200a24 24 0 01-24-24v-4a4 4 0 00-4-4H16v144a64 64 0 0064 64h352a64 64 0 0064-64V256H340a4 4 0 00-4 4z"/>
                 </svg>
-                <label>{{ user.company || 'Unpublished' }}</label>
+                <label>{{ user.company || 'Company unpublished' }}</label>
             </div>
             <p class="flex-column-justify-self-end mb-0">
                 <a [href]="user.html_url" target="_blank">View on GitHub</a>
@@ -27,7 +27,7 @@
         </div>
     </div>
     <div class="user-details">
-        <div class="stats public-repos" 
+        <div class="stats public-repos {{ (lastCase == CASE_REPOS) ? 'active' : '' }}" 
         #publicrepos
         (click)="onChangeDisplayInfoSelection(publicrepos, CASE_REPOS)">
             <p class="mb-0">Repositories: {{ user.public_repos }}</p>

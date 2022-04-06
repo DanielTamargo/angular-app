@@ -6,7 +6,13 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { MatInputModule } from '@angular/material/input';
 import { MatTableModule } from '@angular/material/table';
+import { MatSortModule } from '@angular/material/sort';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+import { MatChipsModule } from '@angular/material/chips';
+
+// import { A11yModule } from '@angular/cdk/a11y';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -16,7 +22,9 @@ import { GitHubSearchComponent } from './github/github-search/github-search.comp
 import { HomeComponent } from './home/home/home.component';
 import { GitHubComponent } from './github/github.component';
 import { GitHubUserProfileComponent } from './github/github-user-profile/github-user-profile.component';
-import { GitHubUserRepositoriesComponent } from './github/github-user-profile/git-hub-user-repositories/github-user-repositories.component';
+import { GitHubUserRepositoriesComponent } from './github/github-user-profile/github-user-repositories/github-user-repositories.component';
+import { SizeFormatterPipe } from './shared/pipes/size-formatter.pipe';
+import { GitHubRepositoryDialogComponent } from './github/github-user-profile/github-user-repositories/github-repository-dialog/github-repository-dialog.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +35,8 @@ import { GitHubUserRepositoriesComponent } from './github/github-user-profile/gi
     GitHubComponent,
     GitHubUserProfileComponent,
     GitHubUserRepositoriesComponent,
+    SizeFormatterPipe,
+    GitHubRepositoryDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -36,7 +46,12 @@ import { GitHubUserRepositoriesComponent } from './github/github-user-profile/gi
     BrowserAnimationsModule,
     MatPaginatorModule,
     MatInputModule,
-    MatTableModule
+    MatTableModule,
+    MatSortModule,
+    MatDialogModule,
+    MatButtonModule,
+    MatChipsModule,
+    // A11yModule
   ],
   providers: [],
   bootstrap: [AppComponent]

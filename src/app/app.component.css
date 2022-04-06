@@ -1,7 +1,8 @@
 .content {
     width: calc(100vw - 70px);
     margin-left: 70px !important;
-    padding: 1em;
+    padding: 1em !important;
+    padding-right: 1.5em !important;
 }
 
 main {

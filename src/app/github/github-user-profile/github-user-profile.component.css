@@ -61,5 +61,20 @@
 }
 
 .svg-info-icon {
-    max-width: 23px;
+    max-width: 18px;
+}
+
+@media (max-width: 500px) {
+    .user-main-info {
+        flex-direction: column;
+    }
+
+    .user-profile-img {
+        align-self: center;
+    }
+
+    .user-profile-info {
+        text-align: center;
+    }
+
 }
