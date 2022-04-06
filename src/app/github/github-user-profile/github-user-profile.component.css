@@ -59,3 +59,7 @@
 .stats:hover:not(.active) {
     background-color: rgba(111, 193, 255, 0.131);
 }
+
+.svg-info-icon {
+    max-width: 23px;
+}

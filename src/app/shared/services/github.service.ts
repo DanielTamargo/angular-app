@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, pluck, Subject } from 'rxjs';
+import { BehaviorSubject, combineLatest, map, Observable, of, pluck, Subject } from 'rxjs';
 import { ajax } from 'rxjs/ajax';
 
 import { GitHubRepoInterface } from 'src/app/shared/interfaces/github-repo.interface';
@@ -80,17 +80,37 @@ export class GitHubService {
 
 
   // Carga / Actualización de repositorios
-  onUserReposRequest(url: string): void {
-    ajax<GitHubRepoInterface[]>(url)
-      .pipe(pluck('response')) // <- si trabajamos con ajax de rxjs en vez de httpclient lo recibimos distinto
-      .subscribe({
-        next: repos => {
-          this.userReposSubject$.next(repos);
-        },
-        error: err => { // TODO
+  onUserReposRequest(url: string, total: number = 30): void {
+    // Contemplamos si es necesario realizar múltiples peticiones, por página podemos pedir máximo 100 valores a la api
+    let perPage = 5;
+    if (total > perPage) {
+      perPage = total;
+      if (perPage > 100) perPage = 100;
+    }
 
-        }
-      }); 
+    // Obtenemos número de páginas
+    const pages = [];
+    let i = 0;
+    while (i * perPage < total) {
+      i++;
+      pages.push(i);
+    }
+    
+    // Generamos un observable con cada página
+    const observables: Observable<GitHubRepoInterface[]>[] = [];
+    for (let page of pages) {
+      observables.push(ajax<GitHubRepoInterface[]>(url + '?per_page=' + perPage + '&page=' + page).pipe(pluck('response'))); 
+    }
+    
+    // Combinamos todos los resultados
+    // TODO implementar errores
+    combineLatest([...observables]).subscribe(results => {
+      this.repos = []
+      for (let result of results) {
+        this.repos.push(...result);
+      }
+      this.userReposSubject$.next(this.repos);
+    })
   }
 
 }

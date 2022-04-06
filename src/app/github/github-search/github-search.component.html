@@ -1,6 +1,6 @@
-<div class="input-group mb-3">
-    <input type="text" class="form-control" placeholder="Username" 
-    [value]="username"
-    id="username"
-    autocomplete="off">
-</div>
+<mat-form-field class="w-100" appearance="fill">
+    <mat-label class="user-select-none">Username</mat-label>
+    <input matInput placeholder="Ex. DanielTamargo"
+      id="username" [value]="username"
+      autocomplete="off">
+</mat-form-field>

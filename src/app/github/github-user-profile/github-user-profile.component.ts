@@ -61,7 +61,7 @@ export class GitHubUserProfileComponent implements OnInit, OnDestroy {
 
     switch (caseNumber) {
       case 1: // Repos
-        this.gitHubService.onUserReposRequest(this.user.url + '/repos');
+        this.gitHubService.onUserReposRequest(this.user.url + '/repos', this.user.public_repos);
         break;
       case 2: // Gists
 
