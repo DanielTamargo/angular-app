@@ -1,0 +1,15 @@
+.user-display-card {
+    box-shadow: 0 0 4px gray;
+    border-radius: 0;
+    width: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.user-display-img {
+    margin-left: 1em;
+    max-width: 150px;
+    margin: 0;
+    padding: 0;
+}

@@ -76,3 +76,9 @@ class="search-user-error my-5 user-select-none">
 <app-github-user-gists 
 [gists_qt]="user.public_gists" 
 *ngIf="lastCase === CASE_GISTS"></app-github-user-gists>
+
+<div class="follows my-4 user-select-none" *ngIf="lastCase === CASE_FOLLOWING || lastCase === CASE_FOLLOWERS">
+    <app-github-user-display 
+    *ngFor="let follow of follows"
+    [user]="follow"></app-github-user-display>
+</div>

@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { GitHubBasicUserInterface } from 'src/app/shared/interfaces/github-basicuser.interface';
 
 /**
  * Nota:
@@ -12,6 +13,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./github-user-display.component.css']
 })
 export class GitHubUserDisplayComponent implements OnInit {
+
+  @Input('user') user: GitHubBasicUserInterface;
 
   constructor() { }
 

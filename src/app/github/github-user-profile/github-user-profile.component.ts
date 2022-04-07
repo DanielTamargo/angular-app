@@ -7,6 +7,7 @@ import { GitHubUserInterface } from 'src/app/shared/interfaces/github-user.inter
 import { GitHubService } from 'src/app/shared/services/github.service';
 
 import { GitHubConstants as GHC } from 'src/app/shared/constants/github-constants';
+import { GitHubBasicUserInterface } from 'src/app/shared/interfaces/github-basicuser.interface';
 
 @Component({
   selector: 'app-github-user-profile',
@@ -33,9 +34,11 @@ export class GitHubUserProfileComponent implements OnInit, OnDestroy {
 
   user?: GitHubUserInterface;
   userRepos?: GitHubRepoInterface[];
+  follows?: GitHubBasicUserInterface[];
 
   typingSubscription$ = new Subscription;
   userSubscription$ = new Subscription;
+  followsSubscription$ = new Subscription;
   errorSubscription$ = new Subscription;
 
   error?: string;
@@ -60,6 +63,13 @@ export class GitHubUserProfileComponent implements OnInit, OnDestroy {
     // También nos suscribimos para comprobar si el usuario está escribiendo y se está buscando
     this.typingSubscription$ = this.gitHubService.typingSubject$.subscribe(typing => {
       this.typing = typing;
+    });
+
+    // Y a la obtención de los usuarios siguiendo / seguidores
+    this.followsSubscription$ = this.gitHubService.userFollowsSubject$.subscribe(follows => {
+      this.follows = follows;
+      console.log(follows);
+      
     });
   }
 
@@ -95,11 +105,11 @@ export class GitHubUserProfileComponent implements OnInit, OnDestroy {
         this.gitHubService.onUserGistsRequest(this.user.url + '/gists', this.user.public_gists);
         break;
       case 3: // Followers
-
+        this.gitHubService.onUserFollowsRequest(this.user.url + "/followers", this.user.followers)
         break;
       case 4: // Al default
       default: // Following
-
+        this.gitHubService.onUserFollowsRequest(this.user.url + "/following", this.user.following)
     }
 
     // Realizamos la petición a la API
@@ -111,6 +121,7 @@ export class GitHubUserProfileComponent implements OnInit, OnDestroy {
     this.userSubscription$.unsubscribe();
     this.errorSubscription$.unsubscribe();
     this.typingSubscription$.unsubscribe();
+    this.followsSubscription$.unsubscribe();
   }
 
 }

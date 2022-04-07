@@ -125,7 +125,7 @@ export class GitHubService {
       this.onUserGistsRequest(user.url + "/gists", user.public_gists);
     } else if (this.selectedSection == 3) { // Actualizamos followers
       this.follows = [];
-      this.onUserFollowersRequest(user.url + "/followers", user.followers);
+      this.onUserFollowsRequest(user.url + "/followers", user.followers);
     } else { // Actualizamos following
       // TODO 
     }
@@ -175,7 +175,6 @@ export class GitHubService {
     }
     
     // Combinamos todos los resultados
-    // TODO implementar errores
     combineLatest([...observables]).subscribe(results => {
       // Recogemos y juntamos las respuestas
       this.repos = [];
@@ -232,7 +231,6 @@ export class GitHubService {
     }
     
     // Combinamos todos los resultados
-    // TODO implementar errores
     combineLatest([...observables]).subscribe(results => {
       // Recogemos y juntamos las respuestas
       this.gists = []
@@ -247,8 +245,8 @@ export class GitHubService {
   }
 
   // Carga / actualización de follows (tanto followers, como followings (como recientes))
-  onUserFollowersRequest(url: string, total: number = 30): void {
-    console.log('API Followers: ' + (this.user.name ? this.user.name : this.user.login));
+  onUserFollowsRequest(url: string, total: number = 30): void {
+    console.log('API Follows: ' + (this.user.name ? this.user.name : this.user.login));
 
     // Contemplamos si es necesario realizar múltiples peticiones, por página podemos pedir máximo 100 valores a la api
     let perPage = 5;
@@ -289,7 +287,6 @@ export class GitHubService {
     }
     
     // Combinamos todos los resultados
-    // TODO implementar errores
     combineLatest([...observables]).subscribe(results => {
       // Recogemos y juntamos las respuestas
       this.follows = []

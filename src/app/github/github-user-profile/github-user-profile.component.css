@@ -68,6 +68,13 @@
     max-width: 18px;
 }
 
+.follows {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 40px;
+}
+
 @media (max-width: 500px) {
     .user-main-info {
         flex-direction: column;

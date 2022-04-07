@@ -9,7 +9,22 @@ const routes: Routes = [
   { path: 'home', redirectTo: '' },
 
   // GitHub
-  { path: 'github', component: GitHubComponent }
+  { 
+    path: 'github', 
+    component: GitHubComponent, 
+    children: [
+      { path: '**', redirectTo: '/github' }
+    ] 
+  },
+
+  // Mapas
+
+
+  // Task Lists (localstorage) / Markdown Writter (+ guardar contenido en firebase?) 
+
+
+  // Redirección para todas las demás rutas
+  { path: '**', redirectTo: '' }
 ];
 
 @NgModule({

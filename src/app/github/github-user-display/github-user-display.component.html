@@ -1,0 +1,10 @@
+<mat-card class="user-display-card">
+    <mat-card-header>
+      <mat-card-title>{{ user.login }}</mat-card-title>
+    </mat-card-header>
+    <img mat-card-image class="user-display-img" [src]="user.avatar_url">
+    <mat-card-actions>
+      <a target="_blank" href="https://github.com/{{ user.login }}" mat-button>Profile</a>
+      <a target="_blank" href="https://gist.github.com/{{ user.login }}" mat-button>Gists</a>
+    </mat-card-actions>
+</mat-card>

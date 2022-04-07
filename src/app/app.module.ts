@@ -11,6 +11,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatCardModule } from '@angular/material/card';
 
 // import { A11yModule } from '@angular/cdk/a11y';
 
@@ -27,7 +28,7 @@ import { SizeFormatterPipe } from './shared/pipes/size-formatter.pipe';
 import { GitHubRepositoryDialogComponent } from './github/github-user-profile/github-user-repositories/github-repository-dialog/github-repository-dialog.component';
 import { GitHubUserGistsComponent } from './github/github-user-profile/github-user-gists/github-user-gists.component';
 import { RetrieveGistFileNamesPipe } from './shared/pipes/retrieve-gist-file-names.pipe';
-import { GitHubUserDisplayComponent } from './github/github-user-profile/github-user-display/github-user-display.component';
+import { GitHubUserDisplayComponent } from './github/github-user-display/github-user-display.component';
 
 @NgModule({
   declarations: [
@@ -57,6 +58,7 @@ import { GitHubUserDisplayComponent } from './github/github-user-profile/github-
     MatDialogModule,
     MatButtonModule,
     MatChipsModule,
+    MatCardModule,
     // A11yModule
   ],
   providers: [],
