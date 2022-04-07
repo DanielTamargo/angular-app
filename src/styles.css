@@ -29,9 +29,13 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     /* transform: translateY(0px) !important; */
 }
 
-.cdk-overlay-pane {
-    min-width: 80vw;
+.mat-typography.github-repository-dialog {
+    min-height: 45vh;
+    height: fit-content !important;
+    max-height: 70vh !important;
 }
+
+
 
 /*-------------------------------------------------------------------------------------------------*/
 /* PERSONAL */

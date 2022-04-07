@@ -11,7 +11,7 @@
   <mat-paginator [hidden]="repos.length <= 0"
     [pageSizeOptions]="[5, 10, 20]"
     showFirstLastButtons 
-    aria-label="Select page of periodic elements"
+    aria-label="Select page of repositories"
     [pageIndex]="pageIndex"
     (page)="onPaginateChange($event)"
     class="mb-0">
