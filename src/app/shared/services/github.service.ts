@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, combineLatest, map, Observable, of, pluck, Subject } from 'rxjs';
-import { ajax } from 'rxjs/ajax';
+import { BehaviorSubject, combineLatest, map, Observable, of, pluck, Subject, tap } from 'rxjs';
+import { ajax, AjaxError } from 'rxjs/ajax';
 
 import { GitHubRepoInterface } from 'src/app/shared/interfaces/github-repo.interface';
 import { GitHubUserInterface } from 'src/app/shared/interfaces/github-user.interface';
@@ -9,6 +9,7 @@ import { GitHubUserInterface } from 'src/app/shared/interfaces/github-user.inter
 import { GitHubConstants as GHC } from 'src/app/shared/constants/github-constants';
 import { SortDirection } from '@angular/material/sort';
 import { GitHubGistInterface } from '../interfaces/github-gist.interface';
+import { GitHubBasicUserInterface } from '../interfaces/github-basicuser.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -56,7 +57,7 @@ export class GitHubService {
     bio: null,
     twitter_username: null,
     public_repos: 34,
-    public_gists: 1,
+    public_gists: 2,
     followers: 0,
     following: 2,
     created_at: "2017-10-09T16:49:15Z",
@@ -64,28 +65,43 @@ export class GitHubService {
   };
   repos: GitHubRepoInterface[] = [];
   gists: GitHubGistInterface[] = [];
+  follows: GitHubBasicUserInterface[] = [];
+
+  typingSubject$ = new Subject<boolean>();
 
   loadingSubject$ = new Subject<boolean>();
   userSubject$ = new BehaviorSubject<GitHubUserInterface>(this.user);
   userReposSubject$ = new Subject<GitHubRepoInterface[]>();
   userGistsSubject$ = new Subject<GitHubGistInterface[]>();
+  userFollowsSubject$ = new Subject<GitHubBasicUserInterface[]>();
   usernameSubject$ = new BehaviorSubject(this.username);
+
+  userSearchError$ = new Subject<string>();
 
   constructor(private http: HttpClient) { }
 
   // Recibe un username y lo busca, si lo encuentra, lo manda
   onUserSearch(username: string) {
+    this.typingSubject$.next(true);
     this.username = username;
     
     const url = GHC.BASE_URL + GHC.USER.replace(GHC.KEY_USERNAME, username);
     ajax<GitHubUserInterface>(url)
-      .pipe(pluck('response')) // <- si trabajamos con ajax de rxjs en vez de httpclient lo recibimos distinto
+      .pipe(
+        pluck('response'), 
+        tap(() => { // Utilizamos el tap para notificar que ya no está escribiendo
+          this.typingSubject$.next(false);
+      })) // <- si trabajamos con ajax de rxjs en vez de httpclient lo recibimos distinto
       .subscribe({
         next: user => {
           this.onUserResult(user);
         },
-        error: err => { // TODO
-          console.log(err);
+        error: (err: AjaxError) => { // TODO
+          if (err.status == 404) { // No encontrado
+            this.userSubject$.next(null);
+            this.userSearchError$.next("The user '" + username + "' for does not exist 😢");
+            this.typingSubject$.next(false);
+          }
         }
       });
   }
@@ -108,7 +124,8 @@ export class GitHubService {
       this.gists = [];
       this.onUserGistsRequest(user.url + "/gists", user.public_gists);
     } else if (this.selectedSection == 3) { // Actualizamos followers
-      // TODO
+      this.follows = [];
+      this.onUserFollowersRequest(user.url + "/followers", user.followers);
     } else { // Actualizamos following
       // TODO 
     }
@@ -227,6 +244,62 @@ export class GitHubService {
       this.userGistsSubject$.next(this.gists);
     });
 
+  }
+
+  // Carga / actualización de follows (tanto followers, como followings (como recientes))
+  onUserFollowersRequest(url: string, total: number = 30): void {
+    console.log('API Followers: ' + (this.user.name ? this.user.name : this.user.login));
+
+    // Contemplamos si es necesario realizar múltiples peticiones, por página podemos pedir máximo 100 valores a la api
+    let perPage = 5;
+    if (total > perPage) {
+      perPage = total;
+      if (perPage > 100) perPage = 100;
+    }
+
+    // Obtenemos número de páginas
+    const pages = [];
+    let i = 0;
+    while (i * perPage < total) {
+      i++;
+      pages.push(i);
+    }
+
+    // Contemplamos que no tenga ningún repositorio
+    if (pages.length <= 0) {
+      // Timeout de medio segundo para que el componente se inicialice antes y así evitar el loading infinito
+      setTimeout(() => {
+        this.loadingSubject$.next(false);
+        this.follows = [];
+        this.userFollowsSubject$.next(this.follows);
+      }, 500);
+      return;
+    }
+    
+    // Generamos un observable con cada página
+    const observables: Observable<GitHubBasicUserInterface[]>[] = [];
+    for (let page of pages) {
+      observables.push(ajax<GitHubBasicUserInterface[]>({
+        url: url,
+        queryParams: {
+          per_page: perPage,
+          page: page
+        }
+      }).pipe(pluck('response'))); 
+    }
+    
+    // Combinamos todos los resultados
+    // TODO implementar errores
+    combineLatest([...observables]).subscribe(results => {
+      // Recogemos y juntamos las respuestas
+      this.follows = []
+      for (let result of results) {
+        this.follows.push(...result);
+      }
+
+      // Emitimos la lista actualizada
+      this.userFollowsSubject$.next(this.follows);
+    });
   }
 
 }

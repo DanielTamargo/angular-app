@@ -1,4 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { animate, state, style, transition, trigger } from '@angular/animations';
+
 import { Subscription } from 'rxjs';
 import { GitHubRepoInterface } from 'src/app/shared/interfaces/github-repo.interface';
 import { GitHubUserInterface } from 'src/app/shared/interfaces/github-user.interface';
@@ -9,9 +11,18 @@ import { GitHubConstants as GHC } from 'src/app/shared/constants/github-constant
 @Component({
   selector: 'app-github-user-profile',
   templateUrl: './github-user-profile.component.html',
-  styleUrls: ['./github-user-profile.component.css']
+  styleUrls: ['./github-user-profile.component.css'],
+  animations: [ // TODO 
+    trigger('slideInOut', [
+      state('void', style({ opacity: '0' })),
+      state('*', style({ opacity: '1' })),
+      transition(':enter', animate(`1000ms ease-out`)),
+      transition(':leave', animate(`1000ms ease-in`))
+    ]),
+  ]
 })
 export class GitHubUserProfileComponent implements OnInit, OnDestroy {
+  typing: boolean = false;
   lastCase: number = -1;
 
   CASE_REPOS     = GHC.CASE_REPOS;
@@ -23,9 +34,11 @@ export class GitHubUserProfileComponent implements OnInit, OnDestroy {
   user?: GitHubUserInterface;
   userRepos?: GitHubRepoInterface[];
 
+  typingSubscription$ = new Subscription;
   userSubscription$ = new Subscription;
+  errorSubscription$ = new Subscription;
 
-  error?: any;
+  error?: string;
 
   constructor(private gitHubService: GitHubService) { }
 
@@ -33,9 +46,21 @@ export class GitHubUserProfileComponent implements OnInit, OnDestroy {
     // Obtenemos el usuario cargado y nos suscribimos a los cambios
     this.userSubscription$ = this.gitHubService.userSubject$.subscribe(user => {
       this.user = user;
+      if (user) this.error = null;
     });
 
     this.lastCase = this.gitHubService.selectedSection;
+
+    // Nos suscribimos a la notificación de errores
+    this.errorSubscription$ = this.gitHubService.userSearchError$.subscribe(err => {
+      this.error = err;
+      this.lastCase = 0;
+    });
+
+    // También nos suscribimos para comprobar si el usuario está escribiendo y se está buscando
+    this.typingSubscription$ = this.gitHubService.typingSubject$.subscribe(typing => {
+      this.typing = typing;
+    });
   }
 
   /**
@@ -84,6 +109,8 @@ export class GitHubUserProfileComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     // Limpiamos suscripciones para evitar leaks de memoria
     this.userSubscription$.unsubscribe();
+    this.errorSubscription$.unsubscribe();
+    this.typingSubscription$.unsubscribe();
   }
 
 }

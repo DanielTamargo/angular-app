@@ -3,4 +3,11 @@
     <input matInput placeholder="Ex. DanielTamargo"
       id="username" [value]="username"
       autocomplete="off">
+
+    <!-- Spinner que se muestra mientras se busca el usuario -->
+    <div class="loading-spinner search-spinner" *ngIf="typing">
+      <div class="spinner-border text-secondary" role="status">
+          <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
 </mat-form-field>

@@ -1,5 +1,5 @@
+import { Component, OnInit } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { Component, OnDestroy, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-github',
@@ -7,17 +7,10 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
   styleUrls: ['./github.component.css'],
   animations: [ // TODO
     trigger('inOut', [
-      state('in', style({
-        opacity: 1,
-        color: 'white',
-        backgroundColor: 'red'
-      })),
-      /* 
-      state('void', style({
-        opacity: 0
-      })),
-      */
-      transition('void <=> in', animate(1000)),
+      state('void', style({ opacity: 0, /* transform: 'translateX(-100%)' */ })),
+      state('*', style({ opacity: 1, /* transform: 'translateX(0)' */ })),
+      transition(':enter', animate(`1000ms ease-out`)),
+      transition(':leave', animate(`1000ms ease-in`))
     ]),
   ]
 })

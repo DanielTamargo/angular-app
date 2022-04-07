@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { MatSort, Sort, SortDirection } from '@angular/material/sort';
@@ -17,6 +17,8 @@ import { ajax } from 'rxjs/ajax';
 })
 export class GitHubUserRepositoriesComponent implements OnInit, AfterViewInit, OnDestroy {
 
+  @Input('repos_qt') repos_qt: number;
+  
   // Boolean para mostrar/ocultar spinner
   loading: boolean = true;
   // Configuración paginator
@@ -72,6 +74,11 @@ export class GitHubUserRepositoriesComponent implements OnInit, AfterViewInit, O
     this.pageIndex = this.githubService.pageIndex;
     this.filtro_active = this.githubService.filtro_active;
     this.filtro_direction = this.githubService.filtro_direction;
+
+    // Si sabemos de antemano que notiene repositorios, cancelamos la carga
+    if (this.repos_qt <= 0) {
+      this.loading = false;
+    }
   }
 
   ngAfterViewInit(): void {

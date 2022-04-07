@@ -1,5 +1,5 @@
 import { GitHubFilesInterface } from "./github-files.interface";
-import { GitHubOwnerInterface } from "./github-owner.interface";
+import { GitHubBasicUserInterface } from "./github-basicuser.interface";
 
 export interface GitHubGistInterface {
     url:          string;
@@ -19,6 +19,6 @@ export interface GitHubGistInterface {
     comments:     number;
     user:         null;
     comments_url: string;
-    owner:        GitHubOwnerInterface;
+    owner:        GitHubBasicUserInterface;
     truncated:    boolean;
 }

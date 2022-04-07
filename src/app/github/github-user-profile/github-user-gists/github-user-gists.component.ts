@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { MatSort, Sort, SortDirection } from '@angular/material/sort';
@@ -14,6 +14,8 @@ import { GitHubService } from 'src/app/shared/services/github.service';
 export class GitHubUserGistsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // Comportamiento muy similar al de los repositorios, pero más simple (sin modal ni peticiones extra).
+
+  @Input('gists_qt') gists_qt: number;
 
   // Boolean para mostrar/ocultar spinner
   loading: boolean = true;
@@ -62,6 +64,11 @@ export class GitHubUserGistsComponent implements OnInit, AfterViewInit, OnDestro
     this.pageIndex = this.githubService.pageIndex;
     this.filtro_active = this.githubService.filtro_active;
     this.filtro_direction = this.githubService.filtro_direction;
+
+    // Si sabemos de antemano que notiene repositorios, cancelamos la carga
+    if (this.gists_qt <= 0) {
+      this.loading = false;
+    }
   }
 
   ngAfterViewInit(): void {

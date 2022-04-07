@@ -1,4 +1,4 @@
-import { GitHubOwnerInterface } from "./github-owner.interface";
+import { GitHubBasicUserInterface } from "./github-basicuser.interface";
 
 export interface GitHubRepoInterface {
     id:                number;
@@ -6,7 +6,7 @@ export interface GitHubRepoInterface {
     name:              string;
     full_name:         string;
     private:           boolean;
-    owner:             GitHubOwnerInterface;
+    owner:             GitHubBasicUserInterface;
     html_url:          string;
     description:       string;
     fork:              boolean;

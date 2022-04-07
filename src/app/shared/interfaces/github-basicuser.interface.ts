@@ -1,4 +1,4 @@
-export interface GitHubOwnerInterface {
+export interface GitHubBasicUserInterface {
     login:               string;
     id:                  number;
     node_id:             string;

@@ -9,16 +9,23 @@ import { GitHubService } from 'src/app/shared/services/github.service';
   styleUrls: ['./github-search.component.css']
 })
 export class GitHubSearchComponent implements OnInit, AfterViewInit, OnDestroy {
+  typing: boolean = false;
   usernameChange$: Observable<any>;
   username: string;
 
   evtSubscription$ = new Subscription;
+  typingSubscription$ = new Subscription;
 
-  constructor(private githubService: GitHubService) { }
+  constructor(private gitHubService: GitHubService) { }
 
   ngOnInit(): void {
     // Comprobamos si ya ha buscado algún usuario
-    this.username = this.githubService.username;
+    this.username = this.gitHubService.username;
+
+    // También nos suscribimos para comprobar si el usuario está escribiendo y se está buscando
+    this.typingSubscription$ = this.gitHubService.typingSubject$.subscribe(typing => {
+      this.typing = typing;
+    });
   }
 
   ngAfterViewInit(): void {
@@ -30,9 +37,9 @@ export class GitHubSearchComponent implements OnInit, AfterViewInit, OnDestroy {
     this.evtSubscription$ = this.usernameChange$.pipe(
       debounceTime<KeyboardEvent>(700),
       pluck<KeyboardEvent>('target', 'value'),
-      filter<string>(value => value.length > 2)
+      filter<string>(value => value.length > 0)
     ).subscribe(value => {
-      this.githubService.onUserSearch(value);
+      this.gitHubService.onUserSearch(value);
     });
   }
 
