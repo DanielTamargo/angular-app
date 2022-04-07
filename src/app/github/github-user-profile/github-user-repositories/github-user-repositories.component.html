@@ -5,10 +5,17 @@
     </div>
 </div>
 
+
+<!-- Notificación si no existen repos públicos -->
+<div class="no-repos my-4 user-select-none" *ngIf="!loading && repos.length <= 0">
+  <h3 class="text-muted text-center">Seems that this user has no public repositories 😢</h3>
+</div>
+
+
 <!-- Tabla de repositorios (Angular Material con paginación y capacidad de ordenar) -->
-<div class="mat-elevation-z8 my-4 user-select-none" id="repos" [hidden]="repos.length <= 0">
+<div class="mat-elevation-z8 my-4 user-select-none" id="repos" [hidden]="loading || repos.length <= 0">
   <!-- Paginación -->
-  <mat-paginator [hidden]="repos.length <= 0"
+  <mat-paginator
     [pageSizeOptions]="[5, 10, 20]"
     showFirstLastButtons 
     aria-label="Select page of repositories"

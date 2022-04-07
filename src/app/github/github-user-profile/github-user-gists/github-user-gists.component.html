@@ -1,0 +1,59 @@
+
+<!-- Spinner que se muestra mientras se obtienen los resultados -->
+<div class="loading-spinner" *ngIf="loading">
+    <div class="spinner-border text-secondary" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+</div>
+
+
+<!-- Notificación si no existen gists públicos -->
+<div class="no-gists my-4 user-select-none" *ngIf="!loading && gists.length <= 0">
+    <h3 class="text-muted text-center">Seems that this user has no public gists 😢</h3>
+</div>
+  
+  
+<!-- Tabla de gists (Angular Material con paginación y capacidad de ordenar) -->
+<div class="mat-elevation-z8 my-4 user-select-none" id="gists" [hidden]="gists.length <= 0">
+  <!-- Paginación -->
+  <mat-paginator [hidden]="gists.length <= 0"
+    [pageSizeOptions]="[5, 10, 20]"
+    showFirstLastButtons 
+    aria-label="Select page of gists"
+    [pageIndex]="pageIndex"
+    (page)="onPaginateChange($event)"
+    class="mb-0">
+    
+  </mat-paginator>
+
+  <!-- Tabla (con sorting) -->
+  <table 
+    class="w-100" 
+    mat-table 
+    [dataSource]="dataSource" 
+    matSort 
+    (matSortChange)="onSortChange($event)"
+    [matSortActive]="filtro_active" [matSortDirection]="filtro_direction"
+    matSortDisableClear>
+    <!-- Columna ficheros -->
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef class="column-name"> Files </th>
+      <td mat-cell *matCellDef="let gist"> <a target="_blank" [href]="gist.html_url">{{ gist.files | retrieveGistFileNames }}</a> </td>
+    </ng-container>
+
+    <!-- Columna creado en -->
+    <ng-container matColumnDef="created_at">
+      <th class="column-hide-sm" mat-header-cell *matHeaderCellDef mat-sort-header start="desc"> Created At </th>
+      <td class="column-hide-sm" mat-cell *matCellDef="let gist"> {{ gist.created_at | date:'MM/dd/yyyy' }} </td>
+    </ng-container>
+
+    <!-- Columna actualizado en -->
+    <ng-container matColumnDef="updated_at">
+      <th class="column-hide-sm" mat-header-cell *matHeaderCellDef mat-sort-header> Updated At </th>
+      <td class="column-hide-sm" mat-cell *matCellDef="let gist"> {{ gist.updated_at | date:'MM/dd/yyyy' }} </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</div>

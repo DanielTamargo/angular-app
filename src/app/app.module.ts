@@ -25,6 +25,8 @@ import { GitHubUserProfileComponent } from './github/github-user-profile/github-
 import { GitHubUserRepositoriesComponent } from './github/github-user-profile/github-user-repositories/github-user-repositories.component';
 import { SizeFormatterPipe } from './shared/pipes/size-formatter.pipe';
 import { GitHubRepositoryDialogComponent } from './github/github-user-profile/github-user-repositories/github-repository-dialog/github-repository-dialog.component';
+import { GitHubUserGistsComponent } from './github/github-user-profile/github-user-gists/github-user-gists.component';
+import { RetrieveGistFileNamesPipe } from './shared/pipes/retrieve-gist-file-names.pipe';
 
 @NgModule({
   declarations: [
@@ -37,6 +39,8 @@ import { GitHubRepositoryDialogComponent } from './github/github-user-profile/gi
     GitHubUserRepositoriesComponent,
     SizeFormatterPipe,
     GitHubRepositoryDialogComponent,
+    GitHubUserGistsComponent,
+    RetrieveGistFileNamesPipe,
   ],
   imports: [
     BrowserModule,

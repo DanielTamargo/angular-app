@@ -23,6 +23,9 @@
     gap: 20px;
     flex-wrap: wrap;
 }
+.user-details p {
+    min-width: 160px;
+}
 
 
 .user-profile-img {

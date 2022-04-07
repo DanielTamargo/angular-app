@@ -8,6 +8,7 @@ import { GitHubUserInterface } from 'src/app/shared/interfaces/github-user.inter
 
 import { GitHubConstants as GHC } from 'src/app/shared/constants/github-constants';
 import { SortDirection } from '@angular/material/sort';
+import { GitHubGistInterface } from '../interfaces/github-gist.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -55,16 +56,19 @@ export class GitHubService {
     bio: null,
     twitter_username: null,
     public_repos: 34,
-    public_gists: 0,
+    public_gists: 1,
     followers: 0,
     following: 2,
     created_at: "2017-10-09T16:49:15Z",
     updated_at: "2022-03-29T12:54:34Z"
   };
   repos: GitHubRepoInterface[] = [];
+  gists: GitHubGistInterface[] = [];
 
+  loadingSubject$ = new Subject<boolean>();
   userSubject$ = new BehaviorSubject<GitHubUserInterface>(this.user);
-  userReposSubject$ = new BehaviorSubject<GitHubRepoInterface[]>(this.repos);
+  userReposSubject$ = new Subject<GitHubRepoInterface[]>();
+  userGistsSubject$ = new Subject<GitHubGistInterface[]>();
   usernameSubject$ = new BehaviorSubject(this.username);
 
   constructor(private http: HttpClient) { }
@@ -89,21 +93,20 @@ export class GitHubService {
   // Recibe el usuario, lo guarda como variable y lo emite a sus observers
   onUserResult(user: GitHubUserInterface): void {
     this.userSubject$.next(user);
+    this.user = user;
 
     // Notificamos spinner loading
     if (this.selectedSection > 0) {
-
+      this.loadingSubject$.next(true);
     }
 
     // Utilizamos if else porque el rendimiento es mejor que switch y buscamos la respuesta más rápida
     if (this.selectedSection == 1) { // Actualizamos repos
       this.repos = [];
-
-
-
-      this.userReposSubject$.next(this.repos);
+      this.onUserReposRequest(user.url + "/repos", user.public_repos);
     } else if (this.selectedSection == 2) { // Actualizamos gists
-      // TODO
+      this.gists = [];
+      this.onUserGistsRequest(user.url + "/gists", user.public_gists);
     } else if (this.selectedSection == 3) { // Actualizamos followers
       // TODO
     } else { // Actualizamos following
@@ -114,8 +117,10 @@ export class GitHubService {
 
   // Carga / Actualización de repositorios
   onUserReposRequest(url: string, total: number = 30): void {
+    console.log('API Repos: ' + (this.user.name ? this.user.name : this.user.login));
+    
     // Contemplamos si es necesario realizar múltiples peticiones, por página podemos pedir máximo 100 valores a la api
-    let perPage = 5;
+    let perPage = 1;
     if (total > perPage) {
       perPage = total;
       if (perPage > 100) perPage = 100;
@@ -127,6 +132,17 @@ export class GitHubService {
     while (i * perPage < total) {
       i++;
       pages.push(i);
+    }
+
+    // Contemplamos que no tenga ningún repositorio
+    if (pages.length <= 0) {
+      // Timeout de medio segundo para que el componente se inicialice antes y así evitar el loading infinito
+      setTimeout(() => {
+        this.loadingSubject$.next(false);
+        this.repos = [];
+        this.userReposSubject$.next(this.repos);
+      }, 500);
+      return;
     }
     
     // Generamos un observable con cada página
@@ -145,14 +161,72 @@ export class GitHubService {
     // TODO implementar errores
     combineLatest([...observables]).subscribe(results => {
       // Recogemos y juntamos las respuestas
-      this.repos = []
+      this.repos = [];
       for (let result of results) {
         this.repos.push(...result);
       }
 
       // Emitimos la lista actualizada
       this.userReposSubject$.next(this.repos);
-    })
+    });
+
+  }
+
+  // Carga / Actualización de gists
+  onUserGistsRequest(url: string, total: number = 30): void {
+    console.log('API Gists: ' + (this.user.name ? this.user.name : this.user.login));
+
+    // Contemplamos si es necesario realizar múltiples peticiones, por página podemos pedir máximo 100 valores a la api
+    let perPage = 5;
+    if (total > perPage) {
+      perPage = total;
+      if (perPage > 100) perPage = 100;
+    }
+
+    // Obtenemos número de páginas
+    const pages = [];
+    let i = 0;
+    while (i * perPage < total) {
+      i++;
+      pages.push(i);
+    }
+
+    // Contemplamos que no tenga ningún repositorio
+    if (pages.length <= 0) {
+      // Timeout de medio segundo para que el componente se inicialice antes y así evitar el loading infinito
+      setTimeout(() => {
+        this.loadingSubject$.next(false);
+        this.gists = [];
+        this.userGistsSubject$.next(this.gists);
+      }, 500);
+      return;
+    }
+    
+    // Generamos un observable con cada página
+    const observables: Observable<GitHubGistInterface[]>[] = [];
+    for (let page of pages) {
+      observables.push(ajax<GitHubGistInterface[]>({
+        url: url,
+        queryParams: {
+          per_page: perPage,
+          page: page
+        }
+      }).pipe(pluck('response'))); 
+    }
+    
+    // Combinamos todos los resultados
+    // TODO implementar errores
+    combineLatest([...observables]).subscribe(results => {
+      // Recogemos y juntamos las respuestas
+      this.gists = []
+      for (let result of results) {
+        this.gists.push(...result);
+      }
+
+      // Emitimos la lista actualizada
+      this.userGistsSubject$.next(this.gists);
+    });
+
   }
 
 }

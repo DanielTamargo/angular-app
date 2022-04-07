@@ -1,9 +1,12 @@
+import { GitHubOwnerInterface } from "./github-owner.interface";
+
 export interface GitHubRepoInterface {
     id:                number;
     node_id:           string;
     name:              string;
     full_name:         string;
     private:           boolean;
+    owner:             GitHubOwnerInterface;
     html_url:          string;
     description:       string;
     fork:              boolean;

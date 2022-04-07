@@ -12,7 +12,6 @@ import { GitHubConstants as GHC } from 'src/app/shared/constants/github-constant
   styleUrls: ['./github-user-profile.component.css']
 })
 export class GitHubUserProfileComponent implements OnInit, OnDestroy {
-  loading = false;
   lastCase: number = -1;
 
   CASE_REPOS     = GHC.CASE_REPOS;
@@ -50,12 +49,11 @@ export class GitHubUserProfileComponent implements OnInit, OnDestroy {
   onChangeDisplayInfoSelection(selectedElement: HTMLElement, caseNumber: number): void {
     // Evitamos el spam al seleccionar múltiples veces el mismo botón
     if (this.lastCase == caseNumber) return;
+
+    this.lastCase = caseNumber;
     
     // Actualizamos la selección en el servicio
     this.gitHubService.selectedSection = caseNumber;
-
-    this.lastCase = caseNumber;
-    this.loading = true;
 
     // En el DOM actualizamos el elemento activo
     document.querySelectorAll('.stats.active').forEach(elm => {
@@ -69,7 +67,7 @@ export class GitHubUserProfileComponent implements OnInit, OnDestroy {
         this.gitHubService.onUserReposRequest(this.user.url + '/repos', this.user.public_repos);
         break;
       case 2: // Gists
-
+        this.gitHubService.onUserGistsRequest(this.user.url + '/gists', this.user.public_gists);
         break;
       case 3: // Followers
 

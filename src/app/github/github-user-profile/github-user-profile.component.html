@@ -59,4 +59,5 @@ class="search-user-error alert alert-danger">
 </div>
 
 <!-- Se muestra un componente u otro según la selección del usuario -->
-<app-git-hub-user-repositories *ngIf="lastCase === CASE_REPOS"></app-git-hub-user-repositories>
+<app-github-user-repositories *ngIf="lastCase === CASE_REPOS"></app-github-user-repositories>
+<app-github-user-gists *ngIf="lastCase === CASE_GISTS"></app-github-user-gists>
