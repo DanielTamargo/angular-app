@@ -74,7 +74,6 @@ export class GitHubUserProfileComponent implements OnInit, OnDestroy {
     // Y a la obtención de los usuarios siguiendo / seguidores
     this.followsSubscription$ = this.gitHubService.userFollowsSubject$.subscribe(follows => {
       this.displayFollows = [...this.displayFollows, ...follows];
-      console.log(this.displayFollows);
     });
   }
 

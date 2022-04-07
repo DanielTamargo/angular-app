@@ -68,6 +68,7 @@ export class GitHubService {
   follows: GitHubBasicUserInterface[] = [];
 
   typingSubject$ = new Subject<boolean>();
+  rateLimitExceededSubject$ = new Subject<boolean>();
 
   loadingSubject$ = new Subject<boolean>();
   userSubject$ = new BehaviorSubject<GitHubUserInterface>(this.user);
@@ -78,7 +79,13 @@ export class GitHubService {
 
   userSearchError$ = new Subject<string>();
 
-  constructor(private http: HttpClient) { }
+  constructor() { }
+
+  checkApiRateLimitExceeded(err: AjaxError) {
+    if (err.status == 403 && err.response.message.includes('limit exceeded')) {
+      this.rateLimitExceededSubject$.next(true);
+    }
+  }
 
   // Recibe un username y lo busca, si lo encuentra, lo manda
   onUserSearch(username: string) {
@@ -102,6 +109,7 @@ export class GitHubService {
             this.userSearchError$.next("The user '" + username + "' for does not exist 😢");
             this.typingSubject$.next(false);
           }
+          this.checkApiRateLimitExceeded(err);
         }
       });
   }
@@ -125,9 +133,10 @@ export class GitHubService {
       this.onUserGistsRequest(user.url + "/gists", user.public_gists);
     } else if (this.selectedSection == 3) { // Actualizamos followers
       this.follows = [];
-      this.onUserFollowsRequest(user.url + "/followers", user.followers);
+      this.onUserFollowsRequest(user.url + "/followers", 4, 1);
     } else { // Actualizamos following
-      // TODO 
+      this.follows = [];
+      this.onUserFollowsRequest(user.url + "/following", 4, 1);
     }
   }
 
@@ -175,15 +184,21 @@ export class GitHubService {
     }
     
     // Combinamos todos los resultados
-    combineLatest([...observables]).subscribe(results => {
-      // Recogemos y juntamos las respuestas
-      this.repos = [];
-      for (let result of results) {
-        this.repos.push(...result);
+    combineLatest([...observables]).subscribe(
+    {
+      next: results => {
+        // Recogemos y juntamos las respuestas
+        this.repos = [];
+        for (let result of results) {
+          this.repos.push(...result);
+        }
+  
+        // Emitimos la lista actualizada
+        this.userReposSubject$.next(this.repos);
+      },
+      error: (err: AjaxError) => {
+        this.checkApiRateLimitExceeded(err);
       }
-
-      // Emitimos la lista actualizada
-      this.userReposSubject$.next(this.repos);
     });
 
   }
@@ -231,15 +246,21 @@ export class GitHubService {
     }
     
     // Combinamos todos los resultados
-    combineLatest([...observables]).subscribe(results => {
-      // Recogemos y juntamos las respuestas
-      this.gists = []
-      for (let result of results) {
-        this.gists.push(...result);
+    combineLatest([...observables]).subscribe(
+    {
+      next: results => {
+        // Recogemos y juntamos las respuestas
+        this.gists = []
+        for (let result of results) {
+          this.gists.push(...result);
+        }
+  
+        // Emitimos la lista actualizada
+        this.userGistsSubject$.next(this.gists);
+      },
+      error: (err: AjaxError) => {
+        this.checkApiRateLimitExceeded(err);
       }
-
-      // Emitimos la lista actualizada
-      this.userGistsSubject$.next(this.gists);
     });
 
   }
@@ -255,9 +276,16 @@ export class GitHubService {
           per_page: follows_per_query,
           page: page
         }
-    }).pipe(pluck('response')).subscribe(results => {
-      this.userFollowsSubject$.next(results);
-    }); 
+    }).pipe(pluck('response')).subscribe(
+      {
+        next: results => {
+          this.userFollowsSubject$.next(results);
+        },
+        error: (err: AjaxError) => {
+          this.checkApiRateLimitExceeded(err);
+        }
+      }
+    ); 
   }
 
 }

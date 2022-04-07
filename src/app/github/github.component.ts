@@ -1,5 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
+import { MatDialog } from '@angular/material/dialog';
+import { Subscription } from 'rxjs';
+import { GitHubService } from '../shared/services/github.service';
+import { GithubApiExceededDialogComponent } from './github-api-exceeded-dialog/github-api-exceeded-dialog.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-github',
@@ -15,10 +20,24 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
   ]
 })
 export class GitHubComponent implements OnInit {
+  
+  apiRateExceededDialogSubscription$ = new Subscription;
 
-  constructor() { }
+  constructor(private dialog: MatDialog, private githubService: GitHubService, private router: Router) { }
 
   ngOnInit(): void {
+    // Nos suscribimos a la posibilidad de exceder el límite de peticiones y entonces mostrar un modal
+    this.apiRateExceededDialogSubscription$ = this.githubService.rateLimitExceededSubject$.subscribe(show => {
+      if (show) {
+        let apiRateExceededDialog = this.dialog.open(GithubApiExceededDialogComponent);
+        apiRateExceededDialog.afterClosed().subscribe(result => {
+          this.router.navigate(['/']);
+        });
+      }
+    })
+
+
+
   }
 
 }
