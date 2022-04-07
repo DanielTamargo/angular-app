@@ -245,58 +245,19 @@ export class GitHubService {
   }
 
   // Carga / actualización de follows (tanto followers, como followings (como recientes))
-  onUserFollowsRequest(url: string, total: number = 30): void {
+  onUserFollowsRequest(url: string, follows_per_query: number = 5, page: number = 1): void {
     console.log('API Follows: ' + (this.user.name ? this.user.name : this.user.login));
 
-    // Contemplamos si es necesario realizar múltiples peticiones, por página podemos pedir máximo 100 valores a la api
-    let perPage = 5;
-    if (total > perPage) {
-      perPage = total;
-      if (perPage > 100) perPage = 100;
-    }
-
-    // Obtenemos número de páginas
-    const pages = [];
-    let i = 0;
-    while (i * perPage < total) {
-      i++;
-      pages.push(i);
-    }
-
-    // Contemplamos que no tenga ningún repositorio
-    if (pages.length <= 0) {
-      // Timeout de medio segundo para que el componente se inicialice antes y así evitar el loading infinito
-      setTimeout(() => {
-        this.loadingSubject$.next(false);
-        this.follows = [];
-        this.userFollowsSubject$.next(this.follows);
-      }, 500);
-      return;
-    }
-    
     // Generamos un observable con cada página
-    const observables: Observable<GitHubBasicUserInterface[]>[] = [];
-    for (let page of pages) {
-      observables.push(ajax<GitHubBasicUserInterface[]>({
+    ajax<GitHubBasicUserInterface[]>({
         url: url,
         queryParams: {
-          per_page: perPage,
+          per_page: follows_per_query,
           page: page
         }
-      }).pipe(pluck('response'))); 
-    }
-    
-    // Combinamos todos los resultados
-    combineLatest([...observables]).subscribe(results => {
-      // Recogemos y juntamos las respuestas
-      this.follows = []
-      for (let result of results) {
-        this.follows.push(...result);
-      }
-
-      // Emitimos la lista actualizada
-      this.userFollowsSubject$.next(this.follows);
-    });
+    }).pipe(pluck('response')).subscribe(results => {
+      this.userFollowsSubject$.next(results);
+    }); 
   }
 
 }

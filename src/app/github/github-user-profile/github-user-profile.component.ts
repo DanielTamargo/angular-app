@@ -34,7 +34,10 @@ export class GitHubUserProfileComponent implements OnInit, OnDestroy {
 
   user?: GitHubUserInterface;
   userRepos?: GitHubRepoInterface[];
-  follows?: GitHubBasicUserInterface[];
+  follows_number: number = 0;
+  follows_per_query: number = 4;
+  follows_page: number = 1;
+  displayFollows: GitHubBasicUserInterface[] = [];
 
   typingSubscription$ = new Subscription;
   userSubscription$ = new Subscription;
@@ -49,6 +52,7 @@ export class GitHubUserProfileComponent implements OnInit, OnDestroy {
     // Obtenemos el usuario cargado y nos suscribimos a los cambios
     this.userSubscription$ = this.gitHubService.userSubject$.subscribe(user => {
       this.user = user;
+      this.displayFollows = [];
       if (user) this.error = null;
     });
 
@@ -57,6 +61,8 @@ export class GitHubUserProfileComponent implements OnInit, OnDestroy {
     // Nos suscribimos a la notificación de errores
     this.errorSubscription$ = this.gitHubService.userSearchError$.subscribe(err => {
       this.error = err;
+      this.displayFollows = [];
+      this.follows_page = 1;
       this.lastCase = 0;
     });
 
@@ -67,9 +73,8 @@ export class GitHubUserProfileComponent implements OnInit, OnDestroy {
 
     // Y a la obtención de los usuarios siguiendo / seguidores
     this.followsSubscription$ = this.gitHubService.userFollowsSubject$.subscribe(follows => {
-      this.follows = follows;
-      console.log(follows);
-      
+      this.displayFollows = [...this.displayFollows, ...follows];
+      console.log(this.displayFollows);
     });
   }
 
@@ -79,12 +84,12 @@ export class GitHubUserProfileComponent implements OnInit, OnDestroy {
    * 
    * @param selectedElement elemento seleccionado
    * @param caseNumber opción seleccionada
-   * @returns 
    */
   onChangeDisplayInfoSelection(selectedElement: HTMLElement, caseNumber: number): void {
     // Evitamos el spam al seleccionar múltiples veces el mismo botón
     if (this.lastCase == caseNumber) return;
 
+    this.displayFollows = [];
     this.lastCase = caseNumber;
     
     // Actualizamos la selección en el servicio
@@ -105,15 +110,26 @@ export class GitHubUserProfileComponent implements OnInit, OnDestroy {
         this.gitHubService.onUserGistsRequest(this.user.url + '/gists', this.user.public_gists);
         break;
       case 3: // Followers
-        this.gitHubService.onUserFollowsRequest(this.user.url + "/followers", this.user.followers)
+        this.follows_number = this.user.followers;
+        this.gitHubService.onUserFollowsRequest(this.user.url + "/followers", this.follows_per_query, this.follows_page)
         break;
       case 4: // Al default
       default: // Following
-        this.gitHubService.onUserFollowsRequest(this.user.url + "/following", this.user.following)
+        this.follows_number = this.user.following;
+        this.gitHubService.onUserFollowsRequest(this.user.url + "/following", this.follows_per_query, this.follows_page)
     }
 
     // Realizamos la petición a la API
+  }
 
+  loadMoreFollows(): void {
+    this.follows_page++;
+    let key = 'following';
+    if (this.lastCase == this.CASE_FOLLOWERS) {
+      key = 'followers';
+    }
+
+    this.gitHubService.onUserFollowsRequest(this.user.url + key, this.follows_per_query, this.follows_page);
   }
 
   ngOnDestroy(): void {
@@ -123,5 +139,11 @@ export class GitHubUserProfileComponent implements OnInit, OnDestroy {
     this.typingSubscription$.unsubscribe();
     this.followsSubscription$.unsubscribe();
   }
+
+  // TrackBy para mejorar el rendimiento notoriamente al añadir más follows a la lista
+  trackByFollows(index: number, item: GitHubBasicUserInterface): number {
+    return item.id;
+  }
+
 
 }

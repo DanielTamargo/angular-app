@@ -77,8 +77,12 @@ class="search-user-error my-5 user-select-none">
 [gists_qt]="user.public_gists" 
 *ngIf="lastCase === CASE_GISTS"></app-github-user-gists>
 
-<div class="follows my-4 user-select-none" *ngIf="lastCase === CASE_FOLLOWING || lastCase === CASE_FOLLOWERS">
+<div class="follows mt-4 mb-2 user-select-none" *ngIf="lastCase === CASE_FOLLOWING || lastCase === CASE_FOLLOWERS">
+    <!-- Bucle con todos los follows cargados -->
     <app-github-user-display 
-    *ngFor="let follow of follows"
+    *ngFor="let follow of displayFollows; trackBy: trackByFollows"
     [user]="follow"></app-github-user-display>
 </div>
+<button mat-button color="primary" class="mb-4 w-100 text-center"
+*ngIf="(lastCase === CASE_FOLLOWING || lastCase === CASE_FOLLOWERS) && displayFollows.length < follows_number"
+(click)="loadMoreFollows()">Load more</button>
