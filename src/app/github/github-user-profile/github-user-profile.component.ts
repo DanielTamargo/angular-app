@@ -38,6 +38,7 @@ export class GitHubUserProfileComponent implements OnInit, OnDestroy {
   follows_per_query: number = 4;
   follows_page: number = 1;
   displayFollows: GitHubBasicUserInterface[] = [];
+  loading: boolean = false;
 
   typingSubscription$ = new Subscription;
   userSubscription$ = new Subscription;
@@ -52,6 +53,10 @@ export class GitHubUserProfileComponent implements OnInit, OnDestroy {
     // Obtenemos el usuario cargado y nos suscribimos a los cambios
     this.userSubscription$ = this.gitHubService.userSubject$.subscribe(user => {
       this.user = user;
+
+      if (this.lastCase == this.CASE_FOLLOWERS) this.follows_number = this.user.followers;
+      else if (this.lastCase == this.CASE_FOLLOWING) this.follows_number = this.user.following;
+
       this.displayFollows = [];
       if (user) this.error = null;
     });
@@ -74,6 +79,7 @@ export class GitHubUserProfileComponent implements OnInit, OnDestroy {
     // Y a la obtención de los usuarios siguiendo / seguidores
     this.followsSubscription$ = this.gitHubService.userFollowsSubject$.subscribe(follows => {
       this.displayFollows = [...this.displayFollows, ...follows];
+      this.loading = false;
     });
   }
 
@@ -90,6 +96,8 @@ export class GitHubUserProfileComponent implements OnInit, OnDestroy {
 
     this.displayFollows = [];
     this.lastCase = caseNumber;
+    this.follows_page = 1;
+    this.loading = false;
     
     // Actualizamos la selección en el servicio
     this.gitHubService.selectedSection = caseNumber;
@@ -110,22 +118,25 @@ export class GitHubUserProfileComponent implements OnInit, OnDestroy {
         break;
       case 3: // Followers
         this.follows_number = this.user.followers;
-        this.gitHubService.onUserFollowsRequest(this.user.url + "/followers", this.follows_per_query, this.follows_page)
+        this.loading = true;
+        this.gitHubService.onUserFollowsRequest(this.user.url + "/followers", this.follows_per_query, this.follows_page);
         break;
       case 4: // Al default
       default: // Following
         this.follows_number = this.user.following;
+        this.loading = true;
         this.gitHubService.onUserFollowsRequest(this.user.url + "/following", this.follows_per_query, this.follows_page)
     }
 
     // Realizamos la petición a la API
   }
 
+  // Carga más follows
   loadMoreFollows(): void {
     this.follows_page++;
-    let key = 'following';
+    let key = '/following';
     if (this.lastCase == this.CASE_FOLLOWERS) {
-      key = 'followers';
+      key = '/followers';
     }
 
     this.gitHubService.onUserFollowsRequest(this.user.url + key, this.follows_per_query, this.follows_page);

@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, combineLatest, map, Observable, of, pluck, Subject, tap } from 'rxjs';
 import { ajax, AjaxError } from 'rxjs/ajax';
 
@@ -81,16 +80,50 @@ export class GitHubService {
 
   constructor() { }
 
-  checkApiRateLimitExceeded(err: AjaxError) {
-    if (err.status == 403 && err.response.message.includes('limit exceeded')) {
+  /**
+   * Método reutilizado en cada catch de las peticiones a la API.
+   * 
+   * Si encuentra el error 403 y si se debe al límite excedido emite un valor true para que se genere un modal donde sea necesario
+   * @emits boolean cuando surge la casuística
+   * 
+   * Si encuentra el error 404 y surge en la petición al usuario, reinicia el usuario
+   * 
+   * @param err objeto con la información del error
+   */
+  checkApiErrors(err: AjaxError, peticionUsuario = false) {
+    const msg: string = err.response.message;
+
+    // Usuario no existe
+    if (err.status == 404 && peticionUsuario) { // No encontrado
+      this.userSubject$.next(null);
+      this.userSearchError$.next("The user '" + this.username + "' for does not exist 😢");
+      this.typingSubject$.next(false);
+    }
+
+    // Límite excedido
+    if (err.status == 403 && msg.includes('limit exceeded')) {
       this.rateLimitExceededSubject$.next(true);
     }
   }
 
   // Recibe un username y lo busca, si lo encuentra, lo manda
+  /**
+   * Recibe un username y lo busca, si lo encuentra delege en el @method onUserResult
+   * Si surgen errores en la petición emite valores nulos y falsos donde sea necesario para notificar a la APP
+   * 
+   * @param username nombre de usuario a buscar
+   */
   onUserSearch(username: string) {
-    this.typingSubject$.next(true);
     this.username = username;
+    
+    // Si no ha escrito nada, reiniciamos
+    if (!username) {
+      this.userSubject$.next(null);
+      this.userSearchError$.next(null);
+      return;
+    }
+    
+    this.typingSubject$.next(true);
     
     const url = GHC.BASE_URL + GHC.USER.replace(GHC.KEY_USERNAME, username);
     ajax<GitHubUserInterface>(url)
@@ -103,18 +136,19 @@ export class GitHubService {
         next: user => {
           this.onUserResult(user);
         },
-        error: (err: AjaxError) => { // TODO
-          if (err.status == 404) { // No encontrado
-            this.userSubject$.next(null);
-            this.userSearchError$.next("The user '" + username + "' for does not exist 😢");
-            this.typingSubject$.next(false);
-          }
-          this.checkApiRateLimitExceeded(err);
+        error: (err: AjaxError) => {
+          this.checkApiErrors(err, true);
         }
       });
   }
 
-  // Recibe el usuario, lo guarda como variable y lo emite a sus observers
+  /**
+   * Recibe el usuario encontrado y lo emite a sus observers, también dependiendo de si ya existía una elección previa
+   * de información a mostrar la mantiene, por lo que cargará los elementos necesarios
+   * @emits GitHubUserInterface
+   * 
+   * @param user usuario encontrado en la búsqueda de la app
+   */
   onUserResult(user: GitHubUserInterface): void {
     this.userSubject$.next(user);
     this.user = user;
@@ -141,7 +175,14 @@ export class GitHubService {
   }
 
 
-  // Carga / Actualización de repositorios
+  /**
+   * Carga / actualización de los repositorios, dependiendo de si el total de repositorios es superior a 100
+   * combinará múltiples peticiones a la api y sus resultados, emitiendo una única respuesta a través del observable
+   * @emits GitHubRepoInterface[]
+   * 
+   * @param url url de la petición a la api
+   * @param total total de elementos a coger
+   */
   onUserReposRequest(url: string, total: number = 30): void {
     console.log('API Repos: ' + (this.user.name ? this.user.name : this.user.login));
     
@@ -196,14 +237,19 @@ export class GitHubService {
         // Emitimos la lista actualizada
         this.userReposSubject$.next(this.repos);
       },
-      error: (err: AjaxError) => {
-        this.checkApiRateLimitExceeded(err);
-      }
+      error: this.checkApiErrors
     });
 
   }
 
-  // Carga / Actualización de gists
+  /**
+   * Carga / actualización de los gists, dependiendo de si el total de gists es superior a 100
+   * combinará múltiples peticiones a la api y sus resultados, emitiendo una única respuesta a través del observable
+   * @emits GitHubGistInterface[]
+   * 
+   * @param url url de la petición a la api
+   * @param total total de elementos a coger
+   */
   onUserGistsRequest(url: string, total: number = 30): void {
     console.log('API Gists: ' + (this.user.name ? this.user.name : this.user.login));
 
@@ -258,14 +304,20 @@ export class GitHubService {
         // Emitimos la lista actualizada
         this.userGistsSubject$.next(this.gists);
       },
-      error: (err: AjaxError) => {
-        this.checkApiRateLimitExceeded(err);
-      }
+      error: this.checkApiErrors
     });
 
   }
 
-  // Carga / actualización de follows (tanto followers, como followings (como recientes))
+  /**
+   * Carga / actualiza los follows (ya sean followers o following) y a través del observable emitirá
+   * un array con los resultados
+   * @emits GitHubBasicUserInterface[]
+   * 
+   * @param url url de la petición a la api
+   * @param follows_per_query cuántos seguidores obtener en la petición
+   * @param page paginación de la petición
+   */
   onUserFollowsRequest(url: string, follows_per_query: number = 5, page: number = 1): void {
     console.log('API Follows: ' + (this.user.name ? this.user.name : this.user.login));
 
@@ -281,9 +333,7 @@ export class GitHubService {
         next: results => {
           this.userFollowsSubject$.next(results);
         },
-        error: (err: AjaxError) => {
-          this.checkApiRateLimitExceeded(err);
-        }
+        error: this.checkApiErrors
       }
     ); 
   }

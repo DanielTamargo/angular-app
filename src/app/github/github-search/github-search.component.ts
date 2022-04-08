@@ -37,9 +37,9 @@ export class GitHubSearchComponent implements OnInit, AfterViewInit, OnDestroy {
     this.evtSubscription$ = this.usernameChange$.pipe(
       debounceTime<KeyboardEvent>(700),
       pluck<KeyboardEvent>('target', 'value'),
-      filter<string>(value => value.length > 0)
+      filter<string>(value => value.length >= 0) // TODO check
     ).subscribe(value => {
-      this.gitHubService.onUserSearch(value);
+      this.gitHubService.onUserSearch(value.trim());
     });
   }
 

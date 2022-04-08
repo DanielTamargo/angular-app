@@ -3,7 +3,7 @@
 *ngIf="user">
     <div class="user-main-info">
         <div class="user-profile-img">
-            <img [src]="user.avatar_url">
+            <img class="no-drag" [src]="user.avatar_url">
         </div>
         <div class="user-profile-info">
             <h3>{{ user.name || user.login }} <span class="badge bg-secondary">{{ user.type }}</span></h3>
@@ -77,12 +77,29 @@ class="search-user-error my-5 user-select-none">
 [gists_qt]="user.public_gists" 
 *ngIf="lastCase === CASE_GISTS"></app-github-user-gists>
 
+
+<!-- Spinner que se muestra mientras se obtienen los resultados -->
+<div class="loading-spinner" *ngIf="(lastCase === CASE_FOLLOWING || lastCase === CASE_FOLLOWERS) && loading">
+    <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+</div>
+
 <div class="follows mt-4 mb-2 user-select-none" *ngIf="lastCase === CASE_FOLLOWING || lastCase === CASE_FOLLOWERS">
+
+    <!-- Notificación si no existen repos públicos -->
+    <div class="no-repos my-4 user-select-none" *ngIf="!loading && displayFollows.length <= 0">
+    <h3 class="text-muted text-center">This user has no {{ lastCase === CASE_FOLLOWING ? 'followings' : 'followers' }} 😢</h3>
+    </div>
+    
     <!-- Bucle con todos los follows cargados -->
     <app-github-user-display 
     *ngFor="let follow of displayFollows; trackBy: trackByFollows"
     [user]="follow"></app-github-user-display>
 </div>
-<button mat-button color="primary" class="mb-4 w-100 text-center"
-*ngIf="(lastCase === CASE_FOLLOWING || lastCase === CASE_FOLLOWERS) && displayFollows.length < follows_number"
+<button mat-button color="primary" class="mt-4 mb-5 w-100 text-center"
+*ngIf="
+    (lastCase === CASE_FOLLOWING || lastCase === CASE_FOLLOWERS) 
+    && displayFollows.length < follows_number 
+    && displayFollows.length > 0"
 (click)="loadMoreFollows()">Load more</button>
