@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
   selector: 'app-github',
   templateUrl: './github.component.html',
   styleUrls: ['./github.component.scss'],
-  animations: [ // TODO
+  animations: [
     trigger('inOut', [
       state('void', style({ opacity: 0, /* transform: 'translateX(-100%)' */ })),
       state('*', style({ opacity: 1, /* transform: 'translateX(0)' */ })),
@@ -20,7 +20,7 @@ import { Router } from '@angular/router';
   ]
 })
 export class GitHubComponent implements OnInit {
-  
+
   apiRateExceededDialogSubscription$ = new Subscription;
 
   constructor(private dialog: MatDialog, private githubService: GitHubService, private router: Router) { }

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, combineLatest, map, Observable, of, pluck, Subject, tap } from 'rxjs';
+import { BehaviorSubject, combineLatest, forkJoin, map, Observable, of, pluck, Subject, tap } from 'rxjs';
 import { ajax, AjaxError } from 'rxjs/ajax';
 
 import { GitHubRepoInterface } from 'src/app/shared/interfaces/github-repo.interface';
@@ -82,12 +82,12 @@ export class GitHubService {
 
   /**
    * Método reutilizado en cada catch de las peticiones a la API.
-   * 
+   *
    * Si encuentra el error 403 y si se debe al límite excedido emite un valor true para que se genere un modal donde sea necesario
    * @emits boolean cuando surge la casuística
-   * 
+   *
    * Si encuentra el error 404 y surge en la petición al usuario, reinicia el usuario
-   * 
+   *
    * @param err objeto con la información del error
    */
   checkApiErrors(err: AjaxError, peticionUsuario = false) {
@@ -108,30 +108,30 @@ export class GitHubService {
 
   // Recibe un username y lo busca, si lo encuentra, lo manda
   /**
-   * Recibe un username y lo busca, si lo encuentra delege en el @method onUserResult
+   * Recibe un username y lo busca, si lo encuentra delege en el método [onUserResult]{@link GitHubService#onUserResult}
    * Si surgen errores en la petición emite valores nulos y falsos donde sea necesario para notificar a la APP
-   * 
+   *
    * @param username nombre de usuario a buscar
    */
   onUserSearch(username: string) {
     this.username = username;
-    
+
     // Si no ha escrito nada, reiniciamos
     if (!username) {
       this.userSubject$.next(null);
       this.userSearchError$.next(null);
       return;
     }
-    
+
     this.typingSubject$.next(true);
-    
+
     const url = GHC.BASE_URL + GHC.USER.replace(GHC.KEY_USERNAME, username);
     ajax<GitHubUserInterface>(url)
       .pipe(
-        pluck('response'), 
+        pluck('response'),
         tap(() => { // Utilizamos el tap para notificar que ya no está escribiendo
           this.typingSubject$.next(false);
-      })) // <- si trabajamos con ajax de rxjs en vez de httpclient lo recibimos distinto
+        }),) // <- si trabajamos con ajax de rxjs en vez de httpclient lo recibimos distinto
       .subscribe({
         next: user => {
           this.onUserResult(user);
@@ -146,7 +146,7 @@ export class GitHubService {
    * Recibe el usuario encontrado y lo emite a sus observers, también dependiendo de si ya existía una elección previa
    * de información a mostrar la mantiene, por lo que cargará los elementos necesarios
    * @emits GitHubUserInterface
-   * 
+   *
    * @param user usuario encontrado en la búsqueda de la app
    */
   onUserResult(user: GitHubUserInterface): void {
@@ -182,13 +182,13 @@ export class GitHubService {
    * Carga / actualización de los repositorios, dependiendo de si el total de repositorios es superior a 100
    * combinará múltiples peticiones a la api y sus resultados, emitiendo una única respuesta a través del observable
    * @emits GitHubRepoInterface[]
-   * 
+   *
    * @param url url de la petición a la api
    * @param total total de elementos a coger
    */
   onUserReposRequest(url: string, total: number = 30): void {
     console.log('API Repos: ' + (this.user.name ? this.user.name : this.user.login));
-    
+
     // Contemplamos si es necesario realizar múltiples peticiones, por página podemos pedir máximo 100 valores a la api
     let perPage = 1;
     if (total > perPage) {
@@ -214,7 +214,7 @@ export class GitHubService {
       }, 500);
       return;
     }
-    
+
     // Generamos un observable con cada página
     const observables: Observable<GitHubRepoInterface[]>[] = [];
     for (let page of pages) {
@@ -224,9 +224,9 @@ export class GitHubService {
           per_page: perPage,
           page: page
         }
-      }).pipe(pluck('response'))); 
+      }).pipe(pluck('response')));
     }
-    
+
     // Combinamos todos los resultados
     combineLatest([...observables]).subscribe(
     {
@@ -236,7 +236,7 @@ export class GitHubService {
         for (let result of results) {
           this.repos.push(...result);
         }
-  
+
         // Emitimos la lista actualizada
         this.userReposSubject$.next(this.repos);
       },
@@ -249,7 +249,7 @@ export class GitHubService {
    * Carga / actualización de los gists, dependiendo de si el total de gists es superior a 100
    * combinará múltiples peticiones a la api y sus resultados, emitiendo una única respuesta a través del observable
    * @emits GitHubGistInterface[]
-   * 
+   *
    * @param url url de la petición a la api
    * @param total total de elementos a coger
    */
@@ -281,7 +281,7 @@ export class GitHubService {
       }, 500);
       return;
     }
-    
+
     // Generamos un observable con cada página
     const observables: Observable<GitHubGistInterface[]>[] = [];
     for (let page of pages) {
@@ -291,11 +291,11 @@ export class GitHubService {
           per_page: perPage,
           page: page
         }
-      }).pipe(pluck('response'))); 
+      }).pipe(pluck('response')));
     }
-    
+
     // Combinamos todos los resultados
-    combineLatest([...observables]).subscribe(
+    forkJoin([...observables]).subscribe(
     {
       next: results => {
         // Recogemos y juntamos las respuestas
@@ -303,7 +303,7 @@ export class GitHubService {
         for (let result of results) {
           this.gists.push(...result);
         }
-  
+
         // Emitimos la lista actualizada
         this.userGistsSubject$.next(this.gists);
       },
@@ -316,7 +316,7 @@ export class GitHubService {
    * Carga / actualiza los follows (ya sean followers o following) y a través del observable emitirá
    * un array con los resultados
    * @emits GitHubBasicUserInterface[]
-   * 
+   *
    * @param url url de la petición a la api
    * @param follows_per_query cuántos seguidores obtener en la petición
    * @param page paginación de la petición
@@ -338,7 +338,7 @@ export class GitHubService {
         },
         error: this.checkApiErrors
       }
-    ); 
+    );
   }
 
 }

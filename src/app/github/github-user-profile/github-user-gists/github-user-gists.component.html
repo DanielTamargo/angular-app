@@ -11,27 +11,27 @@
 <div class="no-gists my-4 user-select-none" *ngIf="!loading && gists.length <= 0">
     <h3 class="text-muted text-center">This user has no public gists 😢</h3>
 </div>
-  
-  
+
+
 <!-- Tabla de gists (Angular Material con paginación y capacidad de ordenar) -->
-<div class="mat-elevation-z8 my-4 user-select-none" id="gists" [hidden]="gists.length <= 0">
+<div class="mat-elevation-z8 my-4 user-select-none" id="gists" [hidden]="loading || gists.length <= 0">
   <!-- Paginación -->
   <mat-paginator [hidden]="gists.length <= 0"
     [pageSizeOptions]="[5, 10, 20]"
-    showFirstLastButtons 
+    showFirstLastButtons
     aria-label="Select page of gists"
     [pageIndex]="pageIndex"
     (page)="onPaginateChange($event)"
     class="mb-0">
-    
+
   </mat-paginator>
 
   <!-- Tabla (con sorting) -->
-  <table 
-    class="w-100" 
-    mat-table 
-    [dataSource]="dataSource" 
-    matSort 
+  <table
+    class="w-100"
+    mat-table
+    [dataSource]="dataSource"
+    matSort
     (matSortChange)="onSortChange($event)"
     [matSortActive]="filtro_active" [matSortDirection]="filtro_direction"
     matSortDisableClear>

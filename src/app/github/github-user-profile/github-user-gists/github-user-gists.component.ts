@@ -29,12 +29,13 @@ export class GitHubUserGistsComponent implements OnInit, AfterViewInit, OnDestro
   // Datos
   gists: GitHubGistInterface[] = [];
   gistsSubscription$ = new Subscription;
+  loadingSubscription$ = new Subscription;
 
   // Tabla Angular Material
   displayedColumns: string[] = [
-    'name', 
-    'created_at', 
-    'updated_at', 
+    'name',
+    'created_at',
+    'updated_at',
   ];
   dataSource = new MatTableDataSource<GitHubGistInterface>(this.gists);
   // Ordenar tabla
@@ -61,7 +62,7 @@ export class GitHubUserGistsComponent implements OnInit, AfterViewInit, OnDestro
       // Configuramos el sorting de la tabla
       this.dataSource.sort = this.sort;
       // Configuramos la paginación de la tabla
-      this.dataSource.paginator = this.paginator;      
+      this.dataSource.paginator = this.paginator;
     });
 
     // Consultamos si el usuario ya había navegado y utilizado el componente y se había ido pero luego vuelve
@@ -73,6 +74,11 @@ export class GitHubUserGistsComponent implements OnInit, AfterViewInit, OnDestro
     if (this.gists_qt <= 0) {
       this.loading = false;
     }
+
+    // Nos suscribimos a la posibilidad de que cambie de usuario y por ende haya que recargar
+    this.loadingSubscription$ = this.githubService.loadingSubject$.subscribe(loading => {
+      this.loading = loading;
+    });
   }
 
   ngAfterViewInit(): void {
@@ -86,6 +92,7 @@ export class GitHubUserGistsComponent implements OnInit, AfterViewInit, OnDestro
   ngOnDestroy(): void {
     // Limpiamos suscripciones para evitar pérdidas de memoria y rendimiento
     this.gistsSubscription$.unsubscribe();
+    this.loadingSubscription$.unsubscribe();
   }
 
   // Función llamada cuando se cambie de página en la paginación

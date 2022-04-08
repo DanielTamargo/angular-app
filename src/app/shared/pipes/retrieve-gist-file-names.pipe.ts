@@ -15,7 +15,7 @@ export class RetrieveGistFileNamesPipe implements PipeTransform {
       let first = true;
       for (const file of files) {
         if (first) first = false;
-        else resp += ' | ';
+        else resp += '  //  ';
 
         resp += `${file.filename} (${file.language})`;
       }
