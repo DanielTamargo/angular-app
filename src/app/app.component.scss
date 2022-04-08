@@ -1,8 +1,8 @@
 .content {
-    width: calc(100vw - 70px);
-    margin-left: 70px !important;
     padding: 1em !important;
-    padding-right: 1.5em !important;
+    padding-left: 100px !important;
+    padding-right: 30px !important;
+    margin: 0;
 }
 
 main {
@@ -12,8 +12,8 @@ main {
 
 @media (max-width: 450px) {
     .content {
-        width: 100vw;
         margin-top: 50px !important;
-        margin-left: 0 !important;
+        padding-left: 20px !important;
+        padding-right: 20px !important;
     }
 }

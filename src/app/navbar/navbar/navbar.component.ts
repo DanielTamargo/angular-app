@@ -32,9 +32,9 @@ const NAV_LINKS = [ 'home', 'github', 'tasklist', 'map' ];
     ]),
     trigger('navSlideSmall', [
       state(NAV_LINKS[0], style({ left: '0' })),
-      state(NAV_LINKS[1], style({ right: 'calc(70px * 2)' })),
-      state(NAV_LINKS[2], style({ right: '70px' })),
-      state(NAV_LINKS[3], style({ right: '0' })),
+      state(NAV_LINKS[1], style({ right: 'calc(100% - 100vw + (70px * 2) + 15px)' })),
+      state(NAV_LINKS[2], style({ right: 'calc(100% - 100vw + 70px + 15px)' })),
+      state(NAV_LINKS[3], style({ right: 'calc(100% - 100vw + 15px)' })),
       transition('* <=> *', animate(`200ms ease-in-out`)),
     ]),
   ]
