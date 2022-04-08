@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-github',
   templateUrl: './github.component.html',
-  styleUrls: ['./github.component.css'],
+  styleUrls: ['./github.component.scss'],
   animations: [ // TODO
     trigger('inOut', [
       state('void', style({ opacity: 0, /* transform: 'translateX(-100%)' */ })),

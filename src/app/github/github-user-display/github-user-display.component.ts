@@ -10,7 +10,7 @@ import { GitHubBasicUserInterface } from 'src/app/shared/interfaces/github-basic
 @Component({
   selector: 'app-github-user-display',
   templateUrl: './github-user-display.component.html',
-  styleUrls: ['./github-user-display.component.css']
+  styleUrls: ['./github-user-display.component.scss']
 })
 export class GitHubUserDisplayComponent implements OnInit {
 

@@ -13,7 +13,7 @@ import { ajax } from 'rxjs/ajax';
 @Component({
   selector: 'app-github-user-repositories',
   templateUrl: './github-user-repositories.component.html',
-  styleUrls: ['./github-user-repositories.component.css']
+  styleUrls: ['./github-user-repositories.component.scss']
 })
 export class GitHubUserRepositoriesComponent implements OnInit, AfterViewInit, OnDestroy {
 

@@ -5,15 +5,16 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+
+    & .user-display-img {
+        margin-left: 1em;
+        max-width: 150px;
+        margin: 0;
+        padding: 0;
+    }
 }
 
 .user-display-card:hover {
     box-shadow: 0 0 5px black;
 }
 
-.user-display-img {
-    margin-left: 1em;
-    max-width: 150px;
-    margin: 0;
-    padding: 0;
-}

@@ -26,7 +26,7 @@ Esta es la mini aplicación *'personal, improvisando mientras aprendo, random pe
 
 - [Angular](https://angular.io/) como framework de desarrollo front-end
 - [RxJS](https://rxjs.dev/) dando uso a sus observables, bservers y operators
-- [SASS](https://sass-lang.com/) (actualmente CSS, en breves migraré a SASS) para los estilos personalizados 'super duper'.
+- [SASS](https://sass-lang.com/) para los estilos personalizados 'super duper'.
 - [Bootstrap](https://getbootstrap.com/) para el maquetado rápido y sencillo
 - [Angular Material](https://next.material.angular.io/) como otra librería de estilos y comportamientos, una librería ideal para trabajar con Angular (por si no se intuía con el nombre).
 - APIs:

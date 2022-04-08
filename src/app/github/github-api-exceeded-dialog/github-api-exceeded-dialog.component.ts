@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 @Component({
   selector: 'app-github-api-exceeded-dialog',
   templateUrl: './github-api-exceeded-dialog.component.html',
-  styleUrls: ['./github-api-exceeded-dialog.component.css']
+  styleUrls: ['./github-api-exceeded-dialog.component.scss']
 })
 export class GithubApiExceededDialogComponent implements OnInit {
 

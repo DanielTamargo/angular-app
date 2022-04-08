@@ -12,7 +12,7 @@ import { GitHubBasicUserInterface } from 'src/app/shared/interfaces/github-basic
 @Component({
   selector: 'app-github-user-profile',
   templateUrl: './github-user-profile.component.html',
-  styleUrls: ['./github-user-profile.component.css'],
+  styleUrls: ['./github-user-profile.component.scss'],
   animations: [ // TODO 
     trigger('slideInOut', [
       state('void', style({ opacity: '0' })),

@@ -9,7 +9,7 @@ import { GitHubService } from 'src/app/shared/services/github.service';
 @Component({
   selector: 'app-github-user-gists',
   templateUrl: './github-user-gists.component.html',
-  styleUrls: ['./github-user-gists.component.css']
+  styleUrls: ['./github-user-gists.component.scss']
 })
 export class GitHubUserGistsComponent implements OnInit, AfterViewInit, OnDestroy {
 

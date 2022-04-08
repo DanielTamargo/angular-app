@@ -6,7 +6,7 @@ import { GitHubService } from 'src/app/shared/services/github.service';
 @Component({
   selector: 'app-github-repository-dialog',
   templateUrl: './github-repository-dialog.component.html',
-  styleUrls: ['./github-repository-dialog.component.css']
+  styleUrls: ['./github-repository-dialog.component.scss']
 })
 export class GitHubRepositoryDialogComponent implements OnInit {
 

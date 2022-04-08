@@ -6,7 +6,7 @@ import { GitHubService } from 'src/app/shared/services/github.service';
 @Component({
   selector: 'app-github-search',
   templateUrl: './github-search.component.html',
-  styleUrls: ['./github-search.component.css']
+  styleUrls: ['./github-search.component.scss']
 })
 export class GitHubSearchComponent implements OnInit, AfterViewInit, OnDestroy {
   typing: boolean = false;
