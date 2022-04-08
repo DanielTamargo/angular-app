@@ -30,6 +30,8 @@ import { GitHubUserGistsComponent } from './github/github-user-profile/github-us
 import { RetrieveGistFileNamesPipe } from './shared/pipes/retrieve-gist-file-names.pipe';
 import { GitHubUserDisplayComponent } from './github/github-user-display/github-user-display.component';
 import { GithubApiExceededDialogComponent } from './github/github-api-exceeded-dialog/github-api-exceeded-dialog.component';
+import { TasklistComponent } from './tasklist/tasklist.component';
+import { MapComponent } from './map/map.component';
 
 @NgModule({
   declarations: [
@@ -46,6 +48,8 @@ import { GithubApiExceededDialogComponent } from './github/github-api-exceeded-d
     RetrieveGistFileNamesPipe,
     GitHubUserDisplayComponent,
     GithubApiExceededDialogComponent,
+    TasklistComponent,
+    MapComponent,
   ],
   imports: [
     BrowserModule,
