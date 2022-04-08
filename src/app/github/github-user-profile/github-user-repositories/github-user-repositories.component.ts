@@ -21,6 +21,7 @@ export class GitHubUserRepositoriesComponent implements OnInit, AfterViewInit, O
   
   // Boolean para mostrar/ocultar spinner
   loading: boolean = true;
+  firstLoad: boolean = true;
   // Configuración paginator
   pageIndex: number = 0;
   // Configuración orden
@@ -52,8 +53,13 @@ export class GitHubUserRepositoriesComponent implements OnInit, AfterViewInit, O
   ngOnInit(): void {
     // Obtenemos los repositorios del usuario
     this.reposSubscription$ = this.githubService.userReposSubject$.subscribe(repos => {
+      console.log(repos);
+      
       this.repos = repos;
-      this.loading = false;     
+      if (this.firstLoad) this.firstLoad = false;
+      else this.loading = false;  
+      
+      if (repos.length > 0) this.loading = false;
 
       // Volcamos datos en el datasource de la tabla
       this.dataSource = new MatTableDataSource(this.repos);

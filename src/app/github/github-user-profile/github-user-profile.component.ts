@@ -62,6 +62,8 @@ export class GitHubUserProfileComponent implements OnInit, OnDestroy {
     });
 
     this.lastCase = this.gitHubService.selectedSection;
+    if (this.lastCase == this.CASE_FOLLOWERS) this.follows_number = this.user.followers;
+    else if (this.lastCase == this.CASE_FOLLOWING) this.follows_number = this.user.following;
 
     // Nos suscribimos a la notificación de errores
     this.errorSubscription$ = this.gitHubService.userSearchError$.subscribe(err => {

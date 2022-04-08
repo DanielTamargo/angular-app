@@ -19,6 +19,7 @@ export class GitHubUserGistsComponent implements OnInit, AfterViewInit, OnDestro
 
   // Boolean para mostrar/ocultar spinner
   loading: boolean = true;
+  firstLoad: boolean = true;
   // Configuración paginator
   pageIndex: number = 0;
   // Configuración orden
@@ -48,7 +49,10 @@ export class GitHubUserGistsComponent implements OnInit, AfterViewInit, OnDestro
     // Obtenemos los repositorios del usuario
     this.gistsSubscription$ = this.githubService.userGistsSubject$.subscribe(gists => {
       this.gists = gists;
-      this.loading = false;     
+      if (this.firstLoad) this.firstLoad = false;
+      else this.loading = false;
+
+      if (gists.length > 0) this.loading = false;
 
       // Volcamos datos en el datasource de la tabla
       this.dataSource = new MatTableDataSource(this.gists);

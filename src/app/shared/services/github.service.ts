@@ -71,9 +71,9 @@ export class GitHubService {
 
   loadingSubject$ = new Subject<boolean>();
   userSubject$ = new BehaviorSubject<GitHubUserInterface>(this.user);
-  userReposSubject$ = new Subject<GitHubRepoInterface[]>();
-  userGistsSubject$ = new Subject<GitHubGistInterface[]>();
-  userFollowsSubject$ = new Subject<GitHubBasicUserInterface[]>();
+  userReposSubject$ = new BehaviorSubject<GitHubRepoInterface[]>(this.repos);
+  userGistsSubject$ = new BehaviorSubject<GitHubGistInterface[]>(this.gists);
+  userFollowsSubject$ = new BehaviorSubject<GitHubBasicUserInterface[]>(this.follows);
   usernameSubject$ = new BehaviorSubject(this.username);
 
   userSearchError$ = new Subject<string>();
@@ -152,6 +152,9 @@ export class GitHubService {
   onUserResult(user: GitHubUserInterface): void {
     this.userSubject$.next(user);
     this.user = user;
+    this.repos = [];
+    this.gists = [];
+    this.follows = [];
 
     // Notificamos spinner loading
     if (this.selectedSection > 0) {

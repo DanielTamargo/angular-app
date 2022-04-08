@@ -35,17 +35,17 @@
         (click)="onChangeDisplayInfoSelection(publicrepos, CASE_REPOS)">
             <p class="mb-0">Repositories: {{ user.public_repos }}</p>
         </div>
-        <div class="stats public-gists" 
+        <div class="stats public-gists {{ (lastCase == CASE_GISTS) ? 'active' : '' }}" 
         #publicgists
         (click)="onChangeDisplayInfoSelection(publicgists, CASE_GISTS)">
             <p class="mb-0">Gists: {{ user.public_gists }}</p>
         </div>
-        <div class="stats followers" 
+        <div class="stats followers {{ (lastCase == CASE_FOLLOWERS) ? 'active' : '' }}" 
         #followers
         (click)="onChangeDisplayInfoSelection(followers, CASE_FOLLOWERS)">
             <p class="mb-0">Followers: {{ user.followers }}</p>
         </div>
-        <div class="stats following" 
+        <div class="stats following {{ (lastCase == CASE_FOLLOWING) ? 'active' : '' }}" 
         #following
         (click)="onChangeDisplayInfoSelection(following, CASE_FOLLOWING)">
             <p class="mb-0">Following: {{ user.following }}</p>
