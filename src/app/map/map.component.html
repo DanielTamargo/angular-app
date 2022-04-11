@@ -1,1 +1,18 @@
-<p>map works!</p>
+<div id="mapa">
+  <!-- <div id="tooltip"></div> -->
+</div>
+
+<!-- Mostrar / ocultar panel -->
+<button 
+id="panel-toggler"
+class="ms-3" 
+mat-raised-button 
+color="accent"
+(click)="adminPanel = !adminPanel">{{ adminPanel ? 'Close panel' : 'Open panel' }}</button>
+
+<!-- Panel administrador mapa -->
+<app-admin-panel
+id="panel"
+[@adminPanel]="adminPanel"
+></app-admin-panel>
+

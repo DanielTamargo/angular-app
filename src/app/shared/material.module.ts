@@ -9,6 +9,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatCardModule } from '@angular/material/card';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatStepperModule } from '@angular/material/stepper';
 // import { A11yModule } from '@angular/cdk/a11y';
 
 const modules = [
@@ -21,6 +22,7 @@ const modules = [
     MatChipsModule,
     MatCardModule,
     MatAutocompleteModule,
+    MatStepperModule,
 ]
 
 @NgModule({

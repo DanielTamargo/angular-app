@@ -1,0 +1,57 @@
+#mapa {
+  position: fixed;
+  top: 0;
+  left: 0;
+  padding-left: 70px;
+
+  width: 100vw;
+  height: 100vh;
+}
+
+#tooltip {
+  padding: 1em;
+  background-color: rgba(245, 245, 245, 0.8);
+  border: 1px solid darkgray;
+  border-radius: 5px;
+
+  font-family: Roboto;
+}
+
+#panel-toggler {
+  position: fixed;
+  z-index: 990;
+  top: 15px;
+  left: 100px;
+  margin-left: 70px;
+}
+
+#panel {
+  position: fixed;
+  z-index: 10;
+  top: 0;
+  left: 0;
+  padding-left: 70px;
+
+  background-color: white;
+
+  width: 100vw;
+  height: 100vh;
+}
+
+@media (max-width: 450px) { 
+  #mapa {
+    padding-left: 0;
+    padding-top: 70px;
+  }
+
+  #panel-toggler {
+    margin-left: 0;
+    margin-top: 70px;
+  }
+
+  #panel {
+    padding-left: 0;
+    padding-top: 70px;
+    padding-right: 0;
+  }
+}

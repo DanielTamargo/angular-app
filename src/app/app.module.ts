@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -14,6 +14,7 @@ import { MapComponent } from './map/map.component';
 
 import { GitHubModule } from './github/github.module';
 import { SharedModule } from './shared/shared.module';
+import { AdminPanelComponent } from './map/admin-panel/admin-panel.component';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { SharedModule } from './shared/shared.module';
     HomeComponent,
     TasklistComponent,
     MapComponent,
+    AdminPanelComponent,
   ],
   imports: [
     BrowserModule,
