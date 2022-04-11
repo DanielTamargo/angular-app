@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, combineLatest, forkJoin, map, Observable, of, pluck, Subject, tap } from 'rxjs';
+import { BehaviorSubject, combineLatest, forkJoin, Observable, pluck, Subject, tap } from 'rxjs';
 import { ajax, AjaxError } from 'rxjs/ajax';
 
-import { GitHubRepoInterface } from 'src/app/shared/interfaces/github-repo.interface';
-import { GitHubUserInterface } from 'src/app/shared/interfaces/github-user.interface';
+import { GitHubRepoInterface } from 'src/app/github/interfaces/github-repo.interface';
+import { GitHubUserInterface } from 'src/app/github/interfaces/github-user.interface';
 
-import { GitHubConstants as GHC } from 'src/app/shared/constants/github-constants';
+import { GitHubConstants as GHC } from 'src/app/github/constants/github-constants';
 import { SortDirection } from '@angular/material/sort';
 import { GitHubGistInterface } from '../interfaces/github-gist.interface';
 import { GitHubBasicUserInterface } from '../interfaces/github-basicuser.interface';
@@ -35,40 +35,7 @@ export class GitHubService {
   selectedRepository: GitHubRepoInterface = null;
   selectedRepositoryContributors: any = null;
 
-  user?: GitHubUserInterface = {
-    login: "DanielTamargo",
-    id: 32647764,
-    node_id: "MDQ6VXNlcjMyNjQ3NzY0",
-    avatar_url: "https://avatars.githubusercontent.com/u/32647764?v=4",
-    gravatar_id: "",
-    url: "https://api.github.com/users/DanielTamargo",
-    html_url: "https://github.com/DanielTamargo",
-    followers_url: "https://api.github.com/users/DanielTamargo/followers",
-    following_url: "https://api.github.com/users/DanielTamargo/following{/other_user}",
-    gists_url: "https://api.github.com/users/DanielTamargo/gists{/gist_id}",
-    starred_url: "https://api.github.com/users/DanielTamargo/starred{/owner}{/repo}",
-    subscriptions_url: "https://api.github.com/users/DanielTamargo/subscriptions",
-    organizations_url: "https://api.github.com/users/DanielTamargo/orgs",
-    repos_url: "https://api.github.com/users/DanielTamargo/repos",
-    events_url: "https://api.github.com/users/DanielTamargo/events{/privacy}",
-    received_events_url: "https://api.github.com/users/DanielTamargo/received_events",
-    type: "User",
-    site_admin: false,
-    name: "Daniel Tamargo",
-    company: null,
-    blog: "",
-    location: null,
-    email: null,
-    hireable: null,
-    bio: null,
-    twitter_username: null,
-    public_repos: 34,
-    public_gists: 2,
-    followers: 0,
-    following: 2,
-    created_at: "2017-10-09T16:49:15Z",
-    updated_at: "2022-03-29T12:54:34Z"
-  };
+  user?: GitHubUserInterface = null;
   repos: GitHubRepoInterface[] = [];
   gists: GitHubGistInterface[] = [];
   follows: GitHubBasicUserInterface[] = [];

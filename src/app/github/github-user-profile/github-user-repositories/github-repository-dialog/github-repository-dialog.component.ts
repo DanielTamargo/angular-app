@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { GitHubContributorInterface } from 'src/app/shared/interfaces/github-contributor.interface';
-import { GitHubRepoInterface } from 'src/app/shared/interfaces/github-repo.interface';
-import { GitHubService } from 'src/app/shared/services/github.service';
+import { GitHubContributorInterface } from 'src/app/github/interfaces/github-contributor.interface';
+import { GitHubRepoInterface } from 'src/app/github/interfaces/github-repo.interface';
+import { GitHubService } from 'src/app/github/services/github.service';
 
 @Component({
   selector: 'app-github-repository-dialog',

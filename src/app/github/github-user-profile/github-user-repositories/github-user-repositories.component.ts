@@ -4,8 +4,8 @@ import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { MatSort, Sort, SortDirection } from '@angular/material/sort';
 
 import { pluck, Subscription } from 'rxjs';
-import { GitHubRepoInterface } from 'src/app/shared/interfaces/github-repo.interface';
-import { GitHubService } from 'src/app/shared/services/github.service';
+import { GitHubRepoInterface } from 'src/app/github/interfaces/github-repo.interface';
+import { GitHubService } from 'src/app/github/services/github.service';
 import { MatDialog } from '@angular/material/dialog';
 import { GitHubRepositoryDialogComponent } from './github-repository-dialog/github-repository-dialog.component';
 import { ajax } from 'rxjs/ajax';

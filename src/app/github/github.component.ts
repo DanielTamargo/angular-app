@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
-import { GitHubService } from '../shared/services/github.service';
+import { GitHubService } from './services/github.service';
 import { GithubApiExceededDialogComponent } from './github-api-exceeded-dialog/github-api-exceeded-dialog.component';
 import { Router } from '@angular/router';
 
@@ -35,8 +35,6 @@ export class GitHubComponent implements OnInit {
         });
       }
     })
-
-
 
   }
 

@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { GitHubFilesInterface } from '../interfaces/github-files.interface';
+import { GitHubFilesInterface } from '../../github/interfaces/github-files.interface';
 
 @Pipe({
   name: 'retrieveGistFileNames'

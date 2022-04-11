@@ -2,9 +2,9 @@ import { AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild } from '@
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { MatSort, Sort, SortDirection } from '@angular/material/sort';
-import { GitHubGistInterface } from 'src/app/shared/interfaces/github-gist.interface';
+import { GitHubGistInterface } from 'src/app/github/interfaces/github-gist.interface';
 import { Subscription } from 'rxjs';
-import { GitHubService } from 'src/app/shared/services/github.service';
+import { GitHubService } from 'src/app/github/services/github.service';
 
 @Component({
   selector: 'app-github-user-gists',

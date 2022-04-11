@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { debounceTime, filter, fromEvent, map, merge, Observable, pluck, startWith, Subject, Subscription, tap } from 'rxjs';
 
-import { GitHubService } from 'src/app/shared/services/github.service';
-import { GitHubConstants as GHC } from 'src/app/shared/constants/github-constants';
+import { GitHubService } from 'src/app/github/services/github.service';
+import { GitHubConstants as GHC } from 'src/app/github/constants/github-constants';
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 @Component({
   selector: 'app-github-search',
@@ -86,6 +86,7 @@ export class GitHubSearchComponent implements OnInit, OnDestroy {
    */
   onAutoCompleteOptionSelected(username: string): void {
     this.inputDisabled = true;
+    this.typing = true;
     // Para evitar que cargue el usuario que coincida con el texto introducido antes de seleccionar, generamos este mini timeout
     setTimeout(() => {
       this.gitHubService.onUserSearch(username.trim());

@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { GitHubBasicUserInterface } from 'src/app/shared/interfaces/github-basicuser.interface';
+import { GitHubBasicUserInterface } from 'src/app/github/interfaces/github-basicuser.interface';
 
 /**
  * Nota:

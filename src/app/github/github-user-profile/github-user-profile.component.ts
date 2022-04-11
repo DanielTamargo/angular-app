@@ -2,12 +2,12 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 
 import { Subscription } from 'rxjs';
-import { GitHubRepoInterface } from 'src/app/shared/interfaces/github-repo.interface';
-import { GitHubUserInterface } from 'src/app/shared/interfaces/github-user.interface';
-import { GitHubService } from 'src/app/shared/services/github.service';
+import { GitHubRepoInterface } from 'src/app/github/interfaces/github-repo.interface';
+import { GitHubUserInterface } from 'src/app/github/interfaces/github-user.interface';
+import { GitHubService } from 'src/app/github/services/github.service';
 
-import { GitHubConstants as GHC } from 'src/app/shared/constants/github-constants';
-import { GitHubBasicUserInterface } from 'src/app/shared/interfaces/github-basicuser.interface';
+import { GitHubConstants as GHC } from 'src/app/github/constants/github-constants';
+import { GitHubBasicUserInterface } from 'src/app/github/interfaces/github-basicuser.interface';
 
 @Component({
   selector: 'app-github-user-profile',
