@@ -28,6 +28,6 @@ const declarations = [
     SharedModule,
   ],
   declarations: declarations,
-  exports: declarations
+  // exports: declarations
 })
 export class GitHubModule { }

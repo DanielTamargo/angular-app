@@ -1,15 +1,15 @@
 // https://public.opendatasoft.com/api/records/1.0/search/?dataset=provincias-espanolas&q=&lang=es&sort=provincia&facet=ccaa&facet=provincia
 
 export class MapConstants {
-  
-  static OPENDATA_PROVINCIAS 
-    = " https://public.opendatasoft.com/api/records/1.0/search/" 
-      + "?dataset=provincias-espanolas" 
-      + "&lang=es" 
-      + "&rows=52" 
-      + "&sort=provincia" 
+
+  static OPENDATA_PROVINCIAS
+    = " https://public.opendatasoft.com/api/records/1.0/search/"
+      + "?dataset=provincias-espanolas"
+      + "&lang=es"
+      + "&rows=52"
+      + "&sort=provincia"
       + "&timezone=Europe%2FMadrid"
-      + "&format=geojson"; 
+      + "&format=geojson";
   // static OPENDATA_PROVINCIAS = "https://api.npoint.io/0fed625f711338db64b0";
 
   // KEYS
@@ -41,79 +41,79 @@ export class MapConstants {
   static CCAA_COLORS: {key: string, color: string}[] = [
     {
       key: "Castilla y León",
-      color: "rgb(252, 197, 101)"
+      color: "rgba(252, 197, 101, 0.4)"
     },
     {
       key: "Castilla - La Mancha",
-      color: "rgb(57, 174, 132)"
+      color: "rgba(57, 174, 132, 0.4)"
     },
     {
       key: "Andalucía",
-      color: "rgb(125, 101, 129)"
+      color: "rgba(125, 101, 129, 0.4)"
     },
     {
       key: "Cataluña",
-      color: "rgb(162, 109, 54)"
+      color: "rgba(162, 109, 54, 0.4)"
     },
     {
       key: "Galicia",
-      color: "rgb(71, 235, 83)"
+      color: "rgba(71, 235, 83, 0.4)"
     },
     {
       key: "Aragón",
-      color: "rgb(63, 54, 96)"
+      color: "rgba(63, 54, 96, 0.4)"
     },
     {
       key: "Comunitat Valenciana",
-      color: "rgb(126, 145, 162)"
+      color: "rgba(126, 145, 162, 0.4)"
     },
     {
       key: "País Vasco",
-      color: "rgb(184, 51, 76)"
+      color: "rgba(184, 51, 76, 0.4)"
     },
     {
       key: "Canarias",
-      color: "rgb(41, 119, 178)"
+      color: "rgba(41, 119, 178, 0.4)"
     },
     {
       key: "Extremadura",
-      color: "rgb(138, 188, 65)"
+      color: "rgba(138, 188, 65, 0.4)"
     },
     {
       key: "Asturias, Principado de",
-      color: "rgb(211, 177, 142)"
+      color: "rgba(211, 177, 142, 0.4)"
     },
     {
       key: "Cantabria",
-      color: "rgb(46, 136, 124)"
+      color: "rgba(46, 136, 124, 0.4)"
     },
     {
       key: "Ceuta",
-      color: "rgb(77, 117, 16)"
+      color: "rgba(77, 117, 16, 0.4)"
     },
     {
       key: "Comunidad Foral de Navarra",
-      color: "rgb(93, 114, 243)"
+      color: "rgba(93, 114, 243, 0.4)"
     },
     {
       key: "Comunidad de Madrid",
-      color: "rgb(56, 150, 230)"
+      color: "rgba(56, 150, 230, 0.4)"
     },
     {
       key: "Illes Balears",
-      color: "rgb(114, 228, 145)"
+      color: "rgba(114, 228, 145, 0.4)"
     },
     {
       key: "Melilla",
-      color: "rgb(96, 179, 157)"
+      color: "rgba(96, 179, 157, 0.4)"
     },
     {
       key: "Región de Murcia",
-      color: "rgb(77, 245, 188)"
+      color: "rgba(77, 245, 188, 0.4)"
     },
     {
       key: "Rioja, La",
-      color: "rgb(133, 154, 244)"
+      color: "rgba(133, 154, 244, 0.4)"
     },
   ];
 
@@ -121,7 +121,7 @@ export class MapConstants {
   static DATASET_PROVINCIAS_ESPANOLAS = "provincias-espanolas";
 
   // URLS OPENDATA
-  static OPENDATA_DATASET_INFO 
+  static OPENDATA_DATASET_INFO
     = "https://public.opendatasoft.com/api/datasets/1.0/" + this.KEY_DATASET + "/";
 
   static OPENDATA_DATASET_RECORDS

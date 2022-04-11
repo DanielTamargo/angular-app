@@ -20,19 +20,16 @@ export class MapService {
 
   newWFSLayerSubject$ = new Subject<TileLayer<TileWMS> | VectorImageLayer<VectorSource> | TileLayer<WMTS>>();
 
-
   constructor(private http: HttpClient) { }
 
-
-
-    /**
+  /**
    * Método que genera una nueva capa WFS (vectores), la recogerá de geoserver
    * @param url url a cargar con formato geojson
    * @return la capa para añadirla al mapa o trabajar con ella
    */
   newWFSLayer(url: string, ca: string) {
     const ca_color = MapConstants.CCAA_COLORS.find(ca_color => ca_color.key == ca);
-    const color 
+    const color
       = ca_color
       ? ca_color.color
       : 'rgba(252, 197, 101, 0.4)';
@@ -107,8 +104,8 @@ export class MapService {
         }),
         visible: true,
         renderBuffer: 1000,
-        opacity: 0.4
-      }); 
+        opacity: 0.6
+      });
 
       this.newWFSLayerSubject$.next(WFS_layer);
     });

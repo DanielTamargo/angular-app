@@ -23,7 +23,9 @@ export class GitHubSearchComponent implements OnInit, OnDestroy {
   suggedstedUsernamesSubscription = new Subscription;
   suggestedUsernames: string[] = [];
   recentUsernames$: Observable<string[]>;
-  filteredSuggestedUsernames$ = new Subject<string[]>(); 
+  filteredSuggestedUsernames$ = new Subject<string[]>();
+
+  selectedUsernameTimeout: any;
 
   constructor(private gitHubService: GitHubService) { }
 
@@ -62,7 +64,7 @@ export class GitHubSearchComponent implements OnInit, OnDestroy {
         if (value.length == 0) this.typing = false;
       })
     ).subscribe(value => {
-      this.gitHubService.onUserSearch(value.trim());
+      if (!this.selectedUsernameTimeout) this.gitHubService.onUserSearch(value.trim());
     });
 
     // Preparamos el Observable para las opciones del autocomplete
@@ -81,17 +83,21 @@ export class GitHubSearchComponent implements OnInit, OnDestroy {
 
   /**
    * Listener de la selección del MatAutoComplete
-   * 
+   *
    * @param username username seleccionado
    */
   onAutoCompleteOptionSelected(username: string): void {
+    if (this.selectedUsernameTimeout) return;
+
     this.inputDisabled = true;
     this.typing = true;
     // Para evitar que cargue el usuario que coincida con el texto introducido antes de seleccionar, generamos este mini timeout
-    setTimeout(() => {
+    this.selectedUsernameTimeout = setTimeout(() => {
       this.gitHubService.onUserSearch(username.trim());
       this.inputDisabled = false;
-    }, 250);
+
+      this.selectedUsernameTimeout = null;
+    }, 400);
   }
 
   ngOnDestroy(): void {
@@ -102,7 +108,7 @@ export class GitHubSearchComponent implements OnInit, OnDestroy {
 
   /**
    * Filtra la lista de usuarios sugeridos según el valor que se vaya introduciendo
-   * 
+   *
    * @param value valor utilizado para filtrar
    */
   filterSuggestedUsernames(value: string) {

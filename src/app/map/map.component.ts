@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { animate, sequence, state, style, transition, trigger } from '@angular/animations';
 
 import { Map, View } from 'ol';
@@ -17,6 +17,7 @@ import VectorSource from 'ol/source/Vector';
 import { Geometry } from 'ol/geom';
 
 import Rotate from 'ol/control/Rotate';
+import { ScaleLine } from 'ol/control';
 import Zoom from 'ol/control/Zoom';
 import FullScreen from 'ol/control/FullScreen';
 
@@ -36,7 +37,7 @@ import { Subscription } from 'rxjs';
     ]),
   ]
 })
-export class MapComponent implements OnInit {
+export class MapComponent implements OnInit, AfterViewInit {
 
   layers: (TileLayer<TileWMS> | VectorImageLayer<VectorSource> | TileLayer<WMTS>)[] = [];
   baseLayers: (TileLayer<TileWMS> | VectorImageLayer<VectorSource<Geometry>> | TileLayer<WMTS> | TileLayer<OSM>)[] = [];
@@ -53,32 +54,11 @@ export class MapComponent implements OnInit {
     // https://ptc-it.de/developing-openlayers-apps-in-es6-mocha-karma-webpack-projections/
     // https://sisteme-ig.com/questions/50787/como-puedo-reproyectar-una-capa-wms-en-openlayers-3
     // https://mappinggis.com/2016/04/los-codigos-epsg-srid-vinculacion-postgis/#:~:text=La%20tabla%20spatial_ref_sys%20contiene%20informaci%C3%B3n%20descriptiva%20sobre%20los%20sistemas%20de%20referencia%20espacial%2C%20o%20tambi%C3%A9n%20llamados%20Sistemas%20de%20Referencia%20de%20Coordenadas%20soportados%20por%20PostGIS.
-    /* proj4.defs(
+    proj4.defs(
       'EPSG:25830',
       '+proj=utm +zone=30 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs',
     );
-    register(proj4); */
-
-    // Nos suscribimos a las creaciones de nuevas WFS layer
-    this.newWFSlayerSubscription$ 
-      = this.mapService.newWFSLayerSubject$
-        .subscribe({
-          next: layer => {
-            this.map.addLayer(layer);
-          }
-        });
-
-    // TEST
-    for(const ca of MC.CCAA) {
-      const url
-        = MC.OPENDATA_DATASET_RECORDS
-          .replace(MC.KEY_DATASET, MC.DATASET_PROVINCIAS_ESPANOLAS)
-          .replace(MC.KEY_CCAA, ca.replace(/ /g, '%20%'));
-
-      this.mapService.newWFSLayer(url, ca);
-    }
-    
-    
+    register(proj4);
 
     // Consideramos dimensión de pantalla para ajustar zoom al cargar la primera vez
     let zoom = 6.5;
@@ -93,20 +73,19 @@ export class MapComponent implements OnInit {
     // Inicializar mapa
     this.map = new Map({
       target: 'mapa',
-      layers: [
-        ...this.layers, 
-      ],
+      layers: [],
       view: new View({
         center: [-484923.2208519772, 39.96122825707207],
         zoom: zoom,
-        // projection: 'EPSG:25830'
+        //projection: 'EPSG:25830'
         projection: 'EPSG:4326'
       }),
       controls: [
-        new Zoom(), new Rotate({ className: 'ol-rotate me-4' }), new FullScreen({ tipLabel: 'Pantalla completa' })
+        new Zoom(), new Rotate({ className: 'ol-rotate me-4' }), new FullScreen({ tipLabel: 'Pantalla completa' }), new ScaleLine()
       ]
     });
     this.map.getLayers().insertAt(0, capaBase);
+
 
     // Listener on click en el mapa
     this.map.on('singleclick', evt => {
@@ -120,6 +99,30 @@ export class MapComponent implements OnInit {
         console.log(feature.getProperties()['provincia']);
       });
     });
+
+
+    // TEST
+    for(const ca of MC.CCAA) {
+      const url
+        = MC.OPENDATA_DATASET_RECORDS
+          .replace(MC.KEY_DATASET, MC.DATASET_PROVINCIAS_ESPANOLAS)
+          .replace(MC.KEY_CCAA, ca.replace(/ /g, '%20%'));
+
+      this.mapService.newWFSLayer(url, ca);
+    }
+
+  }
+
+  ngAfterViewInit(): void {
+    // Nos suscribimos a las creaciones de nuevas WFS layer
+    this.newWFSlayerSubscription$
+    = this.mapService.newWFSLayerSubject$
+      .subscribe({
+        next: layer => {
+          //layer.setExtent(this.map.getView().calculateExtent())
+          this.map.addLayer(layer);
+        }
+      });
   }
 
 

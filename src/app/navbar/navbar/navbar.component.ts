@@ -1,14 +1,40 @@
 import { Component, OnInit } from '@angular/core';
 import { animate, sequence, state, style, transition, trigger } from '@angular/animations';
 
-  
+
 const NAV_LINKS = [ 'home', 'github', 'tasklist', 'map' ];
+const SLIDER_COLORS = [
+  'rgb(8, 0, 169)',
+  'rgb(8, 0, 169)',
+  'rgb(8, 0, 169)',
+  'rgba(255, 64, 129, 1)',
+];
+const NAV_COLORS = [
+  'rgb(201, 223, 255)',
+  'rgb(201, 223, 255)',
+  'rgb(201, 223, 255)',
+  'rgb(255, 204, 221)',
+ ];
 
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss'],
   animations: [
+    trigger('colorChange', [
+      state(NAV_LINKS[0], style({ backgroundColor: NAV_COLORS[0] })),
+      state(NAV_LINKS[1], style({ backgroundColor: NAV_COLORS[1] })),
+      state(NAV_LINKS[2], style({ backgroundColor: NAV_COLORS[2] })),
+      state(NAV_LINKS[3], style({ backgroundColor: NAV_COLORS[3] })),
+      transition('* <=> *', animate(`200ms ease-in-out`)),
+    ]),
+    trigger('sliderColorChange', [
+      state(NAV_LINKS[0], style({ backgroundColor: SLIDER_COLORS[0] })),
+      state(NAV_LINKS[1], style({ backgroundColor: SLIDER_COLORS[1] })),
+      state(NAV_LINKS[2], style({ backgroundColor: SLIDER_COLORS[2] })),
+      state(NAV_LINKS[3], style({ backgroundColor: SLIDER_COLORS[3] })),
+      transition('* <=> *', animate(`200ms ease-in-out`)),
+    ]),
     trigger('inX', [
       state('void', style({ transform: 'translateX(-100%)' })),
       state('*', style({ transform: 'translateX(0)' })),
@@ -51,7 +77,7 @@ export class NavbarComponent implements OnInit {
         this.navSlideState = navLink;
       }
     })
-    
+
   }
 
   openGitHubRepo(): void {
