@@ -21,7 +21,7 @@ const NAV_LINKS = [ 'home', 'github', 'tasklist', 'map' ];
       state('void', style({ transform: 'translateY(-100%)' })),
       state('*', style({ transform: 'translateY(0)' })),
       transition(':enter', animate(`800ms ease-in-out`)),
-      transition(':leave', animate(`200ms ease-in-out`)), //<- no funciona como espero
+      //transition(':leave', animate(`200ms ease-in-out`)), //<- no funciona como espero
     ]),
     trigger('navSlide', [
       state(NAV_LINKS[0], style({ top: '0' })),
@@ -31,11 +31,11 @@ const NAV_LINKS = [ 'home', 'github', 'tasklist', 'map' ];
       transition('* <=> *', animate(`200ms ease-in-out`)),
     ]),
     trigger('navSlideSmall', [
-      state(NAV_LINKS[0], style({ left: '0' })),
+      state(NAV_LINKS[0], style({ right: 'calc(100% - 70px)' })),
       state(NAV_LINKS[1], style({ right: 'calc(100% - 100vw + (70px * 2) + 15px)' })),
       state(NAV_LINKS[2], style({ right: 'calc(100% - 100vw + 70px + 15px)' })),
       state(NAV_LINKS[3], style({ right: 'calc(100% - 100vw + 15px)' })),
-      transition('* <=> *', animate(`200ms ease-in-out`)),
+      transition('* <=> *', animate(`300ms ease-in-out`)),
     ]),
   ]
 })
