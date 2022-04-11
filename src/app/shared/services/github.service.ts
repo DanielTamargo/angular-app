@@ -15,6 +15,13 @@ import { GitHubBasicUserInterface } from '../interfaces/github-basicuser.interfa
 })
 export class GitHubService {
 
+  // Usuarios buscados anteriormente
+  suggestedUsernames: string[] 
+    = localStorage.getItem(GHC.LS_GITHUB_RECENT_USERNAMES) 
+      ? JSON.parse(localStorage.getItem(GHC.LS_GITHUB_RECENT_USERNAMES))
+      : [];
+  suggedUsernamesSubject$ = new BehaviorSubject<string[]>(this.suggestedUsernames);
+
   // Usuario ya buscado
   username: string = '';
   // Selección ya realizada
@@ -114,6 +121,12 @@ export class GitHubService {
    * @param username nombre de usuario a buscar
    */
   onUserSearch(username: string) {
+    // Si ha buscado el mismo usuario, obviamos
+    if (this.username.toLocaleLowerCase() == username.toLocaleLowerCase()) {
+      this.typingSubject$.next(false);
+      return;
+    }
+    
     this.username = username;
 
     // Si no ha escrito nada, reiniciamos
@@ -122,8 +135,6 @@ export class GitHubService {
       this.userSearchError$.next(null);
       return;
     }
-
-    this.typingSubject$.next(true);
 
     const url = GHC.BASE_URL + GHC.USER.replace(GHC.KEY_USERNAME, username);
     ajax<GitHubUserInterface>(url)
@@ -144,7 +155,10 @@ export class GitHubService {
 
   /**
    * Recibe el usuario encontrado y lo emite a sus observers, también dependiendo de si ya existía una elección previa
-   * de información a mostrar la mantiene, por lo que cargará los elementos necesarios
+   * de información a mostrar la mantiene, por lo que cargará los elementos necesarios.
+   * 
+   * Guarda el usuario buscado utilizando el método [onSaveSearchedUser]{@link GitHubService#onSaveSearchedUser}
+   * 
    * @emits GitHubUserInterface
    *
    * @param user usuario encontrado en la búsqueda de la app
@@ -155,6 +169,12 @@ export class GitHubService {
     this.repos = [];
     this.gists = [];
     this.follows = [];
+    this.userReposSubject$.next([]);
+    this.userGistsSubject$.next([]);
+    this.userFollowsSubject$.next([]);
+
+    // Guardamos el username buscado en la lista de recientes
+    if (user) this.onSaveSearchedUser(user.login);
 
     // Notificamos spinner loading
     if (this.selectedSection > 0) {
@@ -162,19 +182,39 @@ export class GitHubService {
     }
 
     // Utilizamos if else porque el rendimiento es mejor que switch y buscamos la respuesta más rápida
-    if (this.selectedSection == 1) { // Actualizamos repos
-      this.repos = [];
+    if (this.selectedSection == GHC.CASE_REPOS) { // Actualizamos repos
       this.onUserReposRequest(user.url + "/repos", user.public_repos);
-    } else if (this.selectedSection == 2) { // Actualizamos gists
-      this.gists = [];
+    } else if (this.selectedSection == GHC.CASE_GISTS) { // Actualizamos gists
       this.onUserGistsRequest(user.url + "/gists", user.public_gists);
-    } else if (this.selectedSection == 3) { // Actualizamos followers
-      this.follows = [];
+    } else if (this.selectedSection == GHC.CASE_FOLLOWERS) { // Actualizamos followers
       this.onUserFollowsRequest(user.url + "/followers", 4, 1);
-    } else { // Actualizamos following
-      this.follows = [];
+    } else if (this.selectedSection == GHC.CASE_FOLLOWING) { // Actualizamos following
       this.onUserFollowsRequest(user.url + "/following", 4, 1);
     }
+  }
+
+
+  /**
+   * Guarda el usuario buscado en el localStorage para luego utilizar dicha lista como sugerencias según el usuario vaya escribiendo
+   * 
+   * @param username username del usuario buscado
+   */
+  onSaveSearchedUser(username: string): void {
+    const indexOfUsername = this.suggestedUsernames.indexOf(username);
+
+    // Si ya existía lo eliminamos para ponerlo en la primera posición
+    if (indexOfUsername !== -1) {
+      this.suggestedUsernames.splice(indexOfUsername, 1);
+    }
+
+    // Lo añadimos en la primera posición
+    this.suggestedUsernames.unshift(username);
+
+    // Lo guardamos en el almacenamiento local
+    localStorage.setItem(GHC.LS_GITHUB_RECENT_USERNAMES, JSON.stringify(this.suggestedUsernames));
+
+    // Notificamos a las suscripciones la nueva lista
+    this.suggedUsernamesSubject$.next(this.suggestedUsernames);
   }
 
 

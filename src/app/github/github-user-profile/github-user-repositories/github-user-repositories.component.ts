@@ -53,8 +53,6 @@ export class GitHubUserRepositoriesComponent implements OnInit, AfterViewInit, O
   ngOnInit(): void {
     // Obtenemos los repositorios del usuario
     this.reposSubscription$ = this.githubService.userReposSubject$.subscribe(repos => {
-      console.log(repos);
-      
       this.repos = repos;
       if (this.firstLoad) this.firstLoad = false;
       else this.loading = false;  

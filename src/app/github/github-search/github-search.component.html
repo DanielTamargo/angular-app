@@ -2,8 +2,18 @@
     <mat-label class="user-select-none">Username</mat-label>
     <input matInput placeholder="Example: DanielTamargo"
       id="username" [value]="username"
-      autocomplete="off">
-
+      [matAutocomplete]="auto"
+      autocomplete="off"
+      [disabled]="inputDisabled">
+    <mat-autocomplete 
+    #auto="matAutocomplete"
+    #matAutocomplete
+    >
+      <mat-option *ngFor="let username of recentUsernames$ | async" [value]="username"
+      (onSelectionChange)="onAutoCompleteOptionSelected(username)">
+        {{ username }}
+      </mat-option>
+    </mat-autocomplete>
     <!-- Spinner que se muestra mientras se busca el usuario -->
     <div class="loading-spinner search-spinner" *ngIf="typing">
       <div class="spinner-border text-secondary" role="status">
@@ -11,3 +21,8 @@
       </div>
     </div>
 </mat-form-field>
+<p 
+id="clean-recent-usernames" 
+class="mb-0 user-select-none" 
+(click)="clearRecentUsernames()"
+>{{ this.suggestedUsernames.length > 0 ? ' Limpiar recientes' : '&nbsp;' }}</p>

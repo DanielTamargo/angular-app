@@ -3,3 +3,22 @@
     top: -2.7em;
     right: 0;
 }
+
+#clean-recent-usernames {
+    text-align: end;
+    font-size: 12px;
+    color: rgb(33, 123, 172);
+    transform: translateY(-20px);
+    width: fit-content;
+    margin-left: auto;
+
+    cursor: pointer;
+
+    &:hover {
+        color: rgb(78, 167, 215);
+    }
+    &:active {
+        color: rgb(40, 129, 177);
+    }
+}
+

@@ -12,7 +12,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatCardModule } from '@angular/material/card';
-
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 // import { A11yModule } from '@angular/cdk/a11y';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -65,6 +65,7 @@ import { MapComponent } from './map/map.component';
     MatButtonModule,
     MatChipsModule,
     MatCardModule,
+    MatAutocompleteModule,
     // A11yModule
   ],
   providers: [],
