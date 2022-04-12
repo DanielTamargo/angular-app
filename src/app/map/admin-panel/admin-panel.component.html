@@ -3,9 +3,17 @@
     <mat-step label="test">
       <ng-template matStepperIcon="a" matStepLabel>Map configuration</ng-template>
       <div>
-        <button mat-button color="accent" matStepperNext>Go to layers configuration</button>
+        <button mat-button color="accent" class="ms-0" matStepperNext>Go to layers configuration</button>
       </div>
-      <p>Test</p>
+      <div *ngFor="let layerGroup of layersConfig">
+        <h5 class="text-muted mt-2">{{ layerGroup.displayName }}</h5>
+        <div class="layer-config" *ngFor="let layer of layerGroup.layers">
+          <mat-checkbox 
+            (change)="onLayerVisibleChange($event, layer.key, layerGroup.name)" 
+            [checked]="layer.visible" 
+            >{{ layer.key | fixCCAAnames }}</mat-checkbox>
+        </div>
+      </div>
     </mat-step>
     <mat-step>
       <ng-template matStepLabel>Layers configuration</ng-template>

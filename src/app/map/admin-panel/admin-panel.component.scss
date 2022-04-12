@@ -3,6 +3,8 @@
   padding-inline: 2em;
 }
 
-fieldset {
-  border: 1px solid pink;
+.layer-config {
+  display: flex;
+  align-items: center;
+  gap: 20px;
 }

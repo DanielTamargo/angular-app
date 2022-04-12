@@ -15,6 +15,8 @@ import { MapComponent } from './map/map.component';
 import { GitHubModule } from './github/github.module';
 import { SharedModule } from './shared/shared.module';
 import { AdminPanelComponent } from './map/admin-panel/admin-panel.component';
+import { FilterVisibleLayersPipe } from './map/pipes/filter-visible-layers.pipe';
+import { FixCCAAnamesPipe } from './map/pipes/fix-ccaanames.pipe';
 
 @NgModule({
   declarations: [
@@ -24,6 +26,8 @@ import { AdminPanelComponent } from './map/admin-panel/admin-panel.component';
     TasklistComponent,
     MapComponent,
     AdminPanelComponent,
+    FilterVisibleLayersPipe,
+    FixCCAAnamesPipe,
   ],
   imports: [
     BrowserModule,

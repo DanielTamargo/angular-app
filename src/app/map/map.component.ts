@@ -1,5 +1,5 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
-import { animate, sequence, state, style, transition, trigger } from '@angular/animations';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 
 import { Map, View } from 'ol';
 
@@ -22,7 +22,6 @@ import Zoom from 'ol/control/Zoom';
 import FullScreen from 'ol/control/FullScreen';
 
 import { MapService } from './services/map.service';
-import { MapConstants as MC } from './constants/map-constants';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -37,11 +36,13 @@ import { Subscription } from 'rxjs';
     ]),
   ]
 })
-export class MapComponent implements OnInit, AfterViewInit {
+export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
 
   layers: (TileLayer<TileWMS> | VectorImageLayer<VectorSource> | TileLayer<WMTS>)[] = [];
   baseLayers: (TileLayer<TileWMS> | VectorImageLayer<VectorSource<Geometry>> | TileLayer<WMTS> | TileLayer<OSM>)[] = [];
   map?: Map;
+
+  loadedLayersSubscription$ = new Subscription;
 
   adminPanel: boolean = false;
 
@@ -100,6 +101,13 @@ export class MapComponent implements OnInit, AfterViewInit {
       });
     });
 
+    this.loadedLayersSubscription$ 
+      = this.mapService.loadedLayersSubject$
+        .subscribe(layers => {
+          for (const layer of layers) {
+            if (layer.layer) this.map.addLayer(layer.layer);
+          }
+        });
 
     // Cargamos los layers necesarios
     this.mapService.loadVisibleLayers();
@@ -117,5 +125,10 @@ export class MapComponent implements OnInit, AfterViewInit {
       });
   }
 
+  ngOnDestroy(): void {
+    // Eliminamos suscripciones para evitar pérdidas de memoria y rendimiento
+    this.newWFSlayerSubscription$.unsubscribe();
+    this.loadedLayersSubscription$.unsubscribe();
+  }
 
 }

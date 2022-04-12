@@ -3,11 +3,12 @@
 export class MapConstants {
 
   // LS
-  static LAYERS_CONFIG_KEY = "layers_saved_config";
+  static LS_LAYERS_CONFIG_KEY = "layers_saved_config";
 
   // KEYS
   static KEY_DATASET = "{dataset}";
   static KEY_CCAA = "{ccaa}";
+  static LAYERGROUP_CCAA_NAME = "open_data_ccaa";
 
   // Comunidades Autónomas
   static CCAA = [
