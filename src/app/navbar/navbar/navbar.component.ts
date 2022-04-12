@@ -6,13 +6,13 @@ const NAV_LINKS = [ 'home', 'github', 'tasklist', 'map' ];
 const SLIDER_COLORS = [
   'rgb(8, 0, 169)',
   'rgb(8, 0, 169)',
-  'rgb(8, 0, 169)',
+  'rgb(60, 133, 74)',
   'rgba(255, 64, 129, 1)',
 ];
 const NAV_COLORS = [
   'rgb(201, 223, 255)',
   'rgb(201, 223, 255)',
-  'rgb(201, 223, 255)',
+  'rgb(157, 237, 173)',
   'rgb(255, 204, 221)',
  ];
 
