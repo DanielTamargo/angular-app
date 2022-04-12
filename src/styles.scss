@@ -57,9 +57,20 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 /* SWEET ALERTS 2 */
 
 .colored-toast.swal2-icon-success.pink {
-    background-color: #ff4986 !important;
-    color: white;
-  }
+  background-color: #ff4986 !important;
+  color: white;
+}
+
+/*-------------------------------------------------------------------------------------------------*/
+/* OPEN LAYERS */
+
+.ol-control button {
+  background-color: rgba(255, 73, 134, 0.5) !important;
+}
+
+.ol-scale-line, .ol-control button:hover {
+  background-color: rgba(255, 73, 134, 1) !important;
+}
 
 /*-------------------------------------------------------------------------------------------------*/
 /* PERSONAL */

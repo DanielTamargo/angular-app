@@ -9,7 +9,8 @@ export interface LayerGroupConfig {
   displayName: string,
   dataset?: string,
   url: string,
-  opacity: number
+  opacity: number,
+  modified: boolean,
   layers: LayerConfig[],
 }
 

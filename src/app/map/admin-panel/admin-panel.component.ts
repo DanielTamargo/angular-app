@@ -13,6 +13,7 @@ import { MapService } from '../services/map.service';
 export class AdminPanelComponent implements OnInit {
   duration = 2000;
   
+  showOnlyVisible = false;
   layersConfig: LayerGroupConfig[];
 
   constructor(private mapService: MapService) { }

@@ -12,7 +12,7 @@ export class FixCCAAnamesPipe implements PipeTransform {
    * @returns texto 'fixeado'
    */
   transform(text: string): string {
-    text = text.replace(' -', '');
+    text = text.slice().replace(' -', '');
     if (!text.includes(',')) return text;
 
     const parts = text.split(',');

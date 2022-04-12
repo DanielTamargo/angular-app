@@ -8,7 +8,7 @@
       <div *ngFor="let layerGroup of layersConfig">
         <h5 class="text-muted">{{ layerGroup.displayName }}</h5>
         <mat-slider class="me-2" min="0.1" max="1" step="0.1" (change)="onOpacityChange($event, layerGroup.name)" [(value)]="layerGroup.opacity"></mat-slider><label>Opacity: {{ layerGroup.opacity }}</label>
-        <div class="layer-config" *ngFor="let layer of layerGroup.layers">
+        <div class="layer-config" *ngFor="let layer of layerGroup.layers | filterVisibleLayers:showOnlyVisible">
           <mat-checkbox 
             (change)="onLayerVisibleChange($event, layer.key, layerGroup.name)" 
             [checked]="layer.visible" 

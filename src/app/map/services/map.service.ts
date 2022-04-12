@@ -26,6 +26,7 @@ export class MapService {
   loadedLayersSubject$ = new Subject<LoadedLayer[]>();
   configResetedSubject$ = new Subject<boolean>();
 
+  // Es un array porque cargaré más grupos de layers en un futuro cercano
   layersConfig: LayerGroupConfig[];
   defaultLayersConfig: LayerGroupConfig[] = [
     {
@@ -34,6 +35,7 @@ export class MapService {
       url: MC.OPENDATA_DATASET_RECORDS,
       dataset: MC.DATASET_PROVINCIAS_ESPANOLAS,
       opacity: 0.6,
+      modified: false,
       layers: [
         {
           key: "Castilla y León",
@@ -148,6 +150,10 @@ export class MapService {
     } else {
       this.layersConfig = this.defaultLayersConfig.slice();
     }
+
+
+    console.log(this.layersConfig);
+    
   }
 
   /**
