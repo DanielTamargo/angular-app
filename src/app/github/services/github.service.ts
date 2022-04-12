@@ -194,6 +194,7 @@ export class GitHubService {
    * @param total total de elementos a coger
    */
   onUserReposRequest(url: string, total: number = 30): void {
+    const username = this.user.name;
     console.log('API Repos: ' + (this.user.name ? this.user.name : this.user.login));
 
     // Contemplamos si es necesario realizar múltiples peticiones, por página podemos pedir máximo 100 valores a la api
@@ -215,6 +216,8 @@ export class GitHubService {
     if (pages.length <= 0) {
       // Timeout de medio segundo para que el componente se inicialice antes y así evitar el loading infinito
       setTimeout(() => {
+        if (username != this.user.name) return;
+
         this.loadingSubject$.next(false);
         this.repos = [];
         this.userReposSubject$.next(this.repos);
@@ -261,6 +264,7 @@ export class GitHubService {
    * @param total total de elementos a coger
    */
   onUserGistsRequest(url: string, total: number = 30): void {
+    const username = this.user.name;
     console.log('API Gists: ' + (this.user.name ? this.user.name : this.user.login));
 
     // Contemplamos si es necesario realizar múltiples peticiones, por página podemos pedir máximo 100 valores a la api
@@ -282,6 +286,8 @@ export class GitHubService {
     if (pages.length <= 0) {
       // Timeout de medio segundo para que el componente se inicialice antes y así evitar el loading infinito
       setTimeout(() => {
+        if (username != this.user.name) return;
+
         this.loadingSubject$.next(false);
         this.gists = [];
         this.userGistsSubject$.next(this.gists);
