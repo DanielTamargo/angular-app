@@ -9,6 +9,13 @@ class="ms-3"
 mat-raised-button 
 color="accent"
 (click)="adminPanel = !adminPanel">{{ adminPanel ? 'Close panel' : 'Open panel' }}</button>
+<button 
+id="map-center"
+class="ms-3" 
+mat-stroked-button 
+color="accent"
+(click)="centerMap()">Center view</button>
+
 
 <!-- Panel administrador mapa -->
 <app-admin-panel

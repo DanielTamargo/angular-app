@@ -47,6 +47,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   configResetedSubscription$ = new Subscription;
 
   adminPanel: boolean = false;
+  defaultCenterCoordinates: number[] = [-484923.2208519772, 39.96122825707207];
 
 
   constructor(private mapService: MapService) { }
@@ -77,8 +78,8 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
       target: 'mapa',
       layers: [],
       view: new View({
-        center: [-484923.2208519772, 39.96122825707207],
-        zoom: zoom,
+        center: this.defaultCenterCoordinates,
+        zoom: this.getZoom(),
         //projection: 'EPSG:25830'
         projection: 'EPSG:4326'
       }),
@@ -94,6 +95,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
       // Coordenadas:
       // console.log('Coordenadas: ', evt.coordinate);
       // this.map?.getView().setCenter(evt.coordinate);
+      console.log(this.map.getView().getZoom(), window.innerWidth);
 
       // Ejecutar por cada feature en el pixel (con hitTolerance)
       this.map?.forEachFeatureAtPixel(evt.pixel, (feature, layer) => {
@@ -179,6 +181,27 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     this.newWFSlayerSubscription$.unsubscribe();
     this.loadedLayersSubscription$.unsubscribe();
     this.configResetedSubscription$.unsubscribe();
+  }
+
+  getZoom(): number {
+    /* Algunas referencias
+    215 => 4.93
+    1680 => 7.4
+    */
+    const widthRef = 215;
+    const zoomRef = 4.93;
+    const percentageValue = 0.0038505333812777;
+
+    const screenWidth = window.innerWidth;
+    const increase = screenWidth - widthRef;
+    const percentage = increase / widthRef * 100;
+
+    return zoomRef + (percentageValue * percentage);
+  }
+
+  centerMap(): void {
+    this.map.getView().setCenter(this.defaultCenterCoordinates);
+    this.map.getView().setZoom(this.getZoom());
   }
 
 }
