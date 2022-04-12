@@ -1,9 +1,9 @@
 <div id="panel">
   <mat-vertical-stepper [linear]="false" #stepper color="accent">
     <mat-step label="test">
-      <ng-template matStepperIcon="a" matStepLabel>Map configuration</ng-template>
+      <ng-template matStepperIcon="a" matStepLabel>Layers configuration</ng-template>
       <div>
-        <button mat-button color="accent" class="ms-0" matStepperNext>Go to layers configuration</button>
+        <button mat-button color="accent" class="ms-0" matStepperNext>Go to settings</button>
       </div>
       <div *ngFor="let layerGroup of layersConfig">
         <h5 class="text-muted mt-2">{{ layerGroup.displayName }}</h5>
@@ -16,11 +16,11 @@
       </div>
     </mat-step>
     <mat-step>
-      <ng-template matStepLabel>Layers configuration</ng-template>
+      <ng-template matStepLabel>Settings</ng-template>
       <div>
-        <button mat-button color="accent" matStepperPrevious>Go to map configuration</button>
+        <button mat-button color="accent" matStepperPrevious>Go to layers configuration</button>
       </div>
-      <p>Test</p>
+      <button mat-raised-button color="warn" (click)="onRestoreDefaultConfiguration()">Restore default configuration</button>
     </mat-step>
   </mat-vertical-stepper>
 </div>

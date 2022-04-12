@@ -24,6 +24,7 @@ export class MapService {
   changeLayerVisibilitySubject$ = new Subject<LayerConfig>();
   newWFSLayerSubject$ = new Subject<TileLayer<TileWMS> | VectorImageLayer<VectorSource> | TileLayer<WMTS>>();
   loadedLayersSubject$ = new Subject<LoadedLayer[]>();
+  configResetedSubject$ = new Subject<boolean>();
 
   layersConfig: LayerGroupConfig[];
   defaultLayersConfig: LayerGroupConfig[] = [
@@ -311,6 +312,18 @@ export class MapService {
   saveConfig() {
     console.log(this.layersConfig);
     localStorage.setItem(MC.LS_LAYERS_CONFIG_KEY, JSON.stringify(this.layersConfig));
+  }
+
+  /**
+   * Método utilizado cuando el usuario decida restaurar la configuración a la configuración por defecto
+   */
+  resetConfiguration() {
+    localStorage.removeItem(MC.LS_LAYERS_CONFIG_KEY);
+
+    // TODO reiniciar layers del mapa, reiniciar config zoom, config coordenadas, etc
+    this.configResetedSubject$.next(true);
+
+    this.loadedLayers = [];
   }
 
 }

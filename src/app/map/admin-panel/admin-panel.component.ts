@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatCheckboxChange } from '@angular/material/checkbox';
+import Swal from 'sweetalert2';
 import { LayerGroupConfig } from '../interfaces/layer-config.interface';
 import { MapService } from '../services/map.service';
 
@@ -19,8 +20,41 @@ export class AdminPanelComponent implements OnInit {
     this.layersConfig = this.mapService.layersConfig;
   }
 
-
   onLayerVisibleChange(evt: MatCheckboxChange, layerKey: string, layerGroupName: string): void {
     this.mapService.onLayerVisibilityChange(evt.checked, layerKey, layerGroupName);
+  }
+
+  onRestoreDefaultConfiguration() {
+    // Mostramos alerta para la confirmación del usuario ya que es una acción irreversible
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Any configuration made by you will be removed, this is not reversible.',
+      showDenyButton: true,
+      showCancelButton: true,
+      showConfirmButton: false,
+      denyButtonText: 'Reset configuration',
+      cancelButtonText: 'Cancel'
+    }).then((result) => {
+      // Si ha denegado, borramos la configuración
+      if (result.isDenied) {
+        this.mapService.resetConfiguration();
+        const Toast = Swal.mixin({
+          toast: true,
+          position: 'top-right',
+          iconColor: 'white',
+          customClass: {
+            popup: 'colored-toast pink'
+          },
+          showConfirmButton: false,
+          timer: 1500,
+          timerProgressBar: true
+        })
+        Toast.fire({
+          icon: 'success',
+          title: 'Success'
+        })
+      }
+      
+    })
   }
 }

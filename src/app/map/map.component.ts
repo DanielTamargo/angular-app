@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 
-import { Map, View } from 'ol';
+import { Map, Overlay, View } from 'ol';
 
 import proj4 from 'proj4';
 import { register } from 'ol/proj/proj4';
@@ -43,10 +43,11 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   map?: Map;
 
   loadedLayersSubscription$ = new Subscription;
+  newWFSlayerSubscription$ = new Subscription;
+  configResetedSubscription$ = new Subscription;
 
   adminPanel: boolean = false;
 
-  newWFSlayerSubscription$ = new Subscription;
 
   constructor(private mapService: MapService) { }
 
@@ -101,6 +102,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
       });
     });
 
+    // Suscripción para recibir los layers ya cargados
     this.loadedLayersSubscription$ 
       = this.mapService.loadedLayersSubject$
         .subscribe(layers => {
@@ -111,6 +113,17 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // Cargamos los layers necesarios
     this.mapService.loadVisibleLayers();
+
+    // Suscripción para contemplar la posiblidad de que el usuario reinicie la configuración
+    this.configResetedSubscription$
+      = this.mapService.configResetedSubject$
+        .subscribe(reset => {
+          if (reset) {
+            for (const layer of this.map.getAllLayers()) {
+              if (layer != capaBase) this.map.removeLayer(layer);
+            }
+          }
+        });
   }
 
   ngAfterViewInit(): void {
@@ -123,12 +136,51 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
           this.map.addLayer(layer);
         }
       });
+
+
+    // TOOLTIP
+    const tooltip = document.getElementById('tooltip');
+    const overlay = new Overlay({
+      element: tooltip!,
+      offset: [10, 0],
+      positioning: 'bottom-center'
+    });
+    this.map?.addOverlay(overlay);
+
+    this.map?.on('pointermove', evt => {
+      if (evt.dragging) {
+        tooltip!.hidden = true;
+        return;
+      }
+
+      let features = this.map?.getFeaturesAtPixel(evt.pixel);
+      if (features!.length <= 0) {
+        tooltip!.hidden = true;
+      }
+
+      // Obtener features seleccionadas
+      this.map?.forEachFeatureAtPixel(evt.pixel, (feature, layer) => {
+        if (!layer) return;
+        
+        // CCAA (Open Data)
+        if (feature.get('ccaa')) {
+          console.log(feature.getProperties());
+          
+          tooltip!.hidden = false;
+          overlay.setPosition(evt.coordinate);
+          tooltip!.innerHTML = `${feature.get('provincia')} (${feature.get('ccaa')})`;
+        }
+      
+        return;
+      });
+    });
   }
 
   ngOnDestroy(): void {
     // Eliminamos suscripciones para evitar pérdidas de memoria y rendimiento
     this.newWFSlayerSubscription$.unsubscribe();
     this.loadedLayersSubscription$.unsubscribe();
+    this.configResetedSubscription$.unsubscribe();
   }
 
 }
