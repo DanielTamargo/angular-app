@@ -150,9 +150,6 @@ export class MapService {
     } else {
       this.layersConfig = this.defaultLayersConfig.slice();
     }
-
-
-    console.log(this.layersConfig);
     
   }
 
@@ -163,11 +160,11 @@ export class MapService {
    * @return la capa para añadirla al mapa o trabajar con ella
    */
   newOpenDataWFSLayer({url, ca, opacity = 0.6, visible = true}) {
-    const ca_color = MapConstants.CCAA_COLORS.find(ca_color => ca_color.key == ca);
+    const ca_color = this.layersConfig[0].layers.find(ca_color => ca_color.key == ca);
     const color
       = ca_color
       ? ca_color.color
-      : 'rgba(252, 197, 101, 0.4)';
+      : 'rgba(255, 255, 255, 0.4)';
 
     let stroke = new Stroke({
       width: 1,
@@ -275,7 +272,7 @@ export class MapService {
           const url 
             = layerGroup.url
               .replace(MC.KEY_DATASET, MC.DATASET_PROVINCIAS_ESPANOLAS)
-              .replace(MC.KEY_CCAA, layer.key.replace(/ /g, '%20%'));
+              .replace(MC.KEY_CCAA, layer.key.replace(/ /g, '+'));
 
           this.newOpenDataWFSLayer({url: url, ca: layer.key, opacity: layerGroup.opacity, visible: layer.visible});
         }

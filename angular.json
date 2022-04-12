@@ -3,7 +3,7 @@
 	"version": 1,
 	"newProjectRoot": "projects",
 	"projects": {
-		"05-forms": {
+		"dt-angular-app": {
 			"projectType": "application",
 			"schematics": {
 				"@schematics/angular:application": {
