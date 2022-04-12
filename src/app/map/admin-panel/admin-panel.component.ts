@@ -7,7 +7,7 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class AdminPanelComponent implements OnInit {
   duration = 2000;
-
+  
   constructor() { }
 
   ngOnInit(): void {

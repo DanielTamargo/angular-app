@@ -2,15 +2,8 @@
 
 export class MapConstants {
 
-  static OPENDATA_PROVINCIAS
-    = " https://public.opendatasoft.com/api/records/1.0/search/"
-      + "?dataset=provincias-espanolas"
-      + "&lang=es"
-      + "&rows=52"
-      + "&sort=provincia"
-      + "&timezone=Europe%2FMadrid"
-      + "&format=geojson";
-  // static OPENDATA_PROVINCIAS = "https://api.npoint.io/0fed625f711338db64b0";
+  // LS
+  static LAYERS_CONFIG_KEY = "layers_saved_config";
 
   // KEYS
   static KEY_DATASET = "{dataset}";

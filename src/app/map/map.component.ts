@@ -101,16 +101,8 @@ export class MapComponent implements OnInit, AfterViewInit {
     });
 
 
-    // TEST
-    for(const ca of MC.CCAA) {
-      const url
-        = MC.OPENDATA_DATASET_RECORDS
-          .replace(MC.KEY_DATASET, MC.DATASET_PROVINCIAS_ESPANOLAS)
-          .replace(MC.KEY_CCAA, ca.replace(/ /g, '%20%'));
-
-      this.mapService.newWFSLayer(url, ca);
-    }
-
+    // Cargamos los layers necesarios
+    this.mapService.loadVisibleLayers();
   }
 
   ngAfterViewInit(): void {
