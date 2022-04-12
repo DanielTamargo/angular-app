@@ -143,10 +143,10 @@ export class MapService {
       try {
         this.layersConfig = JSON.parse(savedLayersConfig);
       } catch (err) {
-        this.layersConfig = this.defaultLayersConfig;
+        this.layersConfig = this.defaultLayersConfig.slice();
       }
     } else {
-      this.layersConfig = this.defaultLayersConfig;
+      this.layersConfig = this.defaultLayersConfig.slice();
     }
   }
 
@@ -259,7 +259,7 @@ export class MapService {
       this.loadedLayersSubject$.next(this.loadedLayers);
       return;
     }
-
+    
     // Si no existían layers cargados recorremos los grupos de layers que hay en la configuración
     for (let layerGroup of this.layersConfig) {
 
@@ -307,10 +307,22 @@ export class MapService {
   }
 
   /**
+   * Actualiza la opacidad de cada layer del grupo de layers
+   * 
+   * @param opacity opacidad del grupo de layers
+   * @param groupName nombre del grupo de layers
+   */
+  onLayerOpacityChange(opacity: number, groupName: string) {
+    for (const layer of this.loadedLayers.filter(layer => layer.groupName == groupName)) {
+      if (layer.layer) layer.layer.setOpacity(opacity);
+    }
+    this.saveConfig();
+  }
+
+  /**
    * Guarda la configuración en el localStorage
    */
   saveConfig() {
-    console.log(this.layersConfig);
     localStorage.setItem(MC.LS_LAYERS_CONFIG_KEY, JSON.stringify(this.layersConfig));
   }
 
@@ -319,11 +331,13 @@ export class MapService {
    */
   resetConfiguration() {
     localStorage.removeItem(MC.LS_LAYERS_CONFIG_KEY);
+    this.layersConfig = this.defaultLayersConfig.slice();
+    this.loadedLayers = [];
 
     // TODO reiniciar layers del mapa, reiniciar config zoom, config coordenadas, etc
     this.configResetedSubject$.next(true);
 
-    this.loadedLayers = [];
+    this.loadVisibleLayers();
   }
 
 }

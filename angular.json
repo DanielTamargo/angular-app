@@ -20,7 +20,7 @@
 				"build": {
 					"builder": "@angular-devkit/build-angular:browser",
 					"options": {
-						"outputPath": "dist/05-forms",
+						"outputPath": "dist/dt-angular-app",
 						"index": "src/index.html",
 						"main": "src/main.ts",
 						"polyfills": "src/polyfills.ts",
@@ -76,10 +76,10 @@
 					"builder": "@angular-devkit/build-angular:dev-server",
 					"configurations": {
 						"production": {
-							"browserTarget": "05-forms:build:production"
+							"browserTarget": "dt-angular-app:build:production"
 						},
 						"development": {
-							"browserTarget": "05-forms:build:development"
+							"browserTarget": "dt-angular-app:build:development"
 						}
 					},
 					"defaultConfiguration": "development"
@@ -87,7 +87,7 @@
 				"extract-i18n": {
 					"builder": "@angular-devkit/build-angular:extract-i18n",
 					"options": {
-						"browserTarget": "05-forms:build"
+						"browserTarget": "dt-angular-app:build"
 					}
 				},
 				"test": {

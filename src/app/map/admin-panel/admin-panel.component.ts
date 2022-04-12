@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatCheckboxChange } from '@angular/material/checkbox';
+import { MatSliderChange } from '@angular/material/slider';
 import Swal from 'sweetalert2';
 import { LayerGroupConfig } from '../interfaces/layer-config.interface';
 import { MapService } from '../services/map.service';
@@ -20,6 +21,10 @@ export class AdminPanelComponent implements OnInit {
     this.layersConfig = this.mapService.layersConfig;
   }
 
+  onOpacityChange(evt: MatSliderChange, layerGroupName: string): void {
+    this.mapService.onLayerOpacityChange(evt.value, layerGroupName);
+  }
+
   onLayerVisibleChange(evt: MatCheckboxChange, layerKey: string, layerGroupName: string): void {
     this.mapService.onLayerVisibilityChange(evt.checked, layerKey, layerGroupName);
   }
@@ -38,6 +43,7 @@ export class AdminPanelComponent implements OnInit {
       // Si ha denegado, borramos la configuración
       if (result.isDenied) {
         this.mapService.resetConfiguration();
+        this.layersConfig = this.mapService.layersConfig;
         const Toast = Swal.mixin({
           toast: true,
           position: 'top-right',

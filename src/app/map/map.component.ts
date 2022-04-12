@@ -164,8 +164,6 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         
         // CCAA (Open Data)
         if (feature.get('ccaa')) {
-          console.log(feature.getProperties());
-          
           tooltip!.hidden = false;
           overlay.setPosition(evt.coordinate);
           tooltip!.innerHTML = `${feature.get('provincia')} (${feature.get('ccaa')})`;
