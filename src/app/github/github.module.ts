@@ -10,24 +10,25 @@ import { GitHubRepositoryDialogComponent } from './github-user-profile/github-us
 import { GitHubUserGistsComponent } from './github-user-profile/github-user-gists/github-user-gists.component';
 import { GitHubUserDisplayComponent } from './github-user-display/github-user-display.component';
 import { GithubApiExceededDialogComponent } from './github-api-exceeded-dialog/github-api-exceeded-dialog.component';
-
-const declarations = [
-  GitHubSearchComponent,
-  GitHubComponent,
-  GitHubUserProfileComponent,
-  GitHubUserRepositoriesComponent,
-  GitHubRepositoryDialogComponent,
-  GitHubUserGistsComponent,
-  GitHubUserDisplayComponent,
-  GithubApiExceededDialogComponent,
-];
+import { RetrieveGistFileNamesPipe } from './pipes/retrieve-gist-file-names.pipe';
 
 @NgModule({
   imports: [
     CommonModule,
     SharedModule,
   ],
-  declarations: declarations,
-  // exports: declarations
+  declarations: [
+    GitHubSearchComponent,
+    GitHubComponent,
+    GitHubUserProfileComponent,
+    GitHubUserRepositoriesComponent,
+    GitHubRepositoryDialogComponent,
+    GitHubUserGistsComponent,
+    GitHubUserDisplayComponent,
+    GithubApiExceededDialogComponent,
+    RetrieveGistFileNamesPipe
+  ],
+  exports: [
+  ]
 })
 export class GitHubModule { }

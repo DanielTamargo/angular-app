@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -10,14 +10,10 @@ import { AppComponent } from './app.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { HomeComponent } from './home/home.component';
 import { TasklistComponent } from './tasklist/tasklist.component';
-import { MapComponent } from './map/map.component';
 
 import { GitHubModule } from './github/github.module';
+import { MapModule } from './map/map.module';
 import { SharedModule } from './shared/shared.module';
-import { AdminPanelComponent } from './map/admin-panel/admin-panel.component';
-import { FilterVisibleLayersPipe } from './map/pipes/filter-visible-layers.pipe';
-import { FixCCAAnamesPipe } from './map/pipes/fix-ccaanames.pipe';
-import { FeatureInfoComponent } from './map/feature-info/feature-info.component';
 
 @NgModule({
   declarations: [
@@ -25,20 +21,16 @@ import { FeatureInfoComponent } from './map/feature-info/feature-info.component'
     NavbarComponent,
     HomeComponent,
     TasklistComponent,
-    MapComponent,
-    AdminPanelComponent,
-    FilterVisibleLayersPipe,
-    FixCCAAnamesPipe,
-    FeatureInfoComponent,
   ],
   imports: [
     BrowserModule,
-    FormsModule,
+    ReactiveFormsModule,
     AppRoutingModule,
     HttpClientModule,
     BrowserAnimationsModule,
     SharedModule,
     GitHubModule,
+    MapModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
