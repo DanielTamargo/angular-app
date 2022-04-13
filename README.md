@@ -31,6 +31,7 @@ Esta es la mini aplicación *'personal, improvisando mientras aprendo, random pe
 - [Angular Material](https://next.material.angular.io/) como otra librería de estilos y comportamientos, una librería ideal para trabajar con Angular (por si no se intuía con el nombre).
 - APIs:
   - [GitHub API](https://docs.github.com/en/rest) para la parte de GitHub Profile Scouter  
+- [FirebaseUI-Angular](https://github.com/RaphaelJenni/FirebaseUI-Angular)
 
 *El repo está totalmente WIP, ¡sigo desarrollando la aplicación!*
 
