@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { GitHubComponent } from './github/github.component';
-import { HomeComponent } from './home/home/home.component';
+import { HomeComponent } from './home/home.component';
 import { MapComponent } from './map/map.component';
 import { TasklistComponent } from './tasklist/tasklist.component';
 
