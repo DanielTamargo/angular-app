@@ -25,6 +25,8 @@ export class MapService {
   loadedLayersSubject$ = new Subject<LoadedLayer[]>();
   configResetedSubject$ = new Subject<boolean>();
 
+  opacity: number;
+
   // Es un array porque cargaré más grupos de layers en un futuro cercano
   layersConfig: LayerGroupConfig[];
   defaultLayersConfig: LayerGroupConfig[] = [
@@ -38,97 +40,97 @@ export class MapService {
       layers: [
         {
           key: "Castilla y León",
-          color: "rgba(252, 197, 101, 0.4)",
+          color: "rgba(252, 197, 101, 0.6)",
           visible: true,
         },
         {
           key: "Castilla - La Mancha",
-          color: "rgba(57, 174, 132, 0.4)",
+          color: "rgba(57, 174, 132, 0.6)",
           visible: false,
         },
         {
           key: "Andalucía",
-          color: "rgba(125, 101, 129, 0.4)",
+          color: "rgba(125, 101, 129, 0.6)",
           visible: true,
         },
         {
           key: "Cataluña",
-          color: "rgba(162, 109, 54, 0.4)",
+          color: "rgba(162, 109, 54, 0.6)",
           visible: false,
         },
         {
           key: "Galicia",
-          color: "rgba(71, 235, 83, 0.4)",
+          color: "rgba(71, 235, 83, 0.6)",
           visible: false,
         },
         {
           key: "Aragón",
-          color: "rgba(63, 54, 96, 0.4)",
+          color: "rgba(63, 54, 96, 0.6)",
           visible: false,
         },
         {
           key: "Comunitat Valenciana",
-          color: "rgba(126, 145, 162, 0.4)",
+          color: "rgba(196, 145, 162, 0.6)",
           visible: false,
         },
         {
           key: "País Vasco",
-          color: "rgba(184, 51, 76, 0.4)",
+          color: "rgba(184, 51, 76, 0.6)",
           visible: false,
         },
         {
           key: "Canarias",
-          color: "rgba(41, 119, 178, 0.4)",
+          color: "rgba(41, 119, 178, 0.6)",
           visible: false,
         },
         {
           key: "Extremadura",
-          color: "rgba(138, 188, 65, 0.4)",
+          color: "rgba(138, 188, 65, 0.6)",
           visible: false,
         },
         {
           key: "Asturias, Principado de",
-          color: "rgba(211, 177, 142, 0.4)",
+          color: "rgba(211, 177, 142, 0.6)",
           visible: false,
         },
         {
           key: "Cantabria",
-          color: "rgba(46, 136, 124, 0.4)",
+          color: "rgba(46, 136, 124, 0.6)",
           visible: false,
         },
         {
           key: "Ceuta",
-          color: "rgba(77, 117, 16, 0.4)",
+          color: "rgba(77, 117, 16, 0.6)",
           visible: false,
         },
         {
           key: "Comunidad Foral de Navarra",
-          color: "rgba(93, 114, 243, 0.4)",
+          color: "rgba(93, 114, 243, 0.6)",
           visible: false,
         },
         {
           key: "Comunidad de Madrid",
-          color: "rgba(56, 150, 230, 0.4)",
+          color: "rgba(56, 150, 230, 0.6)",
           visible: false,
         },
         {
           key: "Illes Balears",
-          color: "rgba(114, 228, 145, 0.4)",
+          color: "rgba(114, 228, 145, 0.6)",
           visible: false,
         },
         {
           key: "Melilla",
-          color: "rgba(96, 179, 157, 0.4)",
+          color: "rgba(96, 179, 157, 0.6)",
           visible: false,
         },
         {
           key: "Región de Murcia",
-          color: "rgba(77, 245, 188, 0.4)",
+          color: "rgba(77, 245, 188, 0.6)",
           visible: false,
         },
         {
           key: "Rioja, La",
-          color: "rgba(133, 154, 244, 0.4)",
+          color: "rgba(133, 154, 244, 0.6)",
           visible: false,
         }
       ],
@@ -158,7 +160,7 @@ export class MapService {
    * @param url url a cargar y parsear con formato geojson
    * @return la capa para añadirla al mapa o trabajar con ella
    */
-  newOpenDataWFSLayer({url, ca, opacity = 0.6, visible = true}) {
+  newOpenDataWFSLayer({url, ca, opacity =this.layersConfig[0].opacity, visible = true}) {
     const ca_color = this.layersConfig[0].layers.find(ca_color => ca_color.key == ca);
     const color
       = ca_color
@@ -301,7 +303,7 @@ export class MapService {
         const url 
               = this.layersConfig.find(layerGroup => layerGroup.name == layerGroupName).url
                 .replace(MC.KEY_DATASET, MC.DATASET_PROVINCIAS_ESPANOLAS)
-                .replace(MC.KEY_CCAA, layerKey.replace(/ /g, '%20%'));
+                .replace(MC.KEY_CCAA, layerKey.replace(/ /g, '+'));
         
         this.newOpenDataWFSLayer({ url: url, ca: layerKey, visible: visible})
       }
@@ -318,6 +320,7 @@ export class MapService {
    * @param groupName nombre del grupo de layers
    */
   onLayerOpacityChange(opacity: number, groupName: string) {
+    this.layersConfig.find(lc => lc.name == groupName).opacity = opacity;
     for (const layer of this.loadedLayers.filter(layer => layer.groupName == groupName)) {
       if (layer.layer) layer.layer.setOpacity(opacity);
     }
@@ -338,10 +341,7 @@ export class MapService {
     localStorage.removeItem(MC.LS_LAYERS_CONFIG_KEY);
     this.layersConfig = this.defaultLayersConfig.slice();
     this.loadedLayers = [];
-
-    // TODO reiniciar layers del mapa, reiniciar config zoom, config coordenadas, etc
     this.configResetedSubject$.next(true);
-
     this.loadVisibleLayers();
   }
 

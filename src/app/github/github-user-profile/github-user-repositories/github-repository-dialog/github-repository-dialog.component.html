@@ -37,7 +37,7 @@
     <mat-chip color="primary" selected>Watchers: <b>&nbsp;{{ repo.watchers_count }}</b></mat-chip>
     <mat-chip color="primary" selected>Allows forking: <b>&nbsp;{{ repo.allow_forking ? 'Yes' : 'No' }}</b></mat-chip>
     <mat-chip color="primary" selected>Open Issues: <b>&nbsp;{{ repo.open_issues }}</b></mat-chip>
-    <mat-chip color="primary" selected>Main language used: <b>&nbsp;{{ repo.language }}</b></mat-chip>
+    <mat-chip color="primary" selected>Main language: <b>&nbsp;{{ repo.language ? repo.language : 'None' }}</b></mat-chip>
     <mat-chip color="primary" selected>Size: <b>&nbsp;{{ repo.size | sizeFormatter:1 }}</b></mat-chip>
   </mat-chip-list>
 

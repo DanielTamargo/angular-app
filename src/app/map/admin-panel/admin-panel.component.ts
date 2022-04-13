@@ -15,11 +15,22 @@ export class AdminPanelComponent implements OnInit {
   
   showOnlyVisible = false;
   layersConfig: LayerGroupConfig[];
+  ccaaAllVisible: boolean = false;
 
-  constructor(private mapService: MapService) { }
+  constructor(private mapService: MapService) {
+    this.checkIfAllCCAAVisible();
+  }
 
   ngOnInit(): void {
     this.layersConfig = this.mapService.layersConfig;
+  }
+
+  checkIfAllCCAAVisible(): void {
+    if (!this.mapService.layersConfig[0].layers.find(lay => !lay.visible)) {
+      this.ccaaAllVisible = true;
+    } else {
+      this.ccaaAllVisible = false;
+    }
   }
 
   onOpacityChange(evt: MatSliderChange, layerGroupName: string): void {
@@ -28,6 +39,13 @@ export class AdminPanelComponent implements OnInit {
 
   onLayerVisibleChange(evt: MatCheckboxChange, layerKey: string, layerGroupName: string): void {
     this.mapService.onLayerVisibilityChange(evt.checked, layerKey, layerGroupName);
+    this.checkIfAllCCAAVisible();
+  }
+
+  onAllLayersVisibleChange(evt: MatCheckboxChange, layerGroupName: string): void {
+    for (const layer of this.layersConfig.find(lg => lg.name == layerGroupName).layers) {
+      this.mapService.onLayerVisibilityChange(evt.checked, layer.key, layerGroupName);
+    }
   }
 
   onRestoreDefaultConfiguration() {
@@ -45,6 +63,7 @@ export class AdminPanelComponent implements OnInit {
       if (result.isDenied) {
         this.mapService.resetConfiguration();
         this.layersConfig = this.mapService.layersConfig;
+        this.checkIfAllCCAAVisible();
         const Toast = Swal.mixin({
           toast: true,
           position: 'top-right',

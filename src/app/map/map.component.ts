@@ -55,7 +55,6 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   featureInfo: boolean = false;
 
   adminPanel: boolean = false;
-  //defaultCenterCoordinates: number[] = [-484923.2208519772, 39.96122825707207];
   defaultCenterCoordinates: number[] = [566349.3696978227, 4409951.952130745];
 
 
