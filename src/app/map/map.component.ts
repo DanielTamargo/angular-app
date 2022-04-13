@@ -35,7 +35,7 @@ import { Subscription } from 'rxjs';
       transition('0 <=> 1', animate(`200ms ease-in-out`)),
     ]),
     trigger('featureInfo', [
-      state('false', style({ bottom: '-100vw' })),
+      state('false', style({ bottom: '-100vh' })),
       state('true', style({ bottom: '0' })),
       transition('0 <=> 1', animate(`200ms ease-in-out`)),
     ]),
@@ -140,6 +140,9 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
       //console.log('Zoom del mapa y ancho de pantalla', { zoom: this.map.getView().getZoom(), anchoPantalla: window.innerWidth});
 
       // Ejecutar por cada feature en el pixel (con hitTolerance)
+      let features = this.map?.getFeaturesAtPixel(evt.pixel);
+      if (features!.length <= 0) this.featureInfo = false;
+      
       this.map?.forEachFeatureAtPixel(evt.pixel, (feature, layer) => {
         if (!layer) return;
 

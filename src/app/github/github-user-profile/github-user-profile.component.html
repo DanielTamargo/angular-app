@@ -1,71 +1,74 @@
 <!-- Información del usuario -->
 <div class="user-profile-card"
 *ngIf="user">
-    <div class="user-main-info">
-        <div class="user-profile-img">
-            <img class="no-drag" [src]="user.avatar_url">
-        </div>
-        <div class="user-profile-info">
-            <h3>{{ user.name || user.login }} <span class="badge bg-secondary">{{ user.type }}</span></h3>
-            <div class="svg-with-text mb-1">
-                <label>{{ user.bio || ' ' }}</label>
-            </div>
-            <div class="svg-with-text mb-1" *ngIf="user.twitter_username">
-                <svg xmlns="http://www.w3.org/2000/svg" class="svg-info-icon" viewBox="0 0 512 512">
-                    <title>Twitter</title>
-                    <path d="M496 109.5a201.8 201.8 0 01-56.55 15.3 97.51 97.51 0 0043.33-53.6 197.74 197.74 0 01-62.56 23.5A99.14 99.14 0 00348.31 64c-54.42 0-98.46 43.4-98.46 96.9a93.21 93.21 0 002.54 22.1 280.7 280.7 0 01-203-101.3A95.69 95.69 0 0036 130.4c0 33.6 17.53 63.3 44 80.7A97.5 97.5 0 0135.22 199v1.2c0 47 34 86.1 79 95a100.76 100.76 0 01-25.94 3.4 94.38 94.38 0 01-18.51-1.8c12.51 38.5 48.92 66.5 92.05 67.3A199.59 199.59 0 0139.5 405.6a203 203 0 01-23.5-1.4A278.68 278.68 0 00166.74 448c181.36 0 280.44-147.7 280.44-275.8 0-4.2-.11-8.4-.31-12.5A198.48 198.48 0 00496 109.5z"/></svg>
-                <a target="_blank" href="https://twitter.com/{{user.twitter_username}}">{{ user.twitter_username }}</a>
-            </div>
-            <div class="svg-with-text mb-3">
-                <svg xmlns="http://www.w3.org/2000/svg" class="svg-info-icon" viewBox="0 0 512 512">
-                    <title>Company</title>
-                    <path d="M336 80H176a16 16 0 00-16 16v16h192V96a16 16 0 00-16-16z" fill="none"/>
-                    <path d="M496 176a64.07 64.07 0 00-64-64h-48V96a48.05 48.05 0 00-48-48H176a48.05 48.05 0 00-48 48v16H80a64.07 64.07 0 00-64 64v48h480zm-144-64H160V96a16 16 0 0116-16h160a16 16 0 0116 16zM336 264a24 24 0 01-24 24H200a24 24 0 01-24-24v-4a4 4 0 00-4-4H16v144a64 64 0 0064 64h352a64 64 0 0064-64V256H340a4 4 0 00-4 4z"/>
-                </svg>
-                <label>{{ user.company || 'Company unpublished' }}</label>
-            </div>
-            <p class="flex-column-justify-self-end mb-0">
-                <a [href]="user.html_url" target="_blank">View on GitHub</a>
-            </p>
-        </div>
+  <div class="user-main-info">
+    <div class="user-profile-img">
+      <img class="no-drag" [src]="user.avatar_url">
     </div>
-    <div class="user-details">
-        <div class="stats public-repos {{ (lastCase == CASE_REPOS) ? 'active' : '' }}" 
-        #publicrepos
-        (click)="onChangeDisplayInfoSelection(publicrepos, CASE_REPOS)">
-            <p class="mb-0">Repositories: {{ user.public_repos }}</p>
-        </div>
-        <div class="stats public-gists {{ (lastCase == CASE_GISTS) ? 'active' : '' }}" 
-        #publicgists
-        (click)="onChangeDisplayInfoSelection(publicgists, CASE_GISTS)">
-            <p class="mb-0">Gists: {{ user.public_gists }}</p>
-        </div>
-        <div class="stats followers {{ (lastCase == CASE_FOLLOWERS) ? 'active' : '' }}" 
-        #followers
-        (click)="onChangeDisplayInfoSelection(followers, CASE_FOLLOWERS)">
-            <p class="mb-0">Followers: {{ user.followers }}</p>
-        </div>
-        <div class="stats following {{ (lastCase == CASE_FOLLOWING) ? 'active' : '' }}" 
-        #following
-        (click)="onChangeDisplayInfoSelection(following, CASE_FOLLOWING)">
-            <p class="mb-0">Following: {{ user.following }}</p>
-        </div>
+    <div class="user-profile-info">
+      <h3>{{ user.name || user.login }} <span class="badge bg-secondary">{{ user.type }}</span></h3>
+      <div class="svg-with-text mb-1">
+        <label>{{ user.bio || ' ' }}</label>
+      </div>
+      <div class="svg-with-text mb-1" *ngIf="user.twitter_username">
+        <svg xmlns="http://www.w3.org/2000/svg" class="svg-info-icon" viewBox="0 0 512 512">
+          <title>Twitter</title>
+          <path d="M496 109.5a201.8 201.8 0 01-56.55 15.3 97.51 97.51 0 0043.33-53.6 197.74 197.74 0 01-62.56 23.5A99.14 99.14 0 00348.31 64c-54.42 0-98.46 43.4-98.46 96.9a93.21 93.21 0 002.54 22.1 280.7 280.7 0 01-203-101.3A95.69 95.69 0 0036 130.4c0 33.6 17.53 63.3 44 80.7A97.5 97.5 0 0135.22 199v1.2c0 47 34 86.1 79 95a100.76 100.76 0 01-25.94 3.4 94.38 94.38 0 01-18.51-1.8c12.51 38.5 48.92 66.5 92.05 67.3A199.59 199.59 0 0139.5 405.6a203 203 0 01-23.5-1.4A278.68 278.68 0 00166.74 448c181.36 0 280.44-147.7 280.44-275.8 0-4.2-.11-8.4-.31-12.5A198.48 198.48 0 00496 109.5z"/></svg>
+        <a target="_blank" href="https://twitter.com/{{user.twitter_username}}">{{ user.twitter_username }}</a>
+      </div>
+      <div class="svg-with-text mb-3">
+        <svg xmlns="http://www.w3.org/2000/svg" class="svg-info-icon" viewBox="0 0 512 512">
+          <title>Company</title>
+          <path d="M336 80H176a16 16 0 00-16 16v16h192V96a16 16 0 00-16-16z" fill="none"/>
+          <path d="M496 176a64.07 64.07 0 00-64-64h-48V96a48.05 48.05 0 00-48-48H176a48.05 48.05 0 00-48 48v16H80a64.07 64.07 0 00-64 64v48h480zm-144-64H160V96a16 16 0 0116-16h160a16 16 0 0116 16zM336 264a24 24 0 01-24 24H200a24 24 0 01-24-24v-4a4 4 0 00-4-4H16v144a64 64 0 0064 64h352a64 64 0 0064-64V256H340a4 4 0 00-4 4z"/>
+        </svg>
+        <label>{{ user.company || 'Company unpublished' }}</label>
+      </div>
+      <p class="flex-column-justify-self-end mb-0">
+        <a [href]="user.html_url" target="_blank">View on GitHub</a>
+      </p>
     </div>
+  </div>
+  <div class="user-details">
+    <div class="stats public-repos {{ (lastCase == CASE_REPOS) ? 'active' : '' }}" 
+    #publicrepos
+    (click)="onChangeDisplayInfoSelection(publicrepos, CASE_REPOS)">
+      <p class="mb-0">Repositories: {{ user.public_repos }}</p>
+    </div>
+    <div class="stats public-gists {{ (lastCase == CASE_GISTS) ? 'active' : '' }}" 
+    #publicgists
+    (click)="onChangeDisplayInfoSelection(publicgists, CASE_GISTS)">
+      <p class="mb-0">Gists: {{ user.public_gists }}</p>
+    </div>
+    <div class="stats followers {{ (lastCase == CASE_FOLLOWERS) ? 'active' : '' }}" 
+    #followers
+    (click)="onChangeDisplayInfoSelection(followers, CASE_FOLLOWERS)">
+      <p class="mb-0">Followers: {{ user.followers }}</p>
+    </div>
+    <div class="stats following {{ (lastCase == CASE_FOLLOWING) ? 'active' : '' }}" 
+    #following
+    (click)="onChangeDisplayInfoSelection(following, CASE_FOLLOWING)">
+      <p class="mb-0">Following: {{ user.following }}</p>
+    </div>
+  </div>
 
 </div>
 
 <!-- Mensaje de introducción para que busque un usuario -->
 <div
 *ngIf="!user && !error && !typing" 
-class="search-user-error my-5 user-select-none">
-    <h3 class="text-muted text-center">Search for a GitHub user 😊</h3>
+class="search-user-error user-select-none">
+  <svg xmlns="http://www.w3.org/2000/svg" id="animated-arrow" viewBox="0 0 512 512">
+    <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 244l144-144 144 144M256 120v292"/>
+  </svg>
+  <h3 class="text-muted text-center my-5">Search for a GitHub user 😊</h3>
 </div>
 
 <!-- Mensaje de error en caso de no encontrar resultados -->
 <div
 *ngIf="!user && error && !typing" 
 class="search-user-error my-5 user-select-none">
-    <h3 class="text-muted text-center">{{ error }}</h3>
+  <h3 class="text-muted text-center">{{ error }}</h3>
 </div>
 
 <!-- Se muestra un componente u otro según la selección del usuario -->
@@ -80,26 +83,26 @@ class="search-user-error my-5 user-select-none">
 
 <!-- Spinner que se muestra mientras se obtienen los resultados -->
 <div class="loading-spinner" *ngIf="(lastCase === CASE_FOLLOWING || lastCase === CASE_FOLLOWERS) && loading">
-    <div class="spinner-border text-primary" role="status">
-        <span class="visually-hidden">Loading...</span>
-    </div>
+  <div class="spinner-border text-primary" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
 </div>
 
 <div class="follows mt-4 mb-2 user-select-none" *ngIf="lastCase === CASE_FOLLOWING || lastCase === CASE_FOLLOWERS">
 
-    <!-- Notificación si no existen repos públicos -->
-    <div class="no-repos my-4 user-select-none" *ngIf="!loading && displayFollows.length <= 0">
-    <h3 class="text-muted text-center">This user has no {{ lastCase === CASE_FOLLOWING ? 'followings' : 'followers' }} 😢</h3>
-    </div>
-    
-    <!-- Bucle con todos los follows cargados -->
-    <app-github-user-display 
-    *ngFor="let follow of displayFollows; trackBy: trackByFollows"
-    [user]="follow"></app-github-user-display>
+  <!-- Notificación si no existen repos públicos -->
+  <div class="no-repos my-4 user-select-none" *ngIf="!loading && displayFollows.length <= 0">
+  <h3 class="text-muted text-center">This user has no {{ lastCase === CASE_FOLLOWING ? 'followings' : 'followers' }} 😢</h3>
+  </div>
+  
+  <!-- Bucle con todos los follows cargados -->
+  <app-github-user-display 
+  *ngFor="let follow of displayFollows; trackBy: trackByFollows"
+  [user]="follow"></app-github-user-display>
 </div>
 <button mat-button color="primary" class="mt-4 mb-5 w-100 text-center"
 *ngIf="
-    (lastCase === CASE_FOLLOWING || lastCase === CASE_FOLLOWERS) 
-    && displayFollows.length < follows_number 
-    && displayFollows.length > 0"
+  (lastCase === CASE_FOLLOWING || lastCase === CASE_FOLLOWERS) 
+  && displayFollows.length < follows_number 
+  && displayFollows.length > 0"
 (click)="loadMoreFollows()">Load more</button>
