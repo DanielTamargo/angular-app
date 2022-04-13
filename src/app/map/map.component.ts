@@ -34,6 +34,11 @@ import { Subscription } from 'rxjs';
       state('true', style({ left: '0' })),
       transition('0 <=> 1', animate(`200ms ease-in-out`)),
     ]),
+    trigger('featureInfo', [
+      state('false', style({ bottom: '-100vw' })),
+      state('true', style({ bottom: '0' })),
+      transition('0 <=> 1', animate(`200ms ease-in-out`)),
+    ]),
   ]
 })
 export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -46,8 +51,12 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   newWFSlayerSubscription$ = new Subscription;
   configResetedSubscription$ = new Subscription;
 
+  featureProperties: any = {};
+  featureInfo: boolean = false;
+
   adminPanel: boolean = false;
-  defaultCenterCoordinates: number[] = [-484923.2208519772, 39.96122825707207];
+  //defaultCenterCoordinates: number[] = [-484923.2208519772, 39.96122825707207];
+  defaultCenterCoordinates: number[] = [566349.3696978227, 4409951.952130745];
 
 
   constructor(private mapService: MapService) { }
@@ -61,11 +70,8 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
       'EPSG:25830',
       '+proj=utm +zone=30 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs',
     );
+    //proj4("EPSG:4326", "EPSG:25830", [2,5]);
     register(proj4);
-
-    // Consideramos dimensión de pantalla para ajustar zoom al cargar la primera vez
-    let zoom = 6.5;
-    if (window.innerWidth < 500) zoom = 5.5;
 
     const capaBase = new TileLayer({
       source: new OSM()
@@ -80,29 +86,14 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
       view: new View({
         center: this.defaultCenterCoordinates,
         zoom: this.getZoom(),
-        //projection: 'EPSG:25830'
-        projection: 'EPSG:4326'
+        projection: 'EPSG:25830'
+        //projection: 'EPSG:4326'
       }),
       controls: [
         new Zoom(), new Rotate({ className: 'ol-rotate me-4' }), new FullScreen({ tipLabel: 'Pantalla completa' }), new ScaleLine()
       ]
     });
     this.map.getLayers().insertAt(0, capaBase);
-
-
-    // Listener on click en el mapa
-    this.map.on('singleclick', evt => {
-      // Coordenadas:
-      // console.log('Coordenadas: ', evt.coordinate);
-      // this.map?.getView().setCenter(evt.coordinate);
-      console.log(this.map.getView().getZoom(), window.innerWidth);
-
-      // Ejecutar por cada feature en el pixel (con hitTolerance)
-      this.map?.forEachFeatureAtPixel(evt.pixel, (feature, layer) => {
-        if (!layer) return;
-        console.log(feature.getProperties()['provincia']);
-      });
-    });
 
     // Suscripción para recibir los layers ya cargados
     this.loadedLayersSubscription$ 
@@ -126,9 +117,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
             }
           }
         });
-  }
 
-  ngAfterViewInit(): void {
     // Nos suscribimos a las creaciones de nuevas WFS layer
     this.newWFSlayerSubscription$
     = this.mapService.newWFSLayerSubject$
@@ -138,7 +127,45 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
           this.map.addLayer(layer);
         }
       });
+  }
 
+  ngAfterViewInit(): void {
+
+    // LISTENER ONCLICK
+    this.map.on('singleclick', evt => {
+      // Obtener coordenadas click, coordenadas centro mapa, centrar en coordenadas del click, obtener zoom:
+      //console.log('Coordenadas click: ', evt.coordinate);
+      //console.log('Coordenadas centro mapa: ', this.map.getView().getCenter());
+      //this.map?.getView().setCenter(evt.coordinate);
+      //console.log('Zoom del mapa y ancho de pantalla', { zoom: this.map.getView().getZoom(), anchoPantalla: window.innerWidth});
+
+      // Ejecutar por cada feature en el pixel (con hitTolerance)
+      this.map?.forEachFeatureAtPixel(evt.pixel, (feature, layer) => {
+        if (!layer) return;
+
+        const featureProperties = feature.getProperties();
+        this.featureInfo = true;
+
+        const keys = Object.keys(featureProperties);
+        const resp = [];
+        
+        let i = 0;
+        for (const key of keys) {
+          resp[i] = { key: key, value: featureProperties[key] };
+          i++;
+        }
+    
+        this.featureProperties = resp;
+
+        // CCAA (Open Data)
+        if (feature.get('ccaa')) {
+          console.log('Info CCAA');
+          // TODO? algo distintos para CCAA cuando meta más capas?
+        }
+
+      });
+
+    });
 
     // TOOLTIP
     const tooltip = document.getElementById('tooltip');
@@ -149,6 +176,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     });
     this.map?.addOverlay(overlay);
 
+    // LISTENER POINTERMOVE a través del cual instanciaremos el tooltip
     this.map?.on('pointermove', evt => {
       if (evt.dragging) {
         tooltip!.hidden = true;
@@ -174,6 +202,11 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         return;
       });
     });
+
+    // Quitamos el tooltip si nos movemos por el display de la información
+    document.getElementById('feature-info').addEventListener('mouseenter', () => {
+      tooltip!.hidden = true;
+    });
   }
 
   ngOnDestroy(): void {
@@ -183,14 +216,19 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     this.configResetedSubscription$.unsubscribe();
   }
 
+  /**
+   * Calcula el zoom necesario en base a la anchura de la pantalla
+   * 
+   * @returns zoom adecuado para la anchura de la pantalla
+   */
   getZoom(): number {
     /* Algunas referencias
-    215 => 4.93
-    1680 => 7.4
+    540 => 5.880439327374903
+    1313 => 7.148008806652437
     */
-    const widthRef = 215;
-    const zoomRef = 4.93;
-    const percentageValue = 0.0038505333812777;
+    const widthRef = 600;
+    const zoomRef = 5.880439327374903;
+    const percentageValue = 0.008;
 
     const screenWidth = window.innerWidth;
     const increase = screenWidth - widthRef;
@@ -199,9 +237,24 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     return zoomRef + (percentageValue * percentage);
   }
 
+  /**
+   * Centra el mapa en las coordenadas por defecto y el zoom calculado en base a la anchura de la pantalla
+   */
   centerMap(): void {
     this.map.getView().setCenter(this.defaultCenterCoordinates);
     this.map.getView().setZoom(this.getZoom());
+  }
+
+  /**
+   * Evento lanzado por el hijo (Output EventEmitter) cuando se cierra la ventana
+   * 
+   * @param close boolean que determinará si se cierra o no la ventana
+   */
+  onCloseFeatureInfo(close: boolean) {
+    if (!close) return 
+    
+    this.featureInfo = false;
+    this.featureProperties = {};
   }
 
 }

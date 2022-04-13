@@ -23,3 +23,11 @@ id="panel"
 [@adminPanel]="adminPanel"
 ></app-admin-panel>
 
+<!-- Mostrar info de la feature seleccionada -->
+<app-feature-info
+id="feature-info"
+[@featureInfo]="featureInfo"
+[featureInfo]="featureInfo"
+[properties]="featureProperties"
+(closeFeatureInfo)="onCloseFeatureInfo($event)"
+></app-feature-info>

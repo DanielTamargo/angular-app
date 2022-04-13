@@ -9,7 +9,6 @@ import TileLayer from 'ol/layer/Tile';
 import TileWMS from 'ol/source/TileWMS';
 import WMTS from 'ol/source/WMTS';
 
-import { MapConstants } from '../constants/map-constants';
 import { HttpClient } from '@angular/common/http';
 import { catchError, Subject, map } from 'rxjs';
 
@@ -226,7 +225,10 @@ export class MapService {
 
       const WFS_layer = new VectorImageLayer({
         source: new VectorSource({
-          features: new GeoJSON().readFeatures(geojsonObject),
+          features: new GeoJSON().readFeatures(geojsonObject, {
+            dataProjection: 'EPSG:4326',
+            featureProjection: 'EPSG:25830'
+          }),
           strategy: bboxStrategy
         }),
         style: new Style({

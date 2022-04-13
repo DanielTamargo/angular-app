@@ -17,6 +17,7 @@ import { SharedModule } from './shared/shared.module';
 import { AdminPanelComponent } from './map/admin-panel/admin-panel.component';
 import { FilterVisibleLayersPipe } from './map/pipes/filter-visible-layers.pipe';
 import { FixCCAAnamesPipe } from './map/pipes/fix-ccaanames.pipe';
+import { FeatureInfoComponent } from './map/feature-info/feature-info.component';
 
 @NgModule({
   declarations: [
@@ -28,6 +29,7 @@ import { FixCCAAnamesPipe } from './map/pipes/fix-ccaanames.pipe';
     AdminPanelComponent,
     FilterVisibleLayersPipe,
     FixCCAAnamesPipe,
+    FeatureInfoComponent,
   ],
   imports: [
     BrowserModule,

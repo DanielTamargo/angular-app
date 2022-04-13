@@ -46,6 +46,20 @@
   height: 100vh;
 }
 
+#feature-info {
+  position: fixed;
+  z-index: 5;
+  bottom: 0;
+  left: 0;
+  padding-left: 70px;
+
+  background-color: rgb(255, 255, 255);
+
+  width: 100vw;
+  height: 20vh;
+  min-height: 300px;
+}
+
 @media (max-width: 450px) { 
   #mapa {
     padding-left: 0;
@@ -63,6 +77,12 @@
   }
 
   #panel {
+    padding-left: 0;
+    padding-top: 70px;
+    padding-right: 0;
+  }
+
+  #feature-info {
     padding-left: 0;
     padding-top: 70px;
     padding-right: 0;
