@@ -1,5 +1,6 @@
 $blue-1: rgba(0, 83, 128, 1);
-$nav-width: 70px;
+$nav-lg: 70px;
+$nav-sm: 50px;
 
 nav {
   position: fixed;
@@ -9,7 +10,7 @@ nav {
   left: 0;
 
   height: 100vh;
-  width: $nav-width;
+  width: $nav-lg;
 
   background-color: rgb(201, 223, 255);
 
@@ -23,8 +24,8 @@ nav {
   & .menu-button {
     padding: 12px;
 
-    width: $nav-width;
-    height: $nav-width;
+    width: $nav-lg;
+    height: $nav-lg;
 
     display: flex;
     justify-content: center;
@@ -76,10 +77,10 @@ nav {
 }
 
 #selected-slide {
-  height: $nav-width;
+  height: $nav-lg;
   width: 40px;
-  top: calc(10vh + $nav-width);
-  left: $nav-width - 35px;
+  top: calc(10vh + $nav-lg);
+  left: $nav-lg - 35px;
 }
 
 
@@ -96,15 +97,15 @@ nav {
 
   #selected-slide-small {
     display: block;
-    width: $nav-width;
-    height: 40px;
+    width: calc($nav-sm);
+    height: 20px;
 
-    top: $nav-width - 35px;
-    right: calc($nav-width * 2);
+    top: $nav-lg - 35px;
+    right: calc($nav-lg * 2);
   }
 
   nav {
-    height: $nav-width;
+    height: $nav-sm;
     width: 100vw;
 
     flex-direction: row;
@@ -113,6 +114,20 @@ nav {
     & .menu-logo {
       margin-bottom: 0;
       margin-right: auto;
+    }
+
+    & .menu-button {
+      padding: 4px;
+  
+      width: $nav-sm;
+      height: $nav-sm;
+  
+      display: flex;
+      justify-content: center;
+      align-items: center;
+  
+      cursor: pointer;
+      user-select: none;
     }
 
     padding-right: 15px;

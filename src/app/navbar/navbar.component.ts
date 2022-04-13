@@ -57,9 +57,9 @@ const NAV_COLORS = [
       transition('* <=> *', animate(`200ms ease-in-out`)),
     ]),
     trigger('navSlideSmall', [
-      state(NAV_LINKS[0], style({ right: 'calc(100% - 70px)' })), //si utilizo left: 0 la animación da un tirón al cambiar
-      state(NAV_LINKS[1], style({ right: 'calc(100% - 100vw + (70px * 2) + 15px)' })),
-      state(NAV_LINKS[2], style({ right: 'calc(100% - 100vw + 70px + 15px)' })),
+      state(NAV_LINKS[0], style({ right: 'calc(100% - 50px)' })), //si utilizo left: 0 la animación da un tirón al cambiar
+      state(NAV_LINKS[1], style({ right: 'calc(100% - 100vw + (50px * 2) + 15px)' })),
+      state(NAV_LINKS[2], style({ right: 'calc(100% - 100vw + 50px + 15px)' })),
       state(NAV_LINKS[3], style({ right: 'calc(100% - 100vw + 15px)' })),
       transition('* <=> *', animate(`200ms ease-in-out`)),
     ]),

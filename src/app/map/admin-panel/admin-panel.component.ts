@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatSliderChange } from '@angular/material/slider';
 import Swal from 'sweetalert2';
+import { MapConstants as MC } from '../constants/map-constants';
 import { LayerGroupConfig } from '../interfaces/layer-config.interface';
 import { MapService } from '../services/map.service';
 
@@ -26,7 +27,7 @@ export class AdminPanelComponent implements OnInit {
   }
 
   checkIfAllCCAAVisible(): void {
-    if (!this.mapService.layersConfig[0].layers.find(lay => !lay.visible)) {
+    if (!this.mapService.layersConfig.find(lc => lc.name == MC.LAYERGROUP_CCAA_NAME).layers.find(lay => !lay.visible)) {
       this.ccaaAllVisible = true;
     } else {
       this.ccaaAllVisible = false;
