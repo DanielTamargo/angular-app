@@ -139,24 +139,26 @@ export class MapService {
   loadedLayers: LoadedLayer[] = [];
 
 
-  constructor(private http: HttpClient) { 
+  constructor(private http: HttpClient) {
     // Cargamos la configuración guardada o si no existe o da error cargamos la configuración por defecto
     const savedLayersConfig = localStorage.getItem(MC.LS_LAYERS_CONFIG_KEY);
     if (savedLayersConfig) {
       try {
         this.layersConfig = JSON.parse(savedLayersConfig);
       } catch (err) {
-        this.layersConfig = this.defaultLayersConfig.slice();
+        this.layersConfig = JSON.parse(JSON.stringify(this.defaultLayersConfig));
       }
     } else {
-      this.layersConfig = this.defaultLayersConfig.slice();
+      console.log('Cargando configuración por defecto');
+
+      this.layersConfig = JSON.parse(JSON.stringify(this.defaultLayersConfig));
     }
-    
+
   }
 
   /**
    * Método que genera una nueva capa WFS (vectores), la recogerá de OpenData
-   * 
+   *
    * @param url url a cargar y parsear con formato geojson
    * @return la capa para añadirla al mapa o trabajar con ella
    */
@@ -266,14 +268,14 @@ export class MapService {
       this.loadedLayersSubject$.next(this.loadedLayers);
       return;
     }
-    
+
     // Si no existían layers cargados recorremos los grupos de layers que hay en la configuración
     for (let layerGroup of this.layersConfig) {
 
       // Dentro del grupo recorremos los layers marcados como visibles para cargarlos
       for (let layer of layerGroup.layers.filter(lay => lay.visible)) {
         if (layerGroup.name == "open_data_ccaa") {
-          const url 
+          const url
             = layerGroup.url
               .replace(MC.KEY_DATASET, MC.DATASET_PROVINCIAS_ESPANOLAS)
               .replace(MC.KEY_CCAA, layer.key.replace(/ /g, '+'));
@@ -286,7 +288,7 @@ export class MapService {
 
   /**
    * El usuario ha modificado la visibilidad de una de las capas disponibles
-   * 
+   *
    * @param visible boolean que determinará si es visible o no es visible la capa
    */
   onLayerVisibilityChange(visible: boolean, layerKey: string, layerGroupName: string) {
@@ -300,22 +302,25 @@ export class MapService {
       const layer = this.loadedLayers.find(lay => lay.groupName == layerGroupName && lay.key == layerKey);
 
       if (!layer) {
-        const url 
+        const url
               = this.layersConfig.find(layerGroup => layerGroup.name == layerGroupName).url
                 .replace(MC.KEY_DATASET, MC.DATASET_PROVINCIAS_ESPANOLAS)
                 .replace(MC.KEY_CCAA, layerKey.replace(/ /g, '+'));
-        
+
         this.newOpenDataWFSLayer({ url: url, ca: layerKey, visible: visible})
       }
       else layer.layer.setVisible(visible);
-      
+
       this.saveConfig();
+
+      console.log(this.layersConfig[0].layers.find(lay => lay.key == 'Cantabria'));
+      console.log(this.defaultLayersConfig[0].layers.find(lay => lay.key == 'Cantabria'));
     }
   }
 
   /**
    * Actualiza la opacidad de cada layer del grupo de layers
-   * 
+   *
    * @param opacity opacidad del grupo de layers
    * @param groupName nombre del grupo de layers
    */
@@ -339,7 +344,7 @@ export class MapService {
    */
   resetConfiguration() {
     localStorage.removeItem(MC.LS_LAYERS_CONFIG_KEY);
-    this.layersConfig = this.defaultLayersConfig.slice();
+    this.layersConfig = JSON.parse(JSON.stringify(this.defaultLayersConfig));
     this.loadedLayers = [];
     this.configResetedSubject$.next(true);
     this.loadVisibleLayers();
