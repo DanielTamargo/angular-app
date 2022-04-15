@@ -62,7 +62,7 @@
   min-height: 300px;
 }
 
-@media (max-width: 450px) { 
+@media (max-width: 450px) {
   #mapa {
     padding-left: 0;
     padding-top: 50px;
@@ -87,5 +87,12 @@
   #feature-info {
     padding-left: 0;
     padding-right: 0;
+  }
+}
+
+@media (max-width: 307px) {
+  #map-center {
+    top: 110px;
+    left: 29px;
   }
 }
