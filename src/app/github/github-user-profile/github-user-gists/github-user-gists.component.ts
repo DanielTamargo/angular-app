@@ -103,6 +103,9 @@ export class GitHubUserGistsComponent implements OnInit, AfterViewInit, OnDestro
 
   // Función llamada cuando utilice el sorting
   onSortChange(sortState: Sort): void {
+    // Al reordenar, volvemos a la primera página
+    this.paginator.firstPage();
+
     // Actualizamos en el servicio por si navega entre componentes mantener integridad
     this.githubService.filtro_active    = sortState.active;
     this.githubService.filtro_direction = sortState.direction;

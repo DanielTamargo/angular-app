@@ -18,7 +18,7 @@ import { ajax } from 'rxjs/ajax';
 export class GitHubUserRepositoriesComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @Input('repos_qt') repos_qt: number;
-  
+
   // Boolean para mostrar/ocultar spinner
   loading: boolean = true;
   firstLoad: boolean = true;
@@ -35,11 +35,11 @@ export class GitHubUserRepositoriesComponent implements OnInit, AfterViewInit, O
 
   // Tabla Angular Material
   displayedColumns: string[] = [
-    'name', 
-    'created_at', 
-    'updated_at', 
+    'name',
+    'created_at',
+    'updated_at',
     'size',
-    'details', 
+    'details',
   ];
   dataSource = new MatTableDataSource<GitHubRepoInterface>(this.repos);
   // Ordenar tabla
@@ -55,8 +55,8 @@ export class GitHubUserRepositoriesComponent implements OnInit, AfterViewInit, O
     this.reposSubscription$ = this.githubService.userReposSubject$.subscribe(repos => {
       this.repos = repos;
       if (this.firstLoad) this.firstLoad = false;
-      else this.loading = false;  
-      
+      else this.loading = false;
+
       if (repos.length > 0) this.loading = false;
 
       // Volcamos datos en el datasource de la tabla
@@ -107,6 +107,9 @@ export class GitHubUserRepositoriesComponent implements OnInit, AfterViewInit, O
 
   // Función llamada cuando utilice el sorting
   onSortChange(sortState: Sort): void {
+    // Al reordenar, volvemos a la primera página
+    this.paginator.firstPage();
+
     // Actualizamos en el servicio por si navega entre componentes mantener integridad
     this.githubService.filtro_active    = sortState.active;
     this.githubService.filtro_direction = sortState.direction;
@@ -116,13 +119,24 @@ export class GitHubUserRepositoriesComponent implements OnInit, AfterViewInit, O
   openRepositoryDialog(repo: GitHubRepoInterface) {
     this.githubService.selectedRepository = repo;
 
+    // TODO mostrar spinner modal
+
     // Obtenemos los contributors como información extra
     ajax<GitHubRepoInterface[]>(repo.contributors_url)
       .pipe(pluck('response'))
-      .subscribe(contributors => {
-        this.githubService.selectedRepositoryContributors = contributors;
-        this.dialog.open(GitHubRepositoryDialogComponent);
-    });
+      .subscribe(
+        {
+          next: contributors => {
+            this.githubService.selectedRepositoryContributors = contributors;
+            this.dialog.open(GitHubRepositoryDialogComponent);
+
+            // TODO quitar spinner modal
+          },
+          error: (err) => {
+            // TODO quitar spinner modal
+          }
+        }
+      );
 
   }
 
