@@ -95,7 +95,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     this.map.getLayers().insertAt(0, capaBase);
 
     // Suscripción para recibir los layers ya cargados
-    this.loadedLayersSubscription$ 
+    this.loadedLayersSubscription$
       = this.mapService.loadedLayersSubject$
         .subscribe(layers => {
           for (const layer of layers) {
@@ -136,12 +136,17 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
       //console.log('Coordenadas click: ', evt.coordinate);
       //console.log('Coordenadas centro mapa: ', this.map.getView().getCenter());
       //this.map?.getView().setCenter(evt.coordinate);
-      //console.log('Zoom del mapa y ancho de pantalla', { zoom: this.map.getView().getZoom(), anchoPantalla: window.innerWidth});
+      console.log('Zoom del mapa y ancho/alto de pantalla',
+        {
+          zoom: this.map.getView().getZoom(),
+          anchoPantalla: window.innerWidth,
+          alturaPantalla: window.innerHeight,
+        });
 
       // Ejecutar por cada feature en el pixel (con hitTolerance)
       let features = this.map?.getFeaturesAtPixel(evt.pixel);
       if (features!.length <= 0) this.featureInfo = false;
-      
+
       this.map?.forEachFeatureAtPixel(evt.pixel, (feature, layer) => {
         if (!layer) return;
 
@@ -150,13 +155,13 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
 
         const keys = Object.keys(featureProperties);
         const resp = [];
-        
+
         let i = 0;
         for (const key of keys) {
           resp[i] = { key: key, value: featureProperties[key] };
           i++;
         }
-    
+
         this.featureProperties = resp;
 
         // CCAA (Open Data)
@@ -193,14 +198,14 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
       // Obtener features seleccionadas
       this.map?.forEachFeatureAtPixel(evt.pixel, (feature, layer) => {
         if (!layer) return;
-        
+
         // CCAA (Open Data)
         if (feature.get('ccaa')) {
           tooltip!.hidden = false;
           overlay.setPosition(evt.coordinate);
           tooltip!.innerHTML = `${feature.get('provincia')} (${feature.get('ccaa')})`;
         }
-      
+
         return;
       });
     });
@@ -220,14 +225,18 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
 
   /**
    * Calcula el zoom necesario en base a la anchura de la pantalla
-   * 
+   *
    * @returns zoom adecuado para la anchura de la pantalla
    */
   getZoom(): number {
     /* Algunas referencias
-    540 => 5.880439327374903
-    1313 => 7.148008806652437
+    236 => 4.825535095338114 => 0.0204471826073649
+    445 => 5.787843592154494 => 0.0130063900947292
+    971 => 6.714234718575708 => 0.0069147628409637
+    1540 => 7.105328475942655 => 0.004613849659703
+    1904 => 7.255328475942655 => 0.0038105716785413;
     */
+
     const widthRef = 600;
     const zoomRef = 5.880439327374903;
     const percentageValue = 0.008;
@@ -237,6 +246,21 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     const percentage = increase / widthRef * 100;
 
     return zoomRef + (percentageValue * percentage);
+
+
+    /*const width = window.innerWidth;
+    let increase: number;
+
+    if (width < 445) increase = 0.0204471826073649;
+    else if (width < 971) increase = 0.0130063900947292;
+    else if (width < 1540) increase = 0.0069147628409637;
+    else if (width < 1904) increase = 0.004613849659703;
+    else increase = 0.0038105716785413;
+
+    console.log(width);
+    console.log(increase);
+
+    return width * increase;*/
   }
 
   /**
@@ -249,12 +273,12 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
 
   /**
    * Evento lanzado por el hijo (Output EventEmitter) cuando se cierra la ventana
-   * 
+   *
    * @param close boolean que determinará si se cierra o no la ventana
    */
   onCloseFeatureInfo(close: boolean) {
-    if (!close) return 
-    
+    if (!close) return
+
     this.featureInfo = false;
     this.featureProperties = {};
   }
