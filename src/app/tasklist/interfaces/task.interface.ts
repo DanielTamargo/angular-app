@@ -1,7 +1,7 @@
 export interface TaskListStoreInterface {
   tasks: TaskInterface[];
-  editedTask: number;
-  newTask: number;
+  editedTask: string | null;
+  newTask: string | null;
 }
 
 export interface TaskInterface {
