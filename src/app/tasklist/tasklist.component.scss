@@ -1,0 +1,35 @@
+.custom-firebase-ui {
+  margin-top: 2em;
+  height: 60vh;
+  width: 100%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.custom-firebase-ui-content {
+  box-shadow: 0 2px 6px 0 rgb(0 0 0 / 14%), 0 3px 1px -2px rgb(0 0 0 / 20%), 0 1px 9px 0 rgb(0 0 0 / 12%);
+}
+
+.custom-firebase-ui-title {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  text-align: center;
+  position: relative;
+  top: -15px;
+  left: 15px;
+  width: fit-content;
+  background: linear-gradient(90deg, 
+    rgba(255, 255, 255, 0) 0%, 
+    white 15%, 
+    white 85%, 
+    rgba(255, 255, 255, 0) 100%);
+  padding-inline: 1em;
+}
+
+@media (max-height: 380px) {
+  .custom-firebase-ui {
+  margin-top: 2em;
+  }
+}

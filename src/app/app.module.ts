@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 
@@ -26,6 +26,8 @@ import { MapModule } from './map/map.module';
 import { SharedModule } from './shared/shared.module';
 
 import { TaskIndexComponent } from './tasklist/task-index/task-index.component';
+import { AuthInterceptor } from './tasklist/auth.interceptor';
+import { TasklistService } from './tasklist/services/tasklist.service';
 
 const firebaseUiAuthConfig: firebaseui.auth.Config = {
   signInFlow: 'popup',
@@ -77,9 +79,11 @@ const firebaseUiAuthConfig: firebaseui.auth.Config = {
     StoreModule.forRoot({ taskList: taskListReducer }),
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFireAuthModule,
-    FirebaseUIModule.forRoot(firebaseUiAuthConfig)
+    FirebaseUIModule.forRoot(firebaseUiAuthConfig),
   ],
-  providers: [],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true, deps: [TasklistService] }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

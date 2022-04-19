@@ -8,6 +8,9 @@ import * as TaskListActions from '../store/tasklist.actions';
 })
 export class TasklistService {
 
+  user: any;
+  userAccessToken: string
+
   constructor(private store: Store<{ taskList: TaskListStateInterface }>) { 
     // TODO petición GET a Firebase para obtener todas las tareas del usuario loggeado
   }
@@ -19,7 +22,6 @@ export class TasklistService {
    */
   addTask(task: TaskInterface) {
     // TODO petición POST a Firebase para almacenar la nueva tarea y guardar como key el id de la tarea
-
 
     this.store.dispatch(TaskListActions.taskAdd({
       task: task

@@ -23,9 +23,17 @@
   <!-- LOGOUT -->
   <button class="btn btn-secondary" (click)="userSignOut()">Logout</button>
 </div>
-<firebase-ui
-[hidden]="true"></firebase-ui>
 
+<div 
+class="custom-firebase-ui"
+[hidden]="user || loading"
+>
+<div class="custom-firebase-ui-content">
+    <h3 class="custom-firebase-ui-title text-muted">Login</h3>
+    <firebase-ui></firebase-ui>
+  </div>
+</div>
 
 <app-task-index
+[hidden]="!user || loading"
 ></app-task-index>
