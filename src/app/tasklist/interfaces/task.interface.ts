@@ -1,4 +1,10 @@
-export interface Task {
+export interface TaskListStoreInterface {
+  tasks: TaskInterface[];
+  editedTask: number;
+  newTask: number;
+}
+
+export interface TaskInterface {
   activity: string,
   type: TaskType,
   price: number,

@@ -3,22 +3,28 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
 import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
 
-import {firebase, firebaseui, FirebaseUIModule} from 'firebaseui-angular';
-import {environment} from '../environments/environment';
+// NgRx
+import { StoreModule } from '@ngrx/store';
+import { taskListReducer } from './tasklist/store/tasklist.reducer';
+
+// Firebase
+import { firebase, firebaseui, FirebaseUIModule } from 'firebaseui-angular';
+import { environment } from '../environments/environment';
 import { AngularFireModule } from "@angular/fire/compat";
 import { AngularFireAuthModule, USE_EMULATOR as USE_AUTH_EMULATOR } from "@angular/fire/compat/auth";
 
+import { AppComponent } from './app.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { HomeComponent } from './home/home.component';
 import { TasklistComponent } from './tasklist/tasklist.component';
 
+// Módules refactorizados
 import { GitHubModule } from './github/github.module';
 import { MapModule } from './map/map.module';
 import { SharedModule } from './shared/shared.module';
+
 import { TaskIndexComponent } from './tasklist/task-index/task-index.component';
 
 const firebaseUiAuthConfig: firebaseui.auth.Config = {
@@ -68,6 +74,7 @@ const firebaseUiAuthConfig: firebaseui.auth.Config = {
     SharedModule,
     GitHubModule,
     MapModule,
+    StoreModule.forRoot({ taskList: taskListReducer }),
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFireAuthModule,
     FirebaseUIModule.forRoot(firebaseUiAuthConfig)

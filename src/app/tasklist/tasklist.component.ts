@@ -15,7 +15,7 @@ export class TasklistComponent implements OnInit {
     this.afAuth.user.subscribe((user) => {
       this.loading = false;
       this.user = user;
-      console.log(user);
+      // console.log(user);
     });
   }
 
