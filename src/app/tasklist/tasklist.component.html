@@ -1,4 +1,12 @@
 <!-- TODO:
+  TASKS
+  - CREATE
+  - RETRIEVE
+  - UPDATE (marcar como completa / incompleta)
+  - DELETE
+
+
+  AUTH
   - Refactorizar afAuth a un servicio
   - Colocar auth en medio de la pantalla y mostrar un mensaje 'no estás loggeado'
   - Spinner personalizado?
@@ -15,4 +23,9 @@
   <!-- LOGOUT -->
   <button class="btn btn-secondary" (click)="userSignOut()">Logout</button>
 </div>
-<firebase-ui></firebase-ui>
+<firebase-ui
+[hidden]="true"></firebase-ui>
+
+
+<app-task-index
+></app-task-index>

@@ -12,6 +12,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSliderModule } from '@angular/material/slider';
+import { MatTooltipModule } from '@angular/material/tooltip';
 // import { A11yModule } from '@angular/cdk/a11y';
 
 const modules = [
@@ -26,7 +27,8 @@ const modules = [
     MatAutocompleteModule,
     MatStepperModule,
     MatCheckboxModule,
-    MatSliderModule
+    MatSliderModule,
+    MatTooltipModule
 ]
 
 @NgModule({

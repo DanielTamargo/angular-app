@@ -1,0 +1,20 @@
+$add-task-dim: 50px;
+$add-task-pos: 40px;
+
+.add-task {
+  font-size: 2em;
+  padding: 0;
+  width: $add-task-dim;
+  height: $add-task-dim;
+  border-radius: 50%;
+
+  position: fixed;
+  bottom: $add-task-pos;
+  right: $add-task-pos;
+}
+
+@media (min-width: 1000px) {
+  .add-task {
+    right: calc($add-task-pos + ((100vw - 1000px) / 2));
+  }
+}

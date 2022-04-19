@@ -19,6 +19,7 @@ import { TasklistComponent } from './tasklist/tasklist.component';
 import { GitHubModule } from './github/github.module';
 import { MapModule } from './map/map.module';
 import { SharedModule } from './shared/shared.module';
+import { TaskIndexComponent } from './tasklist/task-index/task-index.component';
 
 const firebaseUiAuthConfig: firebaseui.auth.Config = {
   signInFlow: 'popup',
@@ -56,6 +57,7 @@ const firebaseUiAuthConfig: firebaseui.auth.Config = {
     NavbarComponent,
     HomeComponent,
     TasklistComponent,
+    TaskIndexComponent,
   ],
   imports: [
     BrowserModule,
