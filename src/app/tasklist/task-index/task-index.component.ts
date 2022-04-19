@@ -1,7 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Observable, Subscription } from 'rxjs';
-import { TaskInterface, TaskListStoreInterface } from '../interfaces/task.interface';
+import { Subscription } from 'rxjs';
+import { TaskInterface, TaskListStateInterface } from '../interfaces/task.interface';
+import { TasklistService } from '../services/tasklist.service';
 
 @Component({
   selector: 'app-task-index',
@@ -16,16 +17,18 @@ export class TaskIndexComponent implements OnInit, OnDestroy {
   tasks: TaskInterface[] = [];
   tasksSubscription$ = new Subscription;
 
-  constructor(private store: Store<{ taskList: TaskListStoreInterface }>) { }
+  constructor(
+    private taskListService: TasklistService,
+    private store: Store<{ taskList: TaskListStateInterface }>
+    ) { }
 
   ngOnInit(): void {
-    // Nos suscribimos al estado para obtener la lista de tareas
+    // Nos suscribimos al reducer de las tareas para obtener el estado cada vez que haya un cambio
     this.tasksSubscription$ = this.store.select('taskList').subscribe(state => {
       this.tasks = state.tasks;
       this.loading = false;
-    });
-
-    
+      console.log(state.tasks);
+    });    
   }
 
   ngOnDestroy(): void {

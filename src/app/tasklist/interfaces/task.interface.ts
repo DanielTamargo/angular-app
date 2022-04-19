@@ -1,4 +1,4 @@
-export interface TaskListStoreInterface {
+export interface TaskListStateInterface {
   tasks: TaskInterface[];
   editedTask: string | null;
   newTask: string | null;
@@ -13,7 +13,7 @@ export interface TaskInterface {
 
   link?: string,
   accessibility: number,
-  key: string,
+  key?: string, // <- opcional porque al insertar una nueva recogerá su id en la respuesta
 }
 
 type TaskType = 

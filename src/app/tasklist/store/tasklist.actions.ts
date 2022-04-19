@@ -1,32 +1,30 @@
-import { Action } from '@ngrx/store';
+// Documentación oficial NgRx Actions: https://ngrx.io/guide/store/actions
+import { createAction, props } from '@ngrx/store';
 import { TaskInterface } from '../interfaces/task.interface';
 
 // CLAVES DE ACCIONES
-export const TASK_ADD    = 'TASK_ADD';
-export const TASK_UPDATE = 'TASK_UPDATE';
-export const TASK_DELETE = 'TASK_DELETE';
+export const TASK_LOAD   = '[TaskList] Load Tasks';
+export const TASK_ADD    = '[TaskList] Add Task';
+export const TASK_UPDATE = '[TaskList] Update Task';
+export const TASK_DELETE = '[TaskList] Delete Task';
 
 // ACCIONES
-export class TaskAdd implements Action {
-  readonly type: string = TASK_ADD;
+export const tasksLoad = createAction(
+  TASK_UPDATE
+);
 
-  constructor(public payload: TaskInterface) {}
-}
+export const taskAdd = createAction(
+  TASK_ADD,
+  props<{ task: TaskInterface }>()
+);
 
-export class TaskUpdate implements Action {
-  readonly type: string = TASK_UPDATE;
+export const taskUpdate = createAction(
+  TASK_UPDATE,
+  props<{ task: TaskInterface }>()
+);
 
-  constructor(public payload: TaskInterface) {}
-}
+export const taskDelete = createAction(
+  TASK_DELETE,
+  props<{ task: TaskInterface }>()
+);
 
-export class TaskDelete implements Action {
-  readonly type: string = TASK_DELETE;
-
-  constructor(public payload: string) {}
-}
-
-// TIPOS DE ACCIONES
-export type TaskListActionTypes = 
-  | TaskAdd 
-  | TaskUpdate 
-  | TaskDelete;
