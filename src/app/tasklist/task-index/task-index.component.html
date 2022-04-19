@@ -2,6 +2,7 @@
  class="btn btn-success add-task"
  matTooltip="New Task"
  matTooltipClass="user-select-none tasklist-tooltip"
+ (click)="onCreateTask()"
  >+</button>
 
-<p>task-index works!</p>
+<p *ngFor="let task of tasks">{{ task.activity }} ({{ task.price }}€)</p>

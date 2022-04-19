@@ -10,7 +10,8 @@ export const TASK_DELETE = '[TaskList] Delete Task';
 
 // ACCIONES
 export const tasksLoad = createAction(
-  TASK_UPDATE
+  TASK_LOAD,
+  props<{ tasks: TaskInterface[] }>()
 );
 
 export const taskAdd = createAction(

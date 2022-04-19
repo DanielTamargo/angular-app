@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
+import { BehaviorSubject, map, Subject, tap } from 'rxjs';
 import { TaskInterface, TaskListStateInterface } from '../interfaces/task.interface';
 import * as TaskListActions from '../store/tasklist.actions';
+import { AngularFireList, AngularFireDatabase } from '@angular/fire/compat/database';
+
 
 @Injectable({
   providedIn: 'root'
@@ -11,8 +14,40 @@ export class TasklistService {
   user: any;
   userAccessToken: string
 
-  constructor(private store: Store<{ taskList: TaskListStateInterface }>) { 
-    // TODO petición GET a Firebase para obtener todas las tareas del usuario loggeado
+  displayIndex = 1;
+  displaySubject$ = new BehaviorSubject<number>(this.displayIndex);
+
+  tasksDB$: AngularFireList<TaskInterface>;
+
+  constructor(
+    private store: Store<{ taskList: TaskListStateInterface }>, 
+    private db: AngularFireDatabase
+  ) { 
+
+  }
+
+  userLoggedIn(user: any) {
+    this.user = user;
+    if (!user) return;
+    
+    this.tasksDB$ = this.db.list("/" + user.uid + "/tasks", (ref) => 
+      ref.orderByChild('price')
+    );
+
+    this.tasksDB$.snapshotChanges()
+    .pipe(
+      map<any, TaskInterface[]>((changes) => {
+        return changes.map((c) => ({
+          ...c.payload.val(),
+          key: c.payload.key,
+        }));
+      })
+    )
+    .subscribe(resp => {
+      this.store.dispatch(TaskListActions.tasksLoad({
+        tasks: resp
+      }));
+    })
   }
 
   /**
@@ -22,10 +57,11 @@ export class TasklistService {
    */
   addTask(task: TaskInterface) {
     // TODO petición POST a Firebase para almacenar la nueva tarea y guardar como key el id de la tarea
+    this.tasksDB$.push(task);
 
-    this.store.dispatch(TaskListActions.taskAdd({
+    /* this.store.dispatch(TaskListActions.taskAdd({
       task: task
-    }));
+    })); */
   }
 
   /**
@@ -48,6 +84,15 @@ export class TasklistService {
     this.store.dispatch(TaskListActions.taskDelete({
       task: task
     }));
+  }
+
+  /**
+   * Recibe de cualquier componente un índice y lo emite para que el padre lo reciba
+   * El padre utilizará el índice para mostrar u ocultar los componentes hijos
+   */
+  displayComponents(displayIndex: number = 1): void {
+    this.displayIndex = displayIndex;
+    this.displaySubject$.next(this.displayIndex);
   }
 
 

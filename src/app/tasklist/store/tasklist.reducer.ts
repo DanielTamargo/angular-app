@@ -17,8 +17,16 @@ const initialState: TaskListStateInterface = {
 // TaskList Reducer que trabajará con la información
 export const taskListReducer = createReducer(
   initialState,
-  on(TaskListActions.tasksLoad, (state,) => state),
-  on(TaskListActions.taskAdd, (state, { task }) => ({ ...state, tasks: [...state.tasks, task] })),
+  on(TaskListActions.tasksLoad, (state, { tasks }) => ({ 
+    ...state, 
+    tasks: tasks, 
+  })),
+  on(TaskListActions.taskAdd, (state, { task }) => ({ 
+    ...state, 
+    tasks: [...state.tasks, task], 
+    editedTask: null, 
+    newTask: task.key 
+  })),
   on(TaskListActions.taskUpdate, (state, { task }) => {
     // Para respetar el readonly del state, obtenemos una copia de las tasks
     const tasks = [...state.tasks];
@@ -46,7 +54,12 @@ export const taskListReducer = createReducer(
     }
   }),
   on(TaskListActions.taskDelete, (state, { task }) => {
-    return { ...state, tasks: state.tasks.filter(t => t.key !== task.key) }
-  }
-  ),
+    // Devolvemos el estado filtrando para obviar la tarea eliminada
+    return { 
+      ...state, 
+      tasks: state.tasks.filter(t => t.key !== task.key),
+      editedTask: null,
+      newTask: null 
+    }
+  }),
 );

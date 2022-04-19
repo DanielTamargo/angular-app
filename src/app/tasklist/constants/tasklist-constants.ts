@@ -1,3 +1,5 @@
+import { environment } from "src/environments/environment";
+
 export class TaskListConstants {
   /* ----------- UTIL ----------- */
   /* TASK TYPES */
@@ -11,6 +13,8 @@ export class TaskListConstants {
   static TASK_RELAXATION = 'relaxation';
   static TASK_BUSYWORK = 'busywork';
 
+  /* --------- FIREBASE --------- */
+  static FIREBASE_URL = environment.firebaseConfig.databaseURL;
 
   /* ----- LOCAL STORAGE KEYS ----- */
   static LS_TASKLIST_SAVE = 'tasklist_save';
