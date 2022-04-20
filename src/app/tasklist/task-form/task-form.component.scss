@@ -1,0 +1,47 @@
+.error-msg {
+  color: darkred;
+  font-size: 12px;
+}
+
+
+.task-form {
+  display: flex;
+  flex-direction: column;
+
+  & .main-info, & .additional-info {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+
+    flex-wrap: wrap;
+
+    & > * {
+      flex-grow: 1;
+    }
+
+    & > .activity {
+      min-width: 500px;
+      flex-grow: 10;
+    }
+  }
+  
+  & button {
+    width: fit-content;
+  }
+
+}
+
+@media (max-width: 800px) {
+  .task-form {
+    & .main-info, & .additional-info {
+      & > .activity {
+        min-width: 100%;
+      }
+    }
+    
+    & button {
+      width: fit-content;
+    }
+  
+  }
+}

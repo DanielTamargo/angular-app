@@ -48,7 +48,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   // box-shadow: 0px 5px 5px -3px rgb(0 0 0 / 20%), 0px 8px 10px 1px rgb(0 0 0 / 14%), 0px 3px 14px 2px rgb(0 0 0 / 12%);
 }
 
-.mat-form-field-appearance-fill .mat-form-field-flex {
+.github-form-field.mat-form-field-appearance-fill .mat-form-field-flex {
   background-color: #c9dfff57;
   box-shadow: 0 0 4px grey;
   text-align: center;
@@ -58,6 +58,51 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   background-color: rgb(102, 196, 122);
   font-size: 1em;
   // color: black !important;
+}
+
+$task-form-default-color: gray;
+$task-form-valid-color: #1b8209;
+$task-form-invalid-color: #820909;
+.task-form  {
+  & .mat-form-field {
+    // Etiqueta placeholder
+    &.ng-invalid.ng-touched .mat-form-field-label {
+      color: $task-form-invalid-color;
+    }
+    &.ng-valid .mat-form-field-label, & .mat-form-field-label {
+      color: $task-form-valid-color;
+    }
+
+    // Borde inferior input (underline)
+    & .mat-form-field-ripple {
+      background-color: $task-form-valid-color;
+    }
+    &.ng-invalid.ng-touched .mat-form-field-ripple {
+      background-color: $task-form-invalid-color;
+    }
+
+    // Asterisco required
+    &.ng-valid .mat-placeholder-required, & .mat-placeholder-required {
+      color: $task-form-valid-color;
+    }
+    &.ng-invalid.ng-touched .mat-placeholder-required {
+      color: $task-form-invalid-color;
+    }
+
+    // Flecha selección
+    &.ng-valid .mat-select-arrow, & .mat-select-arrow {
+      color: $task-form-valid-color;
+    }
+    &.ng-invalid.ng-touched .mat-select-arrow {
+      color: $task-form-invalid-color;
+    }
+
+  }
+
+  // Errores de los inputs
+  & .mat-error {
+    font-size: 12px;
+  } 
 }
 
 /*-------------------------------------------------------------------------------------------------*/

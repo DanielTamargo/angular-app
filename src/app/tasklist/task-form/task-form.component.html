@@ -1,1 +1,94 @@
-<p>task-form works!</p>
+<form [formGroup]="formTarea" (ngSubmit)="onSubmit()" class="task-form">
+  <!-- Información principal -->
+  <h3 class="text-muted">New Task</h3>
+  <div class="main-info" formGroupName="mainInfo">
+    
+    <!-- Activity -->
+    <mat-form-field class="activity" appearance="fill">
+      <mat-label>Name</mat-label>
+      <input type="text" name="activity" id="activity"
+      matInput formControlName="activity">
+      <div *ngIf="formTarea.get('mainInfo.activity').touched">
+        <mat-error *ngIf="formTarea.get('mainInfo.activity').hasError('required')">
+          Please fill this field
+        </mat-error>
+        <mat-error *ngIf="!formTarea.get('mainInfo.activity').hasError('required') && formTarea.get('mainInfo.activity').hasError('invalidMinLength')">
+          Minimum 3 characters
+        </mat-error>
+        <mat-error *ngIf="!formTarea.get('mainInfo.activity').hasError('required') && formTarea.get('mainInfo.activity').hasError('invalidMaxLength')">
+          Maximum 255 characters
+        </mat-error>
+      </div>
+    </mat-form-field>
+
+    <!-- Type -->
+    <mat-form-field class="type" appearance="fill">
+      <mat-label>Type</mat-label>
+      <mat-select  name="type" id="type" formControlName="type">
+        <mat-option *ngFor="let type of types" [value]="type">{{ type }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <!-- Price -->
+    <mat-form-field class="price" appearance="fill">
+      <mat-label>Price</mat-label>
+      <input type="number" name="price" id="price"
+        matInput formControlName="price">
+        <span matSuffix>€</span>
+      <div *ngIf="formTarea.get('mainInfo.price').touched">
+        <mat-error *ngIf="formTarea.get('mainInfo.price').hasError('invalidLength')">
+          Please enter a valid email address
+        </mat-error>
+      </div>
+    </mat-form-field>
+
+    <!-- Participants -->
+    <mat-form-field class="participants" appearance="fill">
+      <mat-label>Participants</mat-label>
+      <input type="number" name="participants" id="participants"
+        matInput formControlName="participants">
+      <div *ngIf="formTarea.get('mainInfo.participants').touched">
+        <mat-error *ngIf="formTarea.get('mainInfo.participants').hasError('invalidLength')">
+          Please enter a valid email address
+        </mat-error>
+      </div>
+    </mat-form-field>
+
+  </div>
+
+  <!-- Información no vital -->
+  <div class="additional-info mt-4" formGroupName="additionalInfo">
+    
+    <!-- Link -->
+    <mat-form-field class="link" appearance="fill">
+      <mat-label>Link</mat-label>
+      <input type="text" name="link" id="link"
+      matInput formControlName="link">
+      <div *ngIf="formTarea.get('additionalInfo.link').touched">
+        <mat-error *ngIf="formTarea.get('additionalInfo.link').hasError('invalidLength')">
+          Please enter a valid email address
+        </mat-error>
+      </div>
+    </mat-form-field>
+    
+    <!-- Accesibility -->
+    <mat-form-field class="accesibility" appearance="fill">
+      <mat-label>Accesibility</mat-label>
+      <input type="number" name="accesibility" id="accesibility"
+        matInput formControlName="accesibility">
+      <span matSuffix>€</span>
+      <div *ngIf="formTarea.get('additionalInfo.accesibility').touched">
+        <mat-error *ngIf="formTarea.get('additionalInfo.accesibility').hasError('invalidLength')">
+          Please enter a valid email address
+        </mat-error>
+      </div>
+    </mat-form-field>
+
+  </div>
+  
+  <p class="mb-0 mt-4"><span [hidden]="formTarea.valid">Fill all required fields before submitting</span>&nbsp;</p>
+  <button 
+  [disabled]="formTarea.invalid"
+  type="submit" 
+  class="btn btn-success">Submit</button>
+</form>
