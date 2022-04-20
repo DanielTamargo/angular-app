@@ -28,6 +28,7 @@ import { SharedModule } from './shared/shared.module';
 import { TaskIndexComponent } from './tasklist/task-index/task-index.component';
 import { AuthInterceptor } from './tasklist/auth.interceptor';
 import { TasklistService } from './tasklist/services/tasklist.service';
+import { TaskFormComponent } from './tasklist/task-form/task-form.component';
 
 const firebaseUiAuthConfig: firebaseui.auth.Config = {
   signInFlow: 'popup',
@@ -66,6 +67,7 @@ const firebaseUiAuthConfig: firebaseui.auth.Config = {
     HomeComponent,
     TasklistComponent,
     TaskIndexComponent,
+    TaskFormComponent,
   ],
   imports: [
     BrowserModule,

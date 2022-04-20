@@ -5,12 +5,8 @@
   - UPDATE (marcar como completa / incompleta)
   - DELETE
 
-
-  AUTH
-  - Refactorizar afAuth a un servicio
-  - Colocar auth en medio de la pantalla y mostrar un mensaje 'no estás loggeado'
+  MISC
   - Spinner personalizado?
-  - Vincular usuario a sus tareas en firebase realtimedatabase
 -->
 <div *ngIf="userLoading">
   <div class="loading-spinner">
@@ -19,8 +15,9 @@
     </div>
   </div>
 </div>
-<div *ngIf="user && !userLoading">
+<div *ngIf="user && !userLoading" class="logout-section">
   <!-- LOGOUT -->
+  <p>Welcome <b>{{ user.displayName ? user.displayName : user.email }}</b>!</p>
   <button class="btn btn-secondary" (click)="onUserSignOut()">Logout</button>
 </div>
 
@@ -34,6 +31,13 @@ class="custom-firebase-ui"
   </div>
 </div>
 
+<!-- Index con listado de tareas -->
 <app-task-index
 [hidden]="!user || userLoading"
 ></app-task-index>
+
+<!-- Form para crear una NUEVA tarea -->
+<app-task-form
+></app-task-form>
+
+<!-- Form para editar una tarea YA EXISTENTE -->

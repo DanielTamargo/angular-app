@@ -11,7 +11,8 @@ const initialState: TaskListStateInterface = {
     { accessibility: 0.2, activity: 'Test activity 3', completed: false, key: 'test-3', participants: 1, price: 150, type: 'recreational' }, */
   ],
   editedTask: null,
-  newTask: null
+  newTask: null,
+  tasksLoaded: false,
 };
 
 // TaskList Reducer que trabajará con la información
@@ -24,6 +25,7 @@ export const taskListReducer = createReducer(
   on(TaskListActions.tasksLoad, (state, { tasks }) => ({
     ...state,
     tasks: tasks,
+    tasksLoaded: true
   })),
   on(TaskListActions.taskAdd, (state, { task }) => ({
     ...state,

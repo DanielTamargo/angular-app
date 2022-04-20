@@ -27,6 +27,8 @@ export class TaskIndexComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     // Nos suscribimos al reducer de las tareas para obtener el estado cada vez que haya un cambio
     this.tasksSubscription$ = this.store.select('taskList').subscribe(state => {
+      if (!state.tasksLoaded) return;
+
       this.tasks = state.tasks;
       this.loading = false;
       console.log(state.tasks);

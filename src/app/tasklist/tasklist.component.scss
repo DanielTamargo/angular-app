@@ -1,3 +1,14 @@
+.logout-section {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: space-between;
+
+  & p {
+    margin: 0;
+  }
+}
+
 .custom-firebase-ui {
   margin-top: 2em;
   height: 60vh;
@@ -30,6 +41,6 @@
 
 @media (max-height: 380px) {
   .custom-firebase-ui {
-  margin-top: 2em;
+    margin-top: 2em;
   }
 }

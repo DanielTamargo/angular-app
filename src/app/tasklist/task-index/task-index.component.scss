@@ -13,8 +13,8 @@ $add-task-pos: 40px;
   right: $add-task-pos;
 }
 
-@media (min-width: 1000px) {
+@media (min-width: 1140px) {
   .add-task {
-    right: calc($add-task-pos + ((100vw - 1000px) / 2));
+    right: calc($add-task-pos + ((100vw - 1140px) / 2));
   }
 }
