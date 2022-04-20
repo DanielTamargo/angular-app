@@ -12,21 +12,21 @@
   - Spinner personalizado?
   - Vincular usuario a sus tareas en firebase realtimedatabase
 -->
-<div *ngIf="loading">
+<div *ngIf="userLoading">
   <div class="loading-spinner">
     <div class="spinner-border text-primary" role="status">
       <span class="visually-hidden">Loading...</span>
     </div>
   </div>
 </div>
-<div *ngIf="user && !loading">
+<div *ngIf="user && !userLoading">
   <!-- LOGOUT -->
-  <button class="btn btn-secondary" (click)="userSignOut()">Logout</button>
+  <button class="btn btn-secondary" (click)="onUserSignOut()">Logout</button>
 </div>
 
 <div 
 class="custom-firebase-ui"
-[hidden]="user || loading"
+[hidden]="user || userLoading"
 >
 <div class="custom-firebase-ui-content">
     <h3 class="custom-firebase-ui-title text-muted">Login</h3>
@@ -35,5 +35,5 @@ class="custom-firebase-ui"
 </div>
 
 <app-task-index
-[hidden]="!user || loading"
+[hidden]="!user || userLoading"
 ></app-task-index>

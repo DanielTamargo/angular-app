@@ -3,12 +3,17 @@ import { createAction, props } from '@ngrx/store';
 import { TaskInterface } from '../interfaces/task.interface';
 
 // CLAVES DE ACCIONES
+export const USER_LOGOUT = '[User] Logout';
 export const TASK_LOAD   = '[TaskList] Load Tasks';
 export const TASK_ADD    = '[TaskList] Add Task';
 export const TASK_UPDATE = '[TaskList] Update Task';
 export const TASK_DELETE = '[TaskList] Delete Task';
 
 // ACCIONES
+export const userLogout = createAction(
+  USER_LOGOUT
+);
+
 export const tasksLoad = createAction(
   TASK_LOAD,
   props<{ tasks: TaskInterface[] }>()

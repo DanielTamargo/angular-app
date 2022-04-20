@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { TasklistService } from './services/tasklist.service';
 
 @Component({
@@ -7,42 +7,34 @@ import { TasklistService } from './services/tasklist.service';
   templateUrl: './tasklist.component.html',
   styleUrls: ['./tasklist.component.scss']
 })
-export class TasklistComponent implements OnInit {
-  loading = true;
+export class TasklistComponent implements OnInit, OnDestroy {
+
+  userLoading = true;
+  userLoadingSubscription$ = new Subscription;
+  userSubscription$ = new Subscription;
+
   user: any = null;
 
-  // TODO refactorizar a servicio
-  constructor(
-    public afAuth: AngularFireAuth,
-    private taskListService: TasklistService
-    ) 
-  {
-    // Nos suscribimos a los cambios en el usuario
-    this.afAuth.user.subscribe((user) => {
-      this.user = user;
-      this.loading = false;
-      this.taskListService.userLoggedIn(user);
-
-      if (!user) {
-        this.taskListService.userAccessToken = null;
-        return; 
-      }
-
-      // Obtenemos el token: https://firebase.google.com/docs/reference/js/v8/firebase.User#getidtoken
-      user.getIdToken().then(token => {
-        this.taskListService.userAccessToken = token;
-      });
-    });
-
-  }
-
-  async userSignOut() {
-    return this.afAuth.signOut().then(() => {
-      console.log('Logout');
-    });
-  }
+  constructor(private taskListService: TasklistService) { }
 
   ngOnInit(): void {
+    // Inicializamos la suscripción a los cambios en el usuario
+    this.taskListService.initializeAuthSubscription();
+
+    // Nos suscribimos a los cambios en el loading del usuario
+    this.userLoadingSubscription$ = this.taskListService.userLoadingSubject$.subscribe(loading => { this.userLoading = loading });
+    // Y a los cambios en el usuario
+    this.userSubscription$ = this.taskListService.userSubject$.subscribe(user => { this.user = user });
+  }
+
+  onUserSignOut(): void {
+    this.taskListService.userSignOut();
+  }
+
+  ngOnDestroy(): void {
+    // Eliminamos suscripciones para evitar pérdidas de memoria o rendimiento
+    this.userLoadingSubscription$.unsubscribe();
+    this.userSubscription$.unsubscribe();
   }
 
 }

@@ -1,9 +1,3 @@
-export interface TaskListStateInterface {
-  tasks: TaskInterface[];
-  editedTask: string | null;
-  newTask: string | null;
-}
-
 export interface TaskInterface {
   activity: string,
   type: TaskType,

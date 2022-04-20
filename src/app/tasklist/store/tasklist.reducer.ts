@@ -1,5 +1,5 @@
 import { createReducer, on } from '@ngrx/store';
-import { TaskListStateInterface } from "../interfaces/task.interface";
+import { TaskListStateInterface } from "../interfaces/tasklist-state.interface";
 import * as TaskListActions from "./tasklist.actions";
 
 
@@ -17,6 +17,10 @@ const initialState: TaskListStateInterface = {
 // TaskList Reducer que trabajará con la información
 export const taskListReducer = createReducer(
   initialState,
+  on(TaskListActions.userLogout, (state) => ({
+    ...state,
+    ...initialState,
+  })),
   on(TaskListActions.tasksLoad, (state, { tasks }) => ({
     ...state,
     tasks: tasks,

@@ -2,8 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
-import { TaskListConstants as TLC } from '../constants/tasklist-constants';
-import { TaskInterface, TaskListStateInterface } from '../interfaces/task.interface';
+import { TaskInterface } from '../interfaces/task.interface';
+import { TaskListStateInterface } from '../interfaces/tasklist-state.interface';
 import { TasklistService } from '../services/tasklist.service';
 
 @Component({
