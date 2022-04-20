@@ -11,18 +11,19 @@ export interface TaskInterface {
   participants: number,
   completed: boolean,
 
+  key: string,
   link?: string,
   accessibility: number,
-  key?: string, // <- opcional porque al insertar una nueva recogerá su id en la respuesta
+  id?: string, // <- opcional porque al insertar una nueva recogerá su id en la respuesta
 }
 
-type TaskType = 
-  'recreational' | 
+type TaskType =
+  'recreational' |
   'music' |
-  'education' | 
+  'education' |
   'cooking' |
-  'social' | 
-  'diy' | 
+  'social' |
+  'diy' |
   'charity' |
   'relaxation' |
   'busywork';
