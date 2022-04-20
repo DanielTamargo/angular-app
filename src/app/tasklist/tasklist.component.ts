@@ -9,11 +9,13 @@ import { TasklistService } from './services/tasklist.service';
 })
 export class TasklistComponent implements OnInit, OnDestroy {
 
+  user: any = null;
   userLoading = true;
   userLoadingSubscription$ = new Subscription;
   userSubscription$ = new Subscription;
 
-  user: any = null;
+  displayIndex: number = 1;
+  displayIndexSubscription$ = new Subscription;
 
   constructor(private taskListService: TasklistService) { }
 
@@ -25,6 +27,8 @@ export class TasklistComponent implements OnInit, OnDestroy {
     this.userLoadingSubscription$ = this.taskListService.userLoadingSubject$.subscribe(loading => { this.userLoading = loading });
     // Y a los cambios en el usuario
     this.userSubscription$ = this.taskListService.userSubject$.subscribe(user => { this.user = user });
+    // Y al cambio de display
+    this.displayIndexSubscription$ = this.taskListService.displayIndexSubject$.subscribe(index => { this.displayIndex = index });
   }
 
   onUserSignOut(): void {
@@ -35,6 +39,7 @@ export class TasklistComponent implements OnInit, OnDestroy {
     // Eliminamos suscripciones para evitar pérdidas de memoria o rendimiento
     this.userLoadingSubscription$.unsubscribe();
     this.userSubscription$.unsubscribe();
+    this.displayIndexSubscription$.unsubscribe();
   }
 
 }

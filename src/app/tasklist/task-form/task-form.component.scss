@@ -5,6 +5,7 @@
 
 
 .task-form {
+  margin-top: 5vh;
   display: flex;
   flex-direction: column;
 
@@ -23,10 +24,15 @@
       min-width: 500px;
       flex-grow: 10;
     }
+
+    & > .price, & > .participants {
+      max-width: 180px;
+    }
   }
   
-  & button {
-    width: fit-content;
+  & .form-buttons {
+    display: flex;
+    gap: 10px;
   }
 
 }

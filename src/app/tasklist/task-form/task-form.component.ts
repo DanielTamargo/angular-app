@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { TaskInterface } from '../interfaces/task.interface';
+import { TasklistService } from '../services/tasklist.service';
 
 @Component({
   selector: 'app-task-form',
@@ -13,7 +14,7 @@ export class TaskFormComponent implements OnInit {
 
   types: String[] = [ 'recreational', 'music', 'education', 'cooking', 'social', 'diy', 'charity', 'relaxation', 'busywork' ];
 
-  constructor() { }
+  constructor(private taskListService: TasklistService) { }
 
   ngOnInit(): void {
     // Inicializamos el formulario (importante hacerlo antes de que se renderice)
@@ -87,6 +88,10 @@ export class TaskFormComponent implements OnInit {
   onSubmit(): void {
     console.log('Submit');
     console.log(this.formTarea);
+  }
+
+  onGoBack(): void {
+    this.taskListService.displayComponents(2);
   }
 
 }

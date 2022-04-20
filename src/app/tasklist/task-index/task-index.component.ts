@@ -42,8 +42,7 @@ export class TaskIndexComponent implements OnInit, OnDestroy {
 
 
   onCreateTask(): void {
-    const task = this.tasks[0]
-    this.taskListService.addTask(task);
+    this.taskListService.displayComponents(3);
   }
 
 }

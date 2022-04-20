@@ -33,11 +33,12 @@ class="custom-firebase-ui"
 
 <!-- Index con listado de tareas -->
 <app-task-index
-[hidden]="!user || userLoading"
+[hidden]="displayIndex != 2"
 ></app-task-index>
 
 <!-- Form para crear una NUEVA tarea -->
 <app-task-form
+[hidden]="displayIndex != 3"
 ></app-task-form>
 
 <!-- Form para editar una tarea YA EXISTENTE -->

@@ -87,8 +87,11 @@
   </div>
   
   <p class="mb-0 mt-4"><span [hidden]="formTarea.valid">Fill all required fields before submitting</span>&nbsp;</p>
-  <button 
-  [disabled]="formTarea.invalid"
-  type="submit" 
-  class="btn btn-success">Submit</button>
+  <div class="form-buttons">
+    <button 
+    [disabled]="formTarea.invalid"
+    type="submit" 
+    class="btn btn-success">Submit</button>
+    <button class="btn btn-secondary" (click)="onGoBack()">Go back</button>
+  </div>
 </form>

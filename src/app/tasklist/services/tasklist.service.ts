@@ -22,7 +22,7 @@ export class TasklistService {
   userAccessToken: string
 
   displayIndex = 1;
-  displaySubject$ = new BehaviorSubject<number>(this.displayIndex);
+  displayIndexSubject$ = new BehaviorSubject<number>(this.displayIndex);
 
   tasksDB$: AngularFireList<TaskInterface>;
   tasksSubscription$ = new Subscription;
@@ -118,6 +118,8 @@ export class TasklistService {
       this.store.dispatch(TaskListActions.tasksLoad({
         tasks: tasks
       }));
+
+      this.displayComponents(2);
     });
   }
 
@@ -127,6 +129,7 @@ export class TasklistService {
   userSignOut() {
     this.afAuth.signOut().then(() => {
       this.store.dispatch(TaskListActions.userLogout());
+      this.displayComponents(1); // Volvemos al login
     });
   }
 
@@ -182,10 +185,13 @@ export class TasklistService {
   /**
    * Recibe de cualquier componente un índice y lo emite para que el padre lo reciba
    * El padre utilizará el índice para mostrar u ocultar los componentes hijos
+   * 
+   * Casos:
+   * 1 - login, 2 - index, 3 - new task, 4 - edit task
    */
   displayComponents(displayIndex: number = 1): void {
     this.displayIndex = displayIndex;
-    this.displaySubject$.next(this.displayIndex);
+    this.displayIndexSubject$.next(this.displayIndex);
   }
 
 
