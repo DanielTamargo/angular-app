@@ -14,7 +14,7 @@ const ANIMATION_STATES = {
   templateUrl: './tasklist.component.html',
   styleUrls: ['./tasklist.component.scss'],
   animations: [
-    trigger('taskFormFadeInOut', [
+    trigger('taskFormSlideInOut', [
       state('*', style({ transform: 'translateX(110vw)', opacity: 0 })),
       state(ANIMATION_STATES.TaskForm, style({ transform: 'translateX(0)', opacity: 1 })),
       transition('* => ' + ANIMATION_STATES.TaskForm, animate(`200ms ease-in-out`)),

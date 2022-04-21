@@ -17,7 +17,7 @@
       </div>
     </div>
   </div>
-  .
+  
   <div *ngIf="user && !userLoading" class="logout-section">
     <!-- LOGOUT -->
     <p>Welcome <b>{{ user.displayName ? user.displayName : user.email }}</b>!</p>
@@ -42,7 +42,7 @@
   
   <!-- Form para crear una NUEVA tarea -->
   <div class="task-form-container"
-  [@taskFormFadeInOut]="displayState"
+  [@taskFormSlideInOut]="displayState"
   >
     <app-task-form 
     [hidden]="displayIndex < 2"
