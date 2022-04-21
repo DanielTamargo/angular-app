@@ -28,15 +28,11 @@ const ANIMATION_STATES = {
       state(ANIMATION_STATES.TaskForm, style({ left: '0', opacity: 1, display: 'block' })),
       transition('* => ' + ANIMATION_STATES.TaskForm, 
         sequence([
-          animate(`0ms`, style({ display: 'block' })),
+          animate(`0ms`, style({ display: 'block' })), // <- Permite que se vea el deslice al entrar
           animate(`200ms ease-in-out`),
         ])
       ),
-      transition(ANIMATION_STATES.TaskForm + ' => *', 
-        sequence([
-          animate(`200ms ease-in-out`),
-        ])
-      ),
+      transition(ANIMATION_STATES.TaskForm + ' => *', animate(`200ms ease-in-out`)),
     ]),
   ]
 })
@@ -57,6 +53,12 @@ export class TasklistComponent implements OnInit, OnDestroy {
     // Inicializamos la suscripción a los cambios en el usuario
     this.taskListService.initializeAuthSubscription();
 
+    // Comprobamos si ya existía el usuario cargado
+    if (this.taskListService.userLoaded) {
+      this.userLoading = false;
+      this.user = this.taskListService.user;
+    }
+
     // Nos suscribimos a los cambios en el loading del usuario
     this.userLoadingSubscription$ = this.taskListService.userLoadingSubject$.subscribe(loading => { this.userLoading = loading });
     // Y a los cambios en el usuario
@@ -68,8 +70,6 @@ export class TasklistComponent implements OnInit, OnDestroy {
       if (this.displayIndex == 1) this.displayState = ANIMATION_STATES.Login;
       if (this.displayIndex == 2) this.displayState = ANIMATION_STATES.Index;
       if (this.displayIndex == 3) this.displayState = ANIMATION_STATES.TaskForm;
-
-      console.log(this.displayState);
     });
   }
 

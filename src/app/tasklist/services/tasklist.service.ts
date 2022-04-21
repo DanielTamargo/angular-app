@@ -19,6 +19,7 @@ export class TasklistService {
   userLoadingSubject$ = new Subject<boolean>();
 
   user: any;
+  userLoaded: boolean = false;
   userAccessToken: string
 
   displayIndex = 1;
@@ -43,6 +44,8 @@ export class TasklistService {
 
     // Nos suscribimos a los cambios en el usuario
     this.afAuth.user.subscribe((user) => {
+      this.userLoaded = true;
+
       // Emitimos actualizaciones
       this.userLoadingSubject$.next(false);
       this.userSubject$.next(user);
@@ -77,7 +80,6 @@ export class TasklistService {
     this.tasksSubscription$.unsubscribe();
     
     /* Obtener la lista solo una única vez */
-    /*
     this.afDB.list("/" + user.uid + "/tasks").query.once('value').then(val => {
       const tasks = [];
       val.forEach(task => {
@@ -90,11 +92,19 @@ export class TasklistService {
       this.store.dispatch(TaskListActions.tasksLoad({
         tasks: tasks
       }));
+
+      this.displayComponents(2);
     });
-    */
 
     /* Obtener la lista cada vez que ocurra algún cambio en la BBDD */
     // Utilizando @angular/fire podemos acceder a la instancia de la BBDD y obtenemos la referencia al conjunto de datos
+
+    // NO voy a utilizar esta conexión viva por un único motivo: quiero aprender todo lo posible sobre NgRx y decidí aplicarlo en esta parte de la 
+    //   aplicación, por lo que únicamente tomaré la referencia a la BBDD para cargar el listado una vez
+    // Lo peor de esta decisión es que si el usuario se conecta a la vez desde dos sitios distintos, la lista no actualizará
+    //   los cambios en ambos lados a la vez, y eso quedaría precioso :(
+
+    /*
     this.tasksDB$ = this.afDB.list<TaskInterface>("/" + user.uid + "/tasks", (ref) =>
       // Podemos ordenar los resultados
       ref.orderByChild('price')
@@ -121,6 +131,7 @@ export class TasklistService {
 
       this.displayComponents(2);
     });
+    */
   }
 
   /**
@@ -152,6 +163,8 @@ export class TasklistService {
     this.store.dispatch(TaskListActions.taskAdd({
       task: task
     }));
+
+    this.displayComponents(2);
   }
 
   /**

@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Subscription } from 'rxjs';
+import Swal from 'sweetalert2';
 import { TaskInterface } from '../interfaces/task.interface';
 import { TasklistService } from '../services/tasklist.service';
 
@@ -8,43 +10,60 @@ import { TasklistService } from '../services/tasklist.service';
   templateUrl: './task-form.component.html',
   styleUrls: ['./task-form.component.scss']
 })
-export class TaskFormComponent implements OnInit {
-  formTarea: FormGroup;
-  tarea: TaskInterface;
-
+export class TaskFormComponent implements OnInit, OnDestroy {
+  formTask: FormGroup;
+  initialFormValue = null;
   types: String[] = [ 'recreational', 'music', 'education', 'cooking', 'social', 'diy', 'charity', 'relaxation', 'busywork' ];
+  formTaskLoadSubscription$ = new Subscription;
+  task?: TaskInterface = null;
 
   constructor(private taskListService: TasklistService) { }
 
   ngOnInit(): void {
+    // Inicializamos un form para nueva tarea, aunque este paso no debería ser relevante pero sí útil para evitar posibles bugs
+    this.setFormControls(null);
+
+    
+  }
+
+  /**
+   * Configura el formulario con los datos de la tarea recibida
+   */
+  setFormControls(task: TaskInterface): void {
+    if (task) this.task = task;
+    else this.task = null;
+
     // Inicializamos el formulario (importante hacerlo antes de que se renderice)
-    this.formTarea = new FormGroup({
+    this.formTask = new FormGroup({
       // Grupo con la información principal
       'mainInfo': new FormGroup({
         'activity': new FormControl(
-          this.tarea ? this.tarea.activity : null,
+          task ? task.activity : null,
           [Validators.required, this.customTextValidator.bind(this)]
         ),
         'type': new FormControl(
-          this.tarea ? this.tarea.type : null,
+          task ? task.type : null,
           [Validators.required]
         ),
         'price': new FormControl(
-          this.tarea ? this.tarea.price : null,
+          task ? task.price : null,
           [Validators.required, this.customNumberValidator.bind(this)]
         ),
         'participants': new FormControl(
-          this.tarea ? this.tarea.participants : null,
+          task ? task.participants : null,
           [Validators.required, this.customNumberValidator.bind(this)]
         ),
       }),
 
       // Grupo con información adicional no vital
       'additionalInfo': new FormGroup({
-        // 'accesibility': new FormControl(this.tarea ? this.tarea.accessibility : null),
-        'link': new FormControl(this.tarea ? this.tarea.link : null),
+        // 'accesibility': new FormControl(task ? task.accessibility : null),
+        'link': new FormControl(task ? task.link : null,
+          [this.customURLValidator.bind(this)]),
       })
     });
+
+    this.initialFormValue = this.formTask.value;
   }
 
   /**
@@ -83,15 +102,106 @@ export class TaskFormComponent implements OnInit {
     return null;
   }
 
+
+  customURLValidator(control: FormControl): { [key: string]: boolean } {
+    // Obtenemos el valor
+    const value = String(control.value);
+
+    // Es opcional
+    if (!value) return null;
+
+    // Si algo falla, devolvemos el error como true
+    try {
+      new URL(value);
+    } catch (_) {
+      return { invalidURL: true };  
+    }
+
+    // Si todo ha ido bien, simplemente no devolvemos nada para que lo considere OK
+    return null;
+  }
  
 
-  onSubmit(): void {
-    console.log('Submit');
-    console.log(this.formTarea);
+  /**
+   * Genera una serie de tramos de una determinada longitud y los une para devolver una clave aleatoria
+   * 
+   * @param partLength longitud de cada tramo
+   * @param partsNumber número de tramos
+   * @returns clave aleatoria generada en base a los tramos configurados (unidos por un guión)
+   */
+  randomKey(partLength: number = 5, partsNumber: number = 3): string {
+    const result           = [];
+    const characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const charactersLength = characters.length;
+    let part               = '';
+    for (let partIndex = 0; partIndex < partsNumber; partIndex++) {
+      for (var i = 0; i < partLength; i++ ) {
+        part += characters.charAt(Math.floor(Math.random() * charactersLength));
+      }
+      result.push(part);
+      part = '';
+    }
+    return result.join('-');
   }
 
+  /**
+   * Crea la tarea y la envía al servicio para que la registre y añada al listado de tareas
+   */
+  onSubmit(): void {
+    // Generamos la tarea
+    const task: TaskInterface = {
+      activity: this.formTask.value['mainInfo']['activity'],
+      participants: this.formTask.valid['mainInfo']['participants'],
+      type: this.formTask.valid['mainInfo']['type'],
+      price: this.formTask.valid['mainInfo']['price'],
+      link: this.formTask.valid['additionalInfo']['link'],
+
+      id: this.task ? this.task.id : null,
+      
+      key: this.task ? this.task.key : this.randomKey(),
+      completed: false,
+      accessibility: this.task ? this.task.accessibility : 0
+    }
+
+    // Si la tarea es null, será una creación
+    if (!this.task) {
+      this.taskListService.addTask(task);
+      return;
+    }
+
+    // Si no, será una actualización
+    this.taskListService.updateTask(task);
+  }
+
+  /**
+   * Método para volver atrás y cancelar el formulario, si detecta cambios mostrará una alerta para solicitar una confirmación
+   * 
+   * Simula el CanDeactivate, pero como no se mueve de ruta lo ejecutamos en el propio método
+   */
   onGoBack(): void {
-    this.taskListService.displayComponents(2);
+    if (this.formTask.touched && this.formTask.dirty) {
+      // Si el usuario ha modificado el formulario, mostramos alerta para la confirmación
+      Swal.fire({
+        title: 'Ey!',
+        text: 'Your changes will be lost. Do you want to leave?',
+        showCancelButton: true,
+        showConfirmButton: true,
+        confirmButtonText: "Yes",
+        cancelButtonText: "No",
+      }).then((result) => {
+        // Si confirma, volvemos
+        if (result.isConfirmed) this.taskListService.displayComponents(2);
+      });
+    } else {
+      // Si no había modificado, directamente volvemos
+      this.taskListService.displayComponents(2);
+    }
+
+  }
+
+  ngOnDestroy(): void {
+    // Eliminamos suscripciones para evitar pérdidas de rendimiento y memoria
+    this.formTaskLoadSubscription$.unsubscribe();
   }
 
 }

@@ -13,6 +13,7 @@ const initialState: TaskListStateInterface = {
   editedTask: null,
   newTask: null,
   tasksLoaded: false,
+  taskToUpdate: null,
 };
 
 // TaskList Reducer que trabajará con la información
@@ -25,13 +26,19 @@ export const taskListReducer = createReducer(
   on(TaskListActions.tasksLoad, (state, { tasks }) => ({
     ...state,
     tasks: tasks,
-    tasksLoaded: true
+    tasksLoaded: true,
+    taskToUpdate: null
   })),
   on(TaskListActions.taskAdd, (state, { task }) => ({
     ...state,
     tasks: [...state.tasks, task],
     editedTask: null,
-    newTask: task.key
+    newTask: task.key,
+    taskToUpdate: null
+  })),
+  on(TaskListActions.taskUpdateShow, (state, { taskToUpdate }) => ({
+    ...state,
+    taskToUpdate: taskToUpdate
   })),
   on(TaskListActions.taskUpdate, (state, { task }) => {
     // Para respetar el readonly del state, obtenemos una copia de las tasks
@@ -56,7 +63,8 @@ export const taskListReducer = createReducer(
       ...state,
       tasks: tasks,
       editedTask: task.key,
-      newTask: null
+      newTask: null,
+      taskToUpdate: null
     }
   }),
   on(TaskListActions.taskDelete, (state, { task }) => {
@@ -65,7 +73,8 @@ export const taskListReducer = createReducer(
       ...state,
       tasks: state.tasks.filter(t => t.key !== task.key),
       editedTask: null,
-      newTask: null
+      newTask: null,
+      taskToUpdate: null
     }
   }),
 );
