@@ -14,9 +14,18 @@ const ANIMATION_STATES = {
   templateUrl: './tasklist.component.html',
   styleUrls: ['./tasklist.component.scss'],
   animations: [
+    // Index
+    trigger('taskIndexFadeInOut', [
+      state('*', style({ opacity: 0 })),
+      state(ANIMATION_STATES.Index, style({ opacity: 1 })),
+      transition('* => ' + ANIMATION_STATES.Index, animate(`200ms ease-in-out`)),
+      transition(ANIMATION_STATES.Index + ' => *',  animate(`200ms ease-in-out`)),
+    ]),
+
+    // TaskForm
     trigger('taskFormSlideInOut', [
-      state('*', style({ transform: 'translateX(110vw)', opacity: 0, display: 'none' })),
-      state(ANIMATION_STATES.TaskForm, style({ transform: 'translateX(0)', opacity: 1 })),
+      state('*', style({ left: '-110vw', opacity: 0, display: 'none' })),
+      state(ANIMATION_STATES.TaskForm, style({ left: '0', opacity: 1, display: 'block' })),
       transition('* => ' + ANIMATION_STATES.TaskForm, 
         sequence([
           animate(`0ms`, style({ display: 'block' })),
@@ -25,8 +34,7 @@ const ANIMATION_STATES = {
       ),
       transition(ANIMATION_STATES.TaskForm + ' => *', 
         sequence([
-          animate(`200ms ease-in-out`, style({ transform: 'translateX(-110vw)',  opacity: 0 })),
-          animate(`0ms`, style({ display: 'none' })),
+          animate(`200ms ease-in-out`),
         ])
       ),
     ]),

@@ -15,7 +15,7 @@
   }
 
   & .main-info {
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
     grid-template-areas: 
       "act act act act act act"
       "typ typ pri par par par";
@@ -38,9 +38,9 @@
   }
 
   & .additional-info {
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     grid-template-areas: 
-      "lin lin lin lin lin lin";
+      "lin lin lin lin";
 
     & > .link {
       grid-area: lin;
@@ -61,12 +61,25 @@
 @media (max-width: 800px) {
   .task-form {
     & .main-info {
-      grid-template-columns: 1fr 1fr 1fr 1fr;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       grid-template-areas: 
-        "act act act act"
-        "typ typ typ pri"
-        "par par par par";
+        "act act act"
+        "typ typ pri"
+        "par par par";
     }
   
+  }
+}
+
+@media (max-width: 350px) {
+  .task-form {
+    & .main-info {
+      grid-template-columns: repeat(1, minmax(0, 1fr));
+      grid-template-areas: 
+        "act"
+        "typ"
+        "pri"
+        "par";
+    }
   }
 }

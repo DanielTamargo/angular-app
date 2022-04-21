@@ -10,7 +10,7 @@
       matInput formControlName="activity">
       <div *ngIf="formTarea.get('mainInfo.activity').touched">
         <mat-error *ngIf="formTarea.get('mainInfo.activity').hasError('required')">
-          Please fill this field
+          Required
         </mat-error>
         <mat-error *ngIf="!formTarea.get('mainInfo.activity').hasError('required') && formTarea.get('mainInfo.activity').hasError('invalidMinLength')">
           Minimum 3 characters
@@ -27,17 +27,28 @@
       <mat-select panelClass="task-form-select" name="type" id="type" formControlName="type">
         <mat-option *ngFor="let type of types" [value]="type">{{ type }}</mat-option>
       </mat-select>
+      <div *ngIf="formTarea.get('mainInfo.type').touched">
+        <mat-error *ngIf="formTarea.get('mainInfo.type').hasError('required')">
+          Required
+        </mat-error>
+      </div>
     </mat-form-field>
 
     <!-- Price -->
     <mat-form-field class="price" appearance="fill">
       <mat-label>Price</mat-label>
-      <input type="number" name="price" id="price"
+      <input type="number" name="price" id="price" min="0" step="0.1"
         matInput formControlName="price">
-        <span matSuffix>€</span>
+      <span matSuffix>€</span>
       <div *ngIf="formTarea.get('mainInfo.price').touched">
-        <mat-error *ngIf="formTarea.get('mainInfo.price').hasError('invalidLength')">
-          Please enter a valid email address
+        <mat-error *ngIf="formTarea.get('mainInfo.price').hasError('required')">
+          Required
+        </mat-error>
+        <mat-error *ngIf="formTarea.get('mainInfo.price').hasError('notANumber')">
+          Not a valid price
+        </mat-error>
+        <mat-error *ngIf="formTarea.get('mainInfo.price').hasError('negativeNumber')">
+          Can't be negative
         </mat-error>
       </div>
     </mat-form-field>
@@ -45,11 +56,17 @@
     <!-- Participants -->
     <mat-form-field class="participants" appearance="fill">
       <mat-label>Number of Participants</mat-label>
-      <input type="number" name="participants" id="participants"
+      <input type="number" name="participants" id="participants"  min="0" step="1"
         matInput formControlName="participants">
       <div *ngIf="formTarea.get('mainInfo.participants').touched">
-        <mat-error *ngIf="formTarea.get('mainInfo.participants').hasError('invalidLength')">
-          Please enter a valid email address
+        <mat-error *ngIf="formTarea.get('mainInfo.participants').hasError('required')">
+          Required
+        </mat-error>
+        <mat-error *ngIf="formTarea.get('mainInfo.participants').hasError('notANumber')">
+          Not a valid number
+        </mat-error>
+        <mat-error *ngIf="formTarea.get('mainInfo.participants').hasError('negativeNumber')">
+          Can't be negative
         </mat-error>
       </div>
     </mat-form-field>

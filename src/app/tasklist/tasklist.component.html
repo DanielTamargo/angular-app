@@ -9,7 +9,7 @@
   - Spinner personalizado?
 -->
 
-<div class="tasklist-container">
+<!-- <div class="tasklist-container"> -->
   <div *ngIf="userLoading">
     <div class="loading-spinner">
       <div class="spinner-border text-primary" role="status">
@@ -18,10 +18,12 @@
     </div>
   </div>
   
-  <div *ngIf="user && !userLoading" class="logout-section">
-    <!-- LOGOUT -->
-    <p>Welcome <b>{{ user.displayName ? user.displayName : user.email }}</b>!</p>
-    <button class="btn btn-secondary" (click)="onUserSignOut()">Logout</button>
+  <div class="tasklist-logout">
+    <div *ngIf="user && !userLoading" class="logout-section">
+      <!-- LOGOUT -->
+      <p>Welcome <b>{{ user.displayName ? user.displayName : user.email }}</b>!</p>
+      <button class="btn btn-secondary" (click)="onUserSignOut()">Logout</button>
+    </div>
   </div>
   
   <div 
@@ -36,20 +38,29 @@
   </div>
   
   <!-- Index con listado de tareas -->
-  <app-task-index
-  [hidden]="displayIndex != 2"
-  ></app-task-index>
+  <div class="tasklist-component"
+  [@taskIndexFadeInOut]="displayState"
+  >
+    <div class="tasklist-component-wrapper">
+      <app-task-index
+      [hidden]="displayIndex < 2"
+    ></app-task-index>
+    </div>
+  </div>
+
+  
   
   <!-- Form para crear una NUEVA tarea -->
-  <div class="task-form-container"
+  <div class="tasklist-component"
   [@taskFormSlideInOut]="displayState"
   >
-    <app-task-form 
-    [hidden]="displayIndex < 2"
-    ></app-task-form>
+    <div class="tasklist-component-wrapper">
+      <app-task-form 
+      [hidden]="displayIndex < 2"
+      ></app-task-form>
+    </div>
   </div>
   
-
   <!-- Form para editar una tarea YA EXISTENTE -->
 
-</div>
+<!-- </div> -->
