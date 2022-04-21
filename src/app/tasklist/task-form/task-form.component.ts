@@ -41,7 +41,7 @@ export class TaskFormComponent implements OnInit {
 
       // Grupo con información adicional no vital
       'additionalInfo': new FormGroup({
-        'accesibility': new FormControl(this.tarea ? this.tarea.accessibility : null),
+        // 'accesibility': new FormControl(this.tarea ? this.tarea.accessibility : null),
         'link': new FormControl(this.tarea ? this.tarea.link : null),
       })
     });

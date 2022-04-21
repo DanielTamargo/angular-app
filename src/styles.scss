@@ -105,6 +105,11 @@ $task-form-invalid-color: #820909;
   } 
 }
 
+// Select selected option color
+.task-form-select .mat-option.mat-selected:not(.mat-option-disabled) {
+  color: $task-form-valid-color !important;
+}
+
 /*-------------------------------------------------------------------------------------------------*/
 /* SWEET ALERTS 2 */
 

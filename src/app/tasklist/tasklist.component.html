@@ -8,37 +8,47 @@
   MISC
   - Spinner personalizado?
 -->
-<div *ngIf="userLoading">
-  <div class="loading-spinner">
-    <div class="spinner-border text-primary" role="status">
-      <span class="visually-hidden">Loading...</span>
+
+<div class="tasklist-container">
+  <div *ngIf="userLoading">
+    <div class="loading-spinner">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
     </div>
   </div>
-</div>
-<div *ngIf="user && !userLoading" class="logout-section">
-  <!-- LOGOUT -->
-  <p>Welcome <b>{{ user.displayName ? user.displayName : user.email }}</b>!</p>
-  <button class="btn btn-secondary" (click)="onUserSignOut()">Logout</button>
-</div>
-
-<div 
-class="custom-firebase-ui"
-[hidden]="user || userLoading"
->
-<div class="custom-firebase-ui-content">
-    <h3 class="custom-firebase-ui-title text-muted">Login</h3>
-    <firebase-ui></firebase-ui>
+  .
+  <div *ngIf="user && !userLoading" class="logout-section">
+    <!-- LOGOUT -->
+    <p>Welcome <b>{{ user.displayName ? user.displayName : user.email }}</b>!</p>
+    <button class="btn btn-secondary" (click)="onUserSignOut()">Logout</button>
   </div>
+  
+  <div 
+  class="custom-firebase-ui"
+  [hidden]="user || userLoading"
+  >
+    <div class="custom-firebase-ui-content"   
+      >
+      <h3 class="custom-firebase-ui-title text-muted">Login</h3>
+      <firebase-ui></firebase-ui>
+    </div>
+  </div>
+  
+  <!-- Index con listado de tareas -->
+  <app-task-index
+  [hidden]="displayIndex != 2"
+  ></app-task-index>
+  
+  <!-- Form para crear una NUEVA tarea -->
+  <div class="task-form-container"
+  [@taskFormFadeInOut]="displayState"
+  >
+    <app-task-form 
+    [hidden]="displayIndex < 2"
+    ></app-task-form>
+  </div>
+  
+  <!-- Form para editar una tarea YA EXISTENTE -->
+
 </div>
-
-<!-- Index con listado de tareas -->
-<app-task-index
-[hidden]="displayIndex != 2"
-></app-task-index>
-
-<!-- Form para crear una NUEVA tarea -->
-<app-task-form
-[hidden]="displayIndex != 3"
-></app-task-form>
-
-<!-- Form para editar una tarea YA EXISTENTE -->

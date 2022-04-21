@@ -3,11 +3,11 @@ export interface TaskInterface {
   type: TaskType,
   price: number,
   participants: number,
-  completed: boolean,
+  completed: boolean, // <- por defecto false
 
-  key: string,
-  link?: string,
-  accessibility: number,
+  key: string, // <- random
+  link?: string, // <- omitible
+  accessibility?: number, // <- omitible
   id?: string, // <- opcional porque al insertar una nueva recogerá su id en la respuesta
 }
 

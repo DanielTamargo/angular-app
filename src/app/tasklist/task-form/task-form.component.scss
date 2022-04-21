@@ -10,23 +10,44 @@
   flex-direction: column;
 
   & .main-info, & .additional-info {
-    display: flex;
-    justify-content: center;
+    display: grid;
     gap: 20px;
+  }
 
-    flex-wrap: wrap;
-
-    & > * {
-      flex-grow: 1;
-    }
+  & .main-info {
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-areas: 
+      "act act act act act act"
+      "typ typ pri par par par";
 
     & > .activity {
-      min-width: 500px;
-      flex-grow: 10;
+      grid-area: act;
     }
 
-    & > .price, & > .participants {
-      max-width: 180px;
+    & > .type {
+      grid-area: typ;
+    }
+
+    & > .price {
+      grid-area: pri;
+    }
+
+    & > .participants {
+      grid-area: par;
+    }
+  }
+
+  & .additional-info {
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-areas: 
+      "lin lin lin lin lin lin";
+
+    & > .link {
+      grid-area: lin;
+    }
+
+    & > .accesibility {
+      grid-area: acc;
     }
   }
   
@@ -39,14 +60,12 @@
 
 @media (max-width: 800px) {
   .task-form {
-    & .main-info, & .additional-info {
-      & > .activity {
-        min-width: 100%;
-      }
-    }
-    
-    & button {
-      width: fit-content;
+    & .main-info {
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      grid-template-areas: 
+        "act act act act"
+        "typ typ typ pri"
+        "par par par par";
     }
   
   }

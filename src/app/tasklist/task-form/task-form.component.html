@@ -24,7 +24,7 @@
     <!-- Type -->
     <mat-form-field class="type" appearance="fill">
       <mat-label>Type</mat-label>
-      <mat-select  name="type" id="type" formControlName="type">
+      <mat-select panelClass="task-form-select" name="type" id="type" formControlName="type">
         <mat-option *ngFor="let type of types" [value]="type">{{ type }}</mat-option>
       </mat-select>
     </mat-form-field>
@@ -44,7 +44,7 @@
 
     <!-- Participants -->
     <mat-form-field class="participants" appearance="fill">
-      <mat-label>Participants</mat-label>
+      <mat-label>Number of Participants</mat-label>
       <input type="number" name="participants" id="participants"
         matInput formControlName="participants">
       <div *ngIf="formTarea.get('mainInfo.participants').touched">
@@ -65,14 +65,14 @@
       <input type="text" name="link" id="link"
       matInput formControlName="link">
       <div *ngIf="formTarea.get('additionalInfo.link').touched">
-        <mat-error *ngIf="formTarea.get('additionalInfo.link').hasError('invalidLength')">
-          Please enter a valid email address
+        <mat-error *ngIf="formTarea.get('additionalInfo.link').hasError('invalidURL')">
+          Please enter a valid URL
         </mat-error>
       </div>
     </mat-form-field>
     
     <!-- Accesibility -->
-    <mat-form-field class="accesibility" appearance="fill">
+    <!-- <mat-form-field class="accesibility" appearance="fill">
       <mat-label>Accesibility</mat-label>
       <input type="number" name="accesibility" id="accesibility"
         matInput formControlName="accesibility">
@@ -82,7 +82,7 @@
           Please enter a valid email address
         </mat-error>
       </div>
-    </mat-form-field>
+    </mat-form-field> -->
 
   </div>
   
