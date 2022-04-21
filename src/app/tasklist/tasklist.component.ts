@@ -15,10 +15,20 @@ const ANIMATION_STATES = {
   styleUrls: ['./tasklist.component.scss'],
   animations: [
     trigger('taskFormSlideInOut', [
-      state('*', style({ transform: 'translateX(110vw)', opacity: 0 })),
+      state('*', style({ transform: 'translateX(110vw)', opacity: 0, display: 'none' })),
       state(ANIMATION_STATES.TaskForm, style({ transform: 'translateX(0)', opacity: 1 })),
-      transition('* => ' + ANIMATION_STATES.TaskForm, animate(`200ms ease-in-out`)),
-      transition(ANIMATION_STATES.TaskForm + ' => *', animate(`200ms ease-in-out`, style({ transform: 'translateX(-110vw)', opacity: 0 })))
+      transition('* => ' + ANIMATION_STATES.TaskForm, 
+        sequence([
+          animate(`0ms`, style({ display: 'block' })),
+          animate(`200ms ease-in-out`),
+        ])
+      ),
+      transition(ANIMATION_STATES.TaskForm + ' => *', 
+        sequence([
+          animate(`200ms ease-in-out`, style({ transform: 'translateX(-110vw)',  opacity: 0 })),
+          animate(`0ms`, style({ display: 'none' })),
+        ])
+      ),
     ]),
   ]
 })
@@ -29,7 +39,7 @@ export class TasklistComponent implements OnInit, OnDestroy {
   userLoadingSubscription$ = new Subscription;
   userSubscription$ = new Subscription;
 
-  displayState: string = "Login";
+  displayState: string = ANIMATION_STATES.Login;
   displayIndex: number = 1;
   displayIndexSubscription$ = new Subscription;
 
