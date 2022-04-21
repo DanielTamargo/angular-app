@@ -6,9 +6,11 @@ import { TaskInterface } from '../interfaces/task.interface';
 export const USER_LOGOUT = '[User] Logout';
 export const TASK_LOAD   = '[TaskList] Load Tasks';
 export const TASK_ADD    = '[TaskList] Add Task';
-export const TASK_UPDATE_SHOW = '[TaskList] Show Update Task Form';
 export const TASK_UPDATE = '[TaskList] Update Task';
 export const TASK_DELETE = '[TaskList] Delete Task';
+
+export const TASK_CREATE_SHOW = '[TaskList] Show Create Task Form';
+export const TASK_UPDATE_SHOW = '[TaskList] Show Update Task Form';
 
 // ACCIONES
 export const userLogout = createAction(
@@ -25,9 +27,13 @@ export const taskAdd = createAction(
   props<{ task: TaskInterface }>()
 );
 
+export const taskCreateShow = createAction(
+  TASK_CREATE_SHOW,
+);
+
 export const taskUpdateShow = createAction(
   TASK_UPDATE_SHOW,
-  props<{ taskToUpdate: TaskInterface }>()
+  props<{ taskKey: string }>()
 );
 
 export const taskUpdate = createAction(

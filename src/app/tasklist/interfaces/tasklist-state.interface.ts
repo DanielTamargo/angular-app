@@ -3,7 +3,11 @@ import { TaskInterface } from "./task.interface";
 export interface TaskListStateInterface {
   tasks: TaskInterface[];
   editedTask: string | null;
-  newTask?: string;
+
+  taskAdded?: string;
+  taskUpdated?: string;
+  taskToUpdate?: string;
+
   tasksLoaded: boolean;
-  taskToUpdate?: TaskInterface;
+  taskFormShow: boolean,
 }

@@ -5,6 +5,7 @@ import { Subscription } from 'rxjs';
 import { TaskInterface } from '../interfaces/task.interface';
 import { TaskListStateInterface } from '../interfaces/tasklist-state.interface';
 import { TasklistService } from '../services/tasklist.service';
+import * as TaskListActions from '../store/tasklist.actions';
 
 @Component({
   selector: 'app-task-index',
@@ -42,7 +43,7 @@ export class TaskIndexComponent implements OnInit, OnDestroy {
 
 
   onCreateTask(): void {
-    this.taskListService.displayComponents(3);
+    this.store.dispatch(TaskListActions.taskCreateShow());
   }
 
 }

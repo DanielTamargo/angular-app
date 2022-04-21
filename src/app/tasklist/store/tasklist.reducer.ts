@@ -11,10 +11,21 @@ const initialState: TaskListStateInterface = {
     { accessibility: 0.2, activity: 'Test activity 3', completed: false, key: 'test-3', participants: 1, price: 150, type: 'recreational' }, */
   ],
   editedTask: null,
-  newTask: null,
+  taskAdded: null,
+  taskUpdated: null,
   tasksLoaded: false,
+  taskFormShow: false,
   taskToUpdate: null,
 };
+
+const resetOptions = {
+  editedTask: null,
+  taskAdded: null,
+  taskUpdated: null,
+  tasksLoaded: false,
+  taskFormShow: false,
+  taskToUpdate: null,
+}
 
 // TaskList Reducer que trabajará con la información
 export const taskListReducer = createReducer(
@@ -25,20 +36,26 @@ export const taskListReducer = createReducer(
   })),
   on(TaskListActions.tasksLoad, (state, { tasks }) => ({
     ...state,
+    ...resetOptions,
     tasks: tasks,
     tasksLoaded: true,
-    taskToUpdate: null
   })),
   on(TaskListActions.taskAdd, (state, { task }) => ({
     ...state,
+    ...resetOptions,
     tasks: [...state.tasks, task],
-    editedTask: null,
     newTask: task.key,
-    taskToUpdate: null
   })),
-  on(TaskListActions.taskUpdateShow, (state, { taskToUpdate }) => ({
+  on(TaskListActions.taskCreateShow, (state) => ({
     ...state,
-    taskToUpdate: taskToUpdate
+    ...resetOptions,
+    taskFormShow: true,
+  })),
+  on(TaskListActions.taskUpdateShow, (state, { taskKey }) => ({
+    ...state,
+    ...resetOptions,
+    taskToUpdate: taskKey,
+    taskFormShow: true,
   })),
   on(TaskListActions.taskUpdate, (state, { task }) => {
     // Para respetar el readonly del state, obtenemos una copia de las tasks
@@ -49,7 +66,11 @@ export const taskListReducer = createReducer(
 
     // TODO si no encuentra la task, mostrar error
     if (indexOfUpdatedTask < 0) {
-      return state;
+      return {
+        ...state,
+        ...resetOptions,
+        // TODO: error: 'error al actualizar, w/e'
+      };
     }
 
     // Modificamos la tarea
@@ -61,20 +82,17 @@ export const taskListReducer = createReducer(
     // Devolvemos el nuevo estado
     return {
       ...state,
+      ...resetOptions,
       tasks: tasks,
       editedTask: task.key,
-      newTask: null,
-      taskToUpdate: null
     }
   }),
   on(TaskListActions.taskDelete, (state, { task }) => {
     // Devolvemos el estado filtrando para obviar la tarea eliminada
     return {
       ...state,
+      ...resetOptions,
       tasks: state.tasks.filter(t => t.key !== task.key),
-      editedTask: null,
-      newTask: null,
-      taskToUpdate: null
     }
   }),
 );

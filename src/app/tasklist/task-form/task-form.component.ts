@@ -1,8 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 import Swal from 'sweetalert2';
 import { TaskInterface } from '../interfaces/task.interface';
+import { TaskListStateInterface } from '../interfaces/tasklist-state.interface';
 import { TasklistService } from '../services/tasklist.service';
 
 @Component({
@@ -14,22 +16,30 @@ export class TaskFormComponent implements OnInit, OnDestroy {
   formTask: FormGroup;
   initialFormValue = null;
   types: String[] = [ 'recreational', 'music', 'education', 'cooking', 'social', 'diy', 'charity', 'relaxation', 'busywork' ];
-  formTaskLoadSubscription$ = new Subscription;
+  storeSubscription$ = new Subscription;
   task?: TaskInterface = null;
 
-  constructor(private taskListService: TasklistService) { }
+  constructor(private taskListService: TasklistService, private store: Store<{ taskList: TaskListStateInterface }>) { }
 
   ngOnInit(): void {
     // Inicializamos un form para nueva tarea, aunque este paso no debería ser relevante pero sí útil para evitar posibles bugs
     this.setFormControls(null);
 
-    
+    // Nos suscribimos al reducer de las tareas para obtener el estado cada vez que haya un cambio
+    this.storeSubscription$ = this.store.select('taskList').subscribe(state => {
+      if (!state.taskFormShow) return;
+
+      if (state.taskToUpdate) this.setFormControls(state.tasks.find(t => t.key == state.taskToUpdate));
+      else this.setFormControls();
+
+      this.taskListService.displayComponents(3);
+    });  
   }
 
   /**
    * Configura el formulario con los datos de la tarea recibida
    */
-  setFormControls(task: TaskInterface): void {
+  setFormControls(task: TaskInterface = null): void {
     if (task) this.task = task;
     else this.task = null;
 
@@ -201,7 +211,7 @@ export class TaskFormComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     // Eliminamos suscripciones para evitar pérdidas de rendimiento y memoria
-    this.formTaskLoadSubscription$.unsubscribe();
+    this.storeSubscription$.unsubscribe();
   }
 
 }
