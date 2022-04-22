@@ -158,6 +158,8 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
 
         let i = 0;
         for (const key of keys) {
+          if (typeof featureProperties[key] == 'object') continue;
+
           resp[i] = { key: key, value: featureProperties[key] };
           i++;
         }

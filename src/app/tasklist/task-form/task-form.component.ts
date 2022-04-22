@@ -164,6 +164,7 @@ export class TaskFormComponent implements OnInit, OnDestroy {
     const task: TaskInterface = {
       ...this.formTask.value['mainInfo'],
       ...this.formTask.value['additionalInfo'],
+      created_at: this.task ? this.task.created_at : new Date().getTime(),
       
       id: this.task ? this.task.id : null,
       

@@ -2,7 +2,6 @@ import { createReducer, on } from '@ngrx/store';
 import { TaskListStateInterface } from "../interfaces/tasklist-state.interface";
 import * as TaskListActions from "./tasklist.actions";
 
-
 // Estado inicial de la aplicación
 const initialState: TaskListStateInterface = {
   tasks: [
@@ -45,7 +44,7 @@ export const taskListReducer = createReducer(
   on(TaskListActions.taskAdd, (state, { task }) => ({
     ...state,
     ...resetOptions,
-    tasks: [...state.tasks, task],
+    tasks: [task, ...state.tasks],
     newTask: task.key,
   })),
   on(TaskListActions.taskCreateShow, (state) => ({

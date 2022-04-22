@@ -4,6 +4,7 @@ export interface TaskInterface {
   price: number,
   participants: number,
   completed: boolean, // <- por defecto false
+  created_at: number,
 
   key: string, // <- random
   link?: string, // <- omitible

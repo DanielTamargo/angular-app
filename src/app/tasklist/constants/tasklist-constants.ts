@@ -1,4 +1,4 @@
-import { environment } from "src/environments/environment";
+import { TaskInterface } from "../interfaces/task.interface";
 
 export class TaskListConstants {
   /* ----------- UTIL ----------- */
@@ -19,4 +19,9 @@ export class TaskListConstants {
   static readonly DISPLAY_FORM  = 3; // <- CREATE y UPDATE en uno
   static readonly DISPLAY_SHOW  = 4;
 
-}
+
+
+  public static taskArraySortByTimestamp(tasks: TaskInterface[]): TaskInterface[] {
+    return tasks.sort((a, z) => z.created_at - a.created_at);
+  }
+ }

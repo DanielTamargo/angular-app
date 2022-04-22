@@ -7,7 +7,7 @@ import { AngularFireList, AngularFireDatabase } from '@angular/fire/compat/datab
 import { TaskInterface } from '../interfaces/task.interface';
 import { TaskListStateInterface } from '../interfaces/tasklist-state.interface';
 import * as TaskListActions from '../store/tasklist.actions';
-import { TaskListConstants as TLC } from '../constants/tasklist-constants';
+import { TaskListConstants, TaskListConstants as TLC } from '../constants/tasklist-constants';
 
 @Injectable({
   providedIn: 'root'
@@ -84,15 +84,15 @@ export class TasklistService {
     this.tasksDB$ = this.afDB.list("/" + user.uid + "/tasks");
     this.tasksDB$.query.once('value').then(val => {
       const tasks = [];
-      val.forEach(task => {
+      val.forEach(payload => {
         tasks.push({
-          ...task.val(),
-          key: task.key
+          ...payload.val(),
+          id: payload.key
         });
       });
       
       this.store.dispatch(TaskListActions.tasksLoad({
-        tasks: tasks
+        tasks: TaskListConstants.taskArraySortByTimestamp(tasks)
       }));
 
       this.displayComponents(TLC.DISPLAY_INDEX);
@@ -166,6 +166,7 @@ export class TasklistService {
       id: newTaskId
     };
 
+    // Actualizamos el estado del store a través de la acción hacia el reducer
     this.store.dispatch(TaskListActions.taskAdd({ task }));
 
     this.displayComponents(TLC.DISPLAY_INDEX);
@@ -180,9 +181,13 @@ export class TasklistService {
     // Comprobamos que estamos recibiendo una tarea
     if (!task) return;
 
-    this.store.dispatch(TaskListActions.taskUpdate({
-      task: task
-    }));
+    // Actualizamos en la BBDD
+    this.tasksDB$.update(task.id, task);
+
+    // Actualizamos el estado del store a través de la acción hacia el reducer
+    this.store.dispatch(TaskListActions.taskUpdate({ task }));
+
+    this.displayComponents(TLC.DISPLAY_INDEX);
   }
 
   /**
@@ -194,9 +199,14 @@ export class TasklistService {
     // Comprobamos que estamos recibiendo una tarea
     if (!task) return;
 
-    this.store.dispatch(TaskListActions.taskDelete({
-      task: task
-    }));
+    // Eliminamos el item de la BBDD
+    this.tasksDB$.remove(task.id);
+
+    // Actualizamos el estado del store a través de la acción hacia el reducer
+    this.store.dispatch(TaskListActions.taskDelete({ task }));
+
+    // Por si lo borramos desde el show
+    this.displayComponents(TLC.DISPLAY_INDEX);
   }
 
   /**

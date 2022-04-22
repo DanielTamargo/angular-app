@@ -1,5 +1,9 @@
 $add-task-dim: 50px;
-$add-task-pos: 40px;
+$add-task-pos-y: 40px;
+$add-task-pos-x: 26px;
+
+$activity-border-color: gray;
+
 
 .add-task {
   font-size: 2em;
@@ -9,19 +13,33 @@ $add-task-pos: 40px;
   border-radius: 50%;
 
   position: fixed;
-  bottom: $add-task-pos;
-  right: $add-task-pos;
+  z-index: 50;
+  bottom: $add-task-pos-y;
+  right: $add-task-pos-x;
+
+  transition: 100ms ease-in-out;
+
+  &:hover {
+    transform: scale(1.3);
+  }
 }
 
 
-$activity-border-color: gray;
+.activities {
+  padding-bottom: 8em;
+}
 
 .activity-card {
   font-family: 'Akshar', sans-serif;
 
   width: 100%;
   border: 1px solid $activity-border-color;
-  border-radius: 4px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  transition: 100ms ease-in-out;
+
+  &:hover {
+    transform: scale(1.015);
+  }
 
   &:not(:first-of-type) {
     margin-top: 10px;
@@ -66,6 +84,10 @@ $activity-border-color: gray;
           gap: 4px;
         }
 
+        & .act-link {
+          margin-left: auto;
+        }
+
         & .act-numbers-svg {
           width: 20px;
         }
@@ -88,6 +110,10 @@ $activity-border-color: gray;
 
       & > div {
         display: flex;
+
+        &:hover {
+          cursor: pointer;
+        }
       }
 
       & .act-completed {
@@ -95,12 +121,44 @@ $activity-border-color: gray;
         grid-area: com;
       }
       & .act-update {
+        padding: 4px;
         justify-content: start;
         grid-area: upd;
+
+        background-color: rgb(238, 162, 22);
+
+        &:hover {
+          background-color: rgb(204, 133, 0);
+        }
+
+        & svg {
+          width: 20px;
+        }
       }
       & .act-delete {
+        padding: 1px;
         justify-content: end;
         grid-area: del;
+        
+        background-color: rgb(237, 59, 59);
+
+        &:hover {
+          background-color: rgb(175, 27, 27);
+        }
+
+        & svg {
+          width: 26px;
+        }
+      }
+      & .act-update, & .act-delete {
+        margin-inline: auto;
+        width: fit-content;
+
+        border: 1px solid gray;
+        border-radius: 5px;
+      }
+
+      & .act-actions-svg {
       }
     }
   }
@@ -108,7 +166,7 @@ $activity-border-color: gray;
 
 @media (min-width: 1140px) {
   .add-task {
-    right: calc($add-task-pos + ((100vw - 1140px) / 2));
+    right: calc($add-task-pos-x + ((100vw - 1140px) / 2));
   }
 }
 

@@ -1,14 +1,46 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { trigger, transition, animate, style, query, stagger } from '@angular/animations';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 import { TaskInterface } from '../interfaces/task.interface';
 import { TaskListStateInterface } from '../interfaces/tasklist-state.interface';
 import * as TaskListActions from '../store/tasklist.actions';
+import { TasklistService } from '../services/tasklist.service';
 
 @Component({
   selector: 'app-task-index',
   templateUrl: './task-index.component.html',
-  styleUrls: ['./task-index.component.scss']
+  styleUrls: ['./task-index.component.scss'],
+  animations: [
+    trigger('pageAnimation', [
+      transition(':enter', [
+        query('.activity-card', [
+          style({opacity: 0, transform: 'translateY(-100px)'}),
+          stagger(-30, [
+            animate('500ms cubic-bezier(0.35, 0, 0.25, 1)', style({ opacity: 1, transform: 'none' }))
+          ])
+        ])
+      ])
+    ]),
+    trigger('filterAnimation', [
+      transition(':enter, * => 0, * => -1', []),
+      transition(':increment', [
+        query(':enter', [
+          style({ opacity: 0, width: '0px' }),
+          stagger(50, [
+            animate('300ms ease-out', style({ opacity: 1, width: '*' })),
+          ]),
+        ], { optional: true })
+      ]),
+      transition(':decrement', [
+        query(':leave', [
+          stagger(50, [
+            animate('300ms ease-out', style({ opacity: 0, width: '0px' })),
+          ]),
+        ])
+      ]),
+    ]),
+  ]
 })
 export class TaskIndexComponent implements OnInit, OnDestroy {
 
@@ -18,7 +50,12 @@ export class TaskIndexComponent implements OnInit, OnDestroy {
   tasks: TaskInterface[] = [];
   tasksSubscription$ = new Subscription;
 
-  constructor(private store: Store<{ taskList: TaskListStateInterface }>) { }
+  activityTotal = -1;
+
+  constructor(
+    private store: Store<{ taskList: TaskListStateInterface }>,
+    private taskListService: TasklistService
+    ) { }
 
   ngOnInit(): void {
     // Nos suscribimos al reducer de las tareas para obtener el estado cada vez que haya un cambio
@@ -36,9 +73,16 @@ export class TaskIndexComponent implements OnInit, OnDestroy {
     this.tasksSubscription$.unsubscribe();
   }
 
-
   onCreateTask(): void {
     this.store.dispatch(TaskListActions.taskCreateShow());
+  }
+
+  onEditTask(task: TaskInterface): void {
+    this.store.dispatch(TaskListActions.taskUpdateShow({ taskKey : task.key }))
+  }
+
+  onDeleteTask(task: TaskInterface): void {
+    this.taskListService.deleteTask(task);
   }
 
 }
