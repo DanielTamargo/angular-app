@@ -27,10 +27,8 @@ export class TaskFormComponent implements OnInit, OnDestroy {
     // Inicializamos un form para nueva tarea, aunque este paso no debería ser relevante pero sí útil para evitar posibles bugs
     this.setFormControls(null);
 
-    // Nos suscribimos al reducer de las tareas para obtener el estado cada vez que haya un cambio
+    // Nos suscribimos al store de las tareas para obtener el estado cada vez que haya un cambio
     this.storeSubscription$ = this.store.select('taskList').subscribe(state => {
-      console.log('Form',state);
-      
       if (!state.taskFormShow) return;
 
       if (state.taskToUpdate) this.setFormControls(state.tasks.find(t => t.key == state.taskToUpdate));
@@ -170,7 +168,7 @@ export class TaskFormComponent implements OnInit, OnDestroy {
       id: this.task ? this.task.id : null,
       
       key: this.task ? this.task.key : this.randomKey(),
-      completed: false,
+      completed: this.task ? this.task.completed : false,
       accessibility: this.task ? this.task.accessibility : 0
     }
 

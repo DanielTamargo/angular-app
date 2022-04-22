@@ -25,8 +25,8 @@ import { GitHubModule } from './github/github.module';
 import { MapModule } from './map/map.module';
 import { SharedModule } from './shared/shared.module';
 
-import { TaskIndexComponent } from './tasklist/task-index/task-index.component';
 import { AuthInterceptor } from './tasklist/auth.interceptor';
+import { TaskIndexComponent } from './tasklist/task-index/task-index.component';
 import { TasklistService } from './tasklist/services/tasklist.service';
 import { TaskFormComponent } from './tasklist/task-form/task-form.component';
 

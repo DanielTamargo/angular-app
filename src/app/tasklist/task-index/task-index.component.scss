@@ -13,8 +13,115 @@ $add-task-pos: 40px;
   right: $add-task-pos;
 }
 
+
+$activity-border-color: gray;
+
+.activity-card {
+  font-family: 'Akshar', sans-serif;
+
+  width: 100%;
+  border: 1px solid $activity-border-color;
+  border-radius: 4px;
+
+  &:not(:first-of-type) {
+    margin-top: 10px;
+  }
+
+  & .activity-content {
+    display: flex;
+    width: 100%;
+
+    gap: 10px;
+    justify-content: space-between;
+
+    & > div {
+      display: flex;
+    }
+
+    & .act-type, & .act-actions {
+      padding: 8px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    & .act-type {
+      background-color: rgb(147, 229, 147);
+      border-right: 1px solid $activity-border-color;
+    }
+
+    & .act-info {
+      flex-grow: 1;
+
+      padding-left: 10px;
+      flex-direction: column;
+      justify-content: space-around;
+
+      & .act-numbers {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0 10px;
+
+        & > div {
+          display: flex;
+          gap: 4px;
+        }
+
+        & .act-numbers-svg {
+          width: 20px;
+        }
+      }
+    }
+
+    & .act-actions {
+      min-width: 107.44px;
+
+      background-color: rgb(209, 255, 209);
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-areas: 
+        "com com"
+        "upd del";
+      justify-content: center;
+      align-content: center;
+      border-left: 1px solid $activity-border-color;
+      gap: 5px;
+
+      & > div {
+        display: flex;
+      }
+
+      & .act-completed {
+        justify-content: center;
+        grid-area: com;
+      }
+      & .act-update {
+        justify-content: start;
+        grid-area: upd;
+      }
+      & .act-delete {
+        justify-content: end;
+        grid-area: del;
+      }
+    }
+  }
+}
+
 @media (min-width: 1140px) {
   .add-task {
     right: calc($add-task-pos + ((100vw - 1140px) / 2));
+  }
+}
+
+@media (max-width: 360px) {
+  .activity-card .act-actions {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    grid-template-areas: 
+      "com"
+      "upd"
+      "del";
+
+    & .act-update, & .act-delete {
+      justify-content: center;
+    }
   }
 }

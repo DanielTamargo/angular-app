@@ -1,4 +1,4 @@
-import { animate, animateChild, group, query, sequence, state, style, transition, trigger } from '@angular/animations';
+import { animate, sequence, state, style, transition, trigger } from '@angular/animations';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { TaskListConstants as TLC } from './constants/tasklist-constants';
