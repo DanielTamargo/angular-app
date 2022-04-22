@@ -6,6 +6,7 @@ import { TaskInterface } from '../interfaces/task.interface';
 import { TaskListStateInterface } from '../interfaces/tasklist-state.interface';
 import * as TaskListActions from '../store/tasklist.actions';
 import { TasklistService } from '../services/tasklist.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-task-index',
@@ -82,7 +83,20 @@ export class TaskIndexComponent implements OnInit, OnDestroy {
   }
 
   onDeleteTask(task: TaskInterface): void {
-    this.taskListService.deleteTask(task);
+    // Si el usuario ha modificado el formulario, mostramos alerta para la confirmación
+    Swal.fire({
+      title: 'U sure mate?',
+      text: 'Deleting it will be irreversible',
+      showCancelButton: true,
+      showConfirmButton: false,
+      showDenyButton: true,
+      denyButtonText: "Do it!",
+      cancelButtonText: "Hell no!",
+    }).then((result) => {
+      // Si confirma, volvemos
+      if (result.isDenied) this.taskListService.deleteTask(task);
+    });
+    
   }
 
 }

@@ -58,6 +58,11 @@ export const taskListReducer = createReducer(
     taskToUpdate: taskKey,
     taskFormShow: true,
   })),
+  on(TaskListActions.taskFormGoBack, (state) => ({
+    ...state,
+    taskFormShow: false,
+    taskToUpdate: null,
+  })),
   on(TaskListActions.taskUpdate, (state, { task }) => {
     // Para respetar el readonly del state, obtenemos una copia de las tasks
     const tasks = [...state.tasks];

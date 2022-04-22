@@ -210,6 +210,14 @@ export class TasklistService {
   }
 
   /**
+   * Para evitar que el estado no se actualice correctamente al salir de formulario, ejecutamos la acción
+   */
+  formGoBack(): void {
+    this.store.dispatch(TaskListActions.taskFormGoBack());
+    this.displayComponents(TLC.DISPLAY_INDEX);
+  }
+
+  /**
    * Recibe de cualquier componente un índice y lo emite para que el padre lo reciba
    * El padre utilizará el índice para mostrar u ocultar los componentes hijos
    * 
@@ -217,6 +225,8 @@ export class TasklistService {
    * 1 - login, 2 - index, 3 - new / edit task, 4 - show task
    */
   displayComponents(displayIndex: number = 1): void {
+    console.log(displayIndex);
+    
     this.displayIndex = displayIndex;
     this.displayIndexSubject$.next(this.displayIndex);
   }

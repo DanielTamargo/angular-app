@@ -19,8 +19,16 @@ export class TaskListConstants {
   static readonly DISPLAY_FORM  = 3; // <- CREATE y UPDATE en uno
   static readonly DISPLAY_SHOW  = 4;
 
+  /* API URLS */
+  static readonly BORED_API_URL = "http://www.boredapi.com/api/activity/";
 
-
+  /* --------- FUNCIONES --------- */
+  /**
+   * Ordena la lista de tareas más reciente a más antiguo
+   * 
+   * @param tasks lista de tareas
+   * @returns lista ordenada
+   */
   public static taskArraySortByTimestamp(tasks: TaskInterface[]): TaskInterface[] {
     return tasks.sort((a, z) => z.created_at - a.created_at);
   }

@@ -200,11 +200,11 @@ export class TaskFormComponent implements OnInit, OnDestroy {
         cancelButtonText: "No",
       }).then((result) => {
         // Si confirma, volvemos
-        if (result.isConfirmed) this.taskListService.displayComponents(TLC.DISPLAY_INDEX);
+        if (result.isConfirmed) this.taskListService.formGoBack();
       });
     } else {
       // Si no había modificado, directamente volvemos
-      this.taskListService.displayComponents(TLC.DISPLAY_INDEX);
+      this.taskListService.formGoBack();
     }
 
   }

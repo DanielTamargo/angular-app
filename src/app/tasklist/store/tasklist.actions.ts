@@ -9,8 +9,9 @@ export const TASK_ADD    = '[TaskList] Add Task';
 export const TASK_UPDATE = '[TaskList] Update Task';
 export const TASK_DELETE = '[TaskList] Delete Task';
 
-export const TASK_CREATE_SHOW = '[TaskList] Show Create Task Form';
-export const TASK_UPDATE_SHOW = '[TaskList] Show Update Task Form';
+export const TASK_FORM_GO_BACK = '[TaskList] Task Form Go Back';
+export const TASK_CREATE_SHOW  = '[TaskList] Show Create Task Form';
+export const TASK_UPDATE_SHOW  = '[TaskList] Show Update Task Form';
 
 // ACCIONES
 export const userLogout = createAction(
@@ -26,6 +27,10 @@ export const taskAdd = createAction(
   TASK_ADD,
   props<{ task: TaskInterface }>()
 );
+
+export const taskFormGoBack = createAction(
+  TASK_FORM_GO_BACK,
+)
 
 export const taskCreateShow = createAction(
   TASK_CREATE_SHOW,
