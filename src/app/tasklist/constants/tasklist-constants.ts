@@ -3,20 +3,20 @@ import { environment } from "src/environments/environment";
 export class TaskListConstants {
   /* ----------- UTIL ----------- */
   /* TASK TYPES */
-  static TASK_RECREATIONAL = 'recreational';
-  static TASK_MUSIC = 'music';
-  static TASK_EDUCATION = 'education';
-  static TASK_COOKING = 'cooking';
-  static TASK_SOCIAL = 'social';
-  static TASK_DIY = 'diy';
-  static TASK_CHARITY = 'charity';
-  static TASK_RELAXATION = 'relaxation';
-  static TASK_BUSYWORK = 'busywork';
+  static readonly TASK_RECREATIONAL = 'recreational';
+  static readonly TASK_MUSIC = 'music';
+  static readonly TASK_EDUCATION = 'education';
+  static readonly TASK_COOKING = 'cooking';
+  static readonly TASK_SOCIAL = 'social';
+  static readonly TASK_DIY = 'diy';
+  static readonly TASK_CHARITY = 'charity';
+  static readonly TASK_RELAXATION = 'relaxation';
+  static readonly TASK_BUSYWORK = 'busywork';
 
-  /* --------- FIREBASE --------- */
-  static FIREBASE_URL = environment.firebaseConfig.databaseURL;
-
-  /* ----- LOCAL STORAGE KEYS ----- */
-  static LS_TASKLIST_SAVE = 'tasklist_save';
+  /* DISPLAY NUMBERS */
+  static readonly DISPLAY_LOGIN = 1;
+  static readonly DISPLAY_INDEX = 2;
+  static readonly DISPLAY_FORM  = 3; // <- CREATE y UPDATE en uno
+  static readonly DISPLAY_SHOW  = 4;
 
 }

@@ -7,6 +7,7 @@ import { AngularFireList, AngularFireDatabase } from '@angular/fire/compat/datab
 import { TaskInterface } from '../interfaces/task.interface';
 import { TaskListStateInterface } from '../interfaces/tasklist-state.interface';
 import * as TaskListActions from '../store/tasklist.actions';
+import { TaskListConstants as TLC } from '../constants/tasklist-constants';
 
 @Injectable({
   providedIn: 'root'
@@ -93,7 +94,7 @@ export class TasklistService {
         tasks: tasks
       }));
 
-      this.displayComponents(2);
+      this.displayComponents(TLC.DISPLAY_INDEX);
     });
 
     /* Obtener la lista cada vez que ocurra algún cambio en la BBDD */
@@ -129,7 +130,7 @@ export class TasklistService {
         tasks: tasks
       }));
 
-      this.displayComponents(2);
+      this.displayComponents(TLC.DISPLAY_INDEX);
     });
     */
   }
@@ -140,7 +141,7 @@ export class TasklistService {
   userSignOut() {
     this.afAuth.signOut().then(() => {
       this.store.dispatch(TaskListActions.userLogout());
-      this.displayComponents(1); // Volvemos al login
+      this.displayComponents(TLC.DISPLAY_LOGIN); // Volvemos al login
     });
   }
 
@@ -164,7 +165,7 @@ export class TasklistService {
       task: task
     }));
 
-    this.displayComponents(2);
+    this.displayComponents(TLC.DISPLAY_INDEX);
   }
 
   /**

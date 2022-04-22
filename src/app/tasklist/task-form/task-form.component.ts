@@ -3,9 +3,11 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 import Swal from 'sweetalert2';
+
 import { TaskInterface } from '../interfaces/task.interface';
 import { TaskListStateInterface } from '../interfaces/tasklist-state.interface';
 import { TasklistService } from '../services/tasklist.service';
+import { TaskListConstants as TLC } from '../constants/tasklist-constants';
 
 @Component({
   selector: 'app-task-form',
@@ -32,7 +34,7 @@ export class TaskFormComponent implements OnInit, OnDestroy {
       if (state.taskToUpdate) this.setFormControls(state.tasks.find(t => t.key == state.taskToUpdate));
       else this.setFormControls();
 
-      this.taskListService.displayComponents(3);
+      this.taskListService.displayComponents(TLC.DISPLAY_FORM);
     });  
   }
 
@@ -200,11 +202,11 @@ export class TaskFormComponent implements OnInit, OnDestroy {
         cancelButtonText: "No",
       }).then((result) => {
         // Si confirma, volvemos
-        if (result.isConfirmed) this.taskListService.displayComponents(2);
+        if (result.isConfirmed) this.taskListService.displayComponents(TLC.DISPLAY_INDEX);
       });
     } else {
       // Si no había modificado, directamente volvemos
-      this.taskListService.displayComponents(2);
+      this.taskListService.displayComponents(TLC.DISPLAY_INDEX);
     }
 
   }

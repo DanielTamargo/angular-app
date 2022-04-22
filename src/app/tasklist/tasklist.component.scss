@@ -25,19 +25,21 @@
   padding-top: 20px;
 
   z-index: 10;
-}
 
-
-.logout-section {
-  padding: 10px;
-
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  justify-content: space-between;
-
-  & p {
-    margin: 0;
+  & .logout-section {
+    max-width: 1020px;
+    margin: 0 auto;
+    
+    padding: 10px;
+  
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: space-between;
+  
+    & p {
+      margin: 0;
+    }
   }
 }
 
