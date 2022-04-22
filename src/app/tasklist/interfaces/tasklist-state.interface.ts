@@ -10,4 +10,6 @@ export interface TaskListStateInterface {
 
   tasksLoaded: boolean;
   taskFormShow: boolean,
+
+  firstLoad: boolean;
 }

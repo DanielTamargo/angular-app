@@ -16,6 +16,7 @@ const initialState: TaskListStateInterface = {
   tasksLoaded: false,
   taskFormShow: false,
   taskToUpdate: null,
+  firstLoad: true,
 };
 
 const resetOptions = {
@@ -25,6 +26,7 @@ const resetOptions = {
   tasksLoaded: false,
   taskFormShow: false,
   taskToUpdate: null,
+  firstLoad: false,
 }
 
 // TaskList Reducer que trabajará con la información

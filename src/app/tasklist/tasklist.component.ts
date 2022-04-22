@@ -1,6 +1,7 @@
 import { animate, animateChild, group, query, sequence, state, style, transition, trigger } from '@angular/animations';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { TaskListConstants as TLC } from './constants/tasklist-constants';
 import { TasklistService } from './services/tasklist.service';
 
 const ANIMATION_STATES = {
@@ -61,15 +62,16 @@ export class TasklistComponent implements OnInit, OnDestroy {
 
     // Nos suscribimos a los cambios en el loading del usuario
     this.userLoadingSubscription$ = this.taskListService.userLoadingSubject$.subscribe(loading => { this.userLoading = loading });
+    
     // Y a los cambios en el usuario
     this.userSubscription$ = this.taskListService.userSubject$.subscribe(user => { this.user = user });
-    // Y al cambio de display
+    
+    // Y al cambio de display (para las animaciones)
     this.displayIndexSubscription$ = this.taskListService.displayIndexSubject$.subscribe(index => { 
       this.displayIndex = index;
-
-      if (this.displayIndex == 1) this.displayState = ANIMATION_STATES.Login;
-      if (this.displayIndex == 2) this.displayState = ANIMATION_STATES.Index;
-      if (this.displayIndex == 3) this.displayState = ANIMATION_STATES.TaskForm;
+      if (this.displayIndex == TLC.DISPLAY_LOGIN) this.displayState = ANIMATION_STATES.Login;
+      if (this.displayIndex == TLC.DISPLAY_INDEX) this.displayState = ANIMATION_STATES.Index;
+      if (this.displayIndex == TLC.DISPLAY_FORM) this.displayState = ANIMATION_STATES.TaskForm;
     });
   }
 

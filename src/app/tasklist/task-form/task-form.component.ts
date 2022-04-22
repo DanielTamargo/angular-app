@@ -29,6 +29,8 @@ export class TaskFormComponent implements OnInit, OnDestroy {
 
     // Nos suscribimos al reducer de las tareas para obtener el estado cada vez que haya un cambio
     this.storeSubscription$ = this.store.select('taskList').subscribe(state => {
+      console.log('Form',state);
+      
       if (!state.taskFormShow) return;
 
       if (state.taskToUpdate) this.setFormControls(state.tasks.find(t => t.key == state.taskToUpdate));
@@ -116,11 +118,11 @@ export class TaskFormComponent implements OnInit, OnDestroy {
 
 
   customURLValidator(control: FormControl): { [key: string]: boolean } {
-    // Obtenemos el valor
-    const value = String(control.value);
+    // Es opcional 
+    if (!control.value) return null;
 
-    // Es opcional
-    if (!value) return null;
+    // Obtenemos el valor
+    const value = String(control.value).trim();
 
     // Si algo falla, devolvemos el error como true
     try {
@@ -162,12 +164,9 @@ export class TaskFormComponent implements OnInit, OnDestroy {
   onSubmit(): void {
     // Generamos la tarea
     const task: TaskInterface = {
-      activity: this.formTask.value['mainInfo']['activity'],
-      participants: this.formTask.valid['mainInfo']['participants'],
-      type: this.formTask.valid['mainInfo']['type'],
-      price: this.formTask.valid['mainInfo']['price'],
-      link: this.formTask.valid['additionalInfo']['link'],
-
+      ...this.formTask.value['mainInfo'],
+      ...this.formTask.value['additionalInfo'],
+      
       id: this.task ? this.task.id : null,
       
       key: this.task ? this.task.key : this.randomKey(),
@@ -175,7 +174,7 @@ export class TaskFormComponent implements OnInit, OnDestroy {
       accessibility: this.task ? this.task.accessibility : 0
     }
 
-    // Si la tarea es null, será una creación
+    // Si la tarea previamente almacenada es null, será una creación
     if (!this.task) {
       this.taskListService.addTask(task);
       return;

@@ -1,3 +1,4 @@
+<!-- (ngSubmit)="onSubmit()" -->
 <form [formGroup]="formTask" class="task-form">
   <!-- Información principal -->
   <h3 class="text-muted">New Task</h3>
@@ -8,7 +9,7 @@
       <mat-label>Name</mat-label>
       <input type="text" name="activity" id="activity"
       matInput formControlName="activity">
-      <div *ngIf="formTask.get('mainInfo.activity').touched">
+      <div *ngIf="formTask.get('mainInfo.activity').dirty">
         <mat-error *ngIf="formTask.get('mainInfo.activity').hasError('required')">
           Required
         </mat-error>
@@ -108,7 +109,8 @@
     <button 
     [disabled]="formTask.invalid"
     type="submit" 
-    class="btn btn-success">Submit</button>
+    class="btn btn-success"
+    (click)="onSubmit()">Submit</button>
     <button class="btn btn-secondary" (click)="onGoBack()">Go back</button>
   </div>
 </form>

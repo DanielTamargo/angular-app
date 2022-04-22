@@ -81,7 +81,8 @@ export class TasklistService {
     this.tasksSubscription$.unsubscribe();
     
     /* Obtener la lista solo una única vez */
-    this.afDB.list("/" + user.uid + "/tasks").query.once('value').then(val => {
+    this.tasksDB$ = this.afDB.list("/" + user.uid + "/tasks");
+    this.tasksDB$.query.once('value').then(val => {
       const tasks = [];
       val.forEach(task => {
         tasks.push({
@@ -152,18 +153,20 @@ export class TasklistService {
    */
   addTask(task: TaskInterface) {
     // Comprobamos que estamos recibiendo una tarea
-    if (!task) return;
+    if (!task) {
+      // TODO contemplar error para mostrar con sweet alert y redirigir a index por ejemplo
 
-    // Registramos en la BBDD
+      return;
+    }
+
+    // Registramos en la BBDD y recogemos el ID de la tarea insertada
     const newTaskId = this.tasksDB$.push(task).key;
     task = {
       ...task,
       id: newTaskId
     };
 
-    this.store.dispatch(TaskListActions.taskAdd({
-      task: task
-    }));
+    this.store.dispatch(TaskListActions.taskAdd({ task }));
 
     this.displayComponents(TLC.DISPLAY_INDEX);
   }
@@ -201,7 +204,7 @@ export class TasklistService {
    * El padre utilizará el índice para mostrar u ocultar los componentes hijos
    * 
    * Casos:
-   * 1 - login, 2 - index, 3 - new task, 4 - edit task
+   * 1 - login, 2 - index, 3 - new / edit task, 4 - show task
    */
   displayComponents(displayIndex: number = 1): void {
     this.displayIndex = displayIndex;
