@@ -24,7 +24,6 @@ import FullScreen from 'ol/control/FullScreen';
 
 import { MapService } from './services/map.service';
 import { Subscription } from 'rxjs';
-import Interaction from 'ol/interaction/Interaction';
 
 @Component({
   selector: 'app-map',
@@ -81,6 +80,9 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     const capaBase = new TileLayer({
       source: new OSM()
     });
+    const capaBaseCanarias = new TileLayer({
+      source: new OSM()
+    });
     this.baseLayers.push(capaBase);
 
 
@@ -103,7 +105,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     // Inicializar mapa canarias
     this.mapCanarias = new Map({
       target: 'mapa-canarias',
-      layers: [ new TileLayer({ source: new OSM() }) ],
+      layers: [ capaBaseCanarias ],
       view: new View({
         center: [-756284.3208675878, 3276106.672008284],
         zoom: 6.5906451086787365,
@@ -140,6 +142,9 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
           if (reset) {
             for (const layer of this.map.getAllLayers()) {
               if (layer != capaBase) this.map.removeLayer(layer);
+            }
+            for (const layer of this.mapCanarias.getAllLayers()) {
+              if (layer != capaBaseCanarias) this.mapCanarias.removeLayer(layer);
             }
           }
         });

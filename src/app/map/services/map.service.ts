@@ -160,7 +160,9 @@ export class MapService {
     }
 
     try {
-      this.showCanariasMap = JSON.parse(localStorage.getItem(MC.LS_SHOW_CANARIAS_CONFIG));
+      const showCanariasConfig = localStorage.getItem(MC.LS_SHOW_CANARIAS_CONFIG);
+      if (showCanariasConfig) this.showCanariasMap = JSON.parse(showCanariasConfig);
+      else this.showCanariasMap = true;
     } catch (e) {
       this.showCanariasMap = true;
     }
@@ -409,8 +411,10 @@ export class MapService {
     this.showCanariasMap = true;
     this.layersConfig = JSON.parse(JSON.stringify(this.defaultLayersConfig));
     this.loadedLayers = [];
+    this.canariasLoadedLayers = [];
     this.configResetedSubject$.next(true);
     this.loadVisibleLayers();
+    this.showCanariasMapSubject$.next(this.showCanariasMap);
   }
 
 }

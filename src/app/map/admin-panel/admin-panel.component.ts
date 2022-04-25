@@ -71,6 +71,7 @@ export class AdminPanelComponent implements OnInit {
     }).then((result) => {
       // Si ha denegado, borramos la configuración
       if (result.isDenied) {
+        this.showCanariasMap = true;
         this.mapService.resetConfiguration();
         this.layersConfig = this.mapService.layersConfig;
         this.checkIfAllCCAAVisible();
