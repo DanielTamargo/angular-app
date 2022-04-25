@@ -13,7 +13,7 @@
   class="activity-card"
   *ngFor="let task of tasks"
   >
-    <div class="activity-content">
+    <div class="activity-content" [ngClass]="{ 'task-edited' : task.key == editedTask }">
       <!-- TODO Logo dependiendo del tipo? -->
       <!-- <div class="act-type" [ngClass]="{ 'completed': task.completed }">
         {{ task.type }}
@@ -49,7 +49,8 @@
     
       <div class="act-actions">
         <div class="act-completed">
-          {{ task.completed ? 'completed' : 'in progress' }}
+          <label (click)="onCompleteTask(task)" for="{{ task.key }}-completed">{{ task.completed ? 'Done!' : 'TODO' }}</label>
+          <mat-slide-toggle (click)="onCompleteTask(task)" class="mat-slide-task-completed" [checked]="task.completed" name="{{ task.key }}-completed"></mat-slide-toggle>
         </div>
         <div class="act-update" (click)="onEditTask(task)">
           <svg xmlns="http://www.w3.org/2000/svg" class="act-actions-svg" viewBox="0 0 512 512">

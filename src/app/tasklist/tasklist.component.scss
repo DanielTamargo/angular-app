@@ -1,4 +1,4 @@
-.tasklist-component {
+.loading-spinner-container, .tasklist-component { 
   position: absolute;
   top: 0;
   left: 0;
@@ -8,6 +8,17 @@
   height: 100vh;
 
   z-index: 5;
+}
+
+.loading-spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding-bottom: 60vh;
+}
+
+.tasklist-component {
 
   & > .tasklist-component-wrapper {
     max-width: 1020px;
@@ -62,6 +73,7 @@
   font-weight: 700;
   text-align: center;
   position: relative;
+  z-index: 1000;
   top: -15px;
   left: 15px;
   width: fit-content;
@@ -75,7 +87,7 @@
 
 
 @media (max-width: 450px) {
-  .tasklist-component { 
+  .loading-spinner-container, .tasklist-component { 
     padding-left: 0;
     padding-top: 80px;
   }

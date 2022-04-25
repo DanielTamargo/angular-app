@@ -45,12 +45,25 @@ $activity-border-color: gray;
     margin-top: 10px;
   }
 
+  @keyframes taskEdited {
+    0%, 50% {
+      background-color: white;
+    }
+    25%, 75% {
+      background-color: rgba(0, 128, 0, 0.201);
+    }
+  }
+
   & .activity-content {
     display: flex;
     width: 100%;
 
     gap: 10px;
     justify-content: space-between;
+
+    &.task-edited {
+      animation: taskEdited forwards 1500ms ease-in-out;
+    }
 
     & > div {
       display: flex;
@@ -106,12 +119,12 @@ $activity-border-color: gray;
       justify-content: center;
       align-content: center;
       border-left: 1px solid $activity-border-color;
-      gap: 5px;
+      gap: 10px;
 
       & > div {
         display: flex;
 
-        &:hover {
+        &:not(.act-completed):hover {
           cursor: pointer;
         }
       }
@@ -119,6 +132,18 @@ $activity-border-color: gray;
       & .act-completed {
         justify-content: center;
         grid-area: com;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding-bottom: 10px;
+        
+        border-bottom: 1px solid gray;
+
+        & label {
+          cursor: pointer;
+        }
       }
       & .act-update {
         padding: 4px;
@@ -158,8 +183,6 @@ $activity-border-color: gray;
         border-radius: 5px;
       }
 
-      & .act-actions-svg {
-      }
     }
   }
 }

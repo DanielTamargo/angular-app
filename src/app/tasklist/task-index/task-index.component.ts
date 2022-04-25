@@ -50,6 +50,7 @@ export class TaskIndexComponent implements OnInit, OnDestroy {
   // Lista de tareas a obtener del Store
   tasks: TaskInterface[] = [];
   tasksSubscription$ = new Subscription;
+  editedTask?: string;
 
   activityTotal = -1;
 
@@ -62,6 +63,8 @@ export class TaskIndexComponent implements OnInit, OnDestroy {
     // Nos suscribimos al reducer de las tareas para obtener el estado cada vez que haya un cambio
     this.tasksSubscription$ = this.store.select('taskList').subscribe(state => {
       if (state.firstLoad) return;
+
+      this.editedTask = state.editedTask;
 
       this.tasks = state.tasks;
       this.loading = false;
@@ -97,6 +100,17 @@ export class TaskIndexComponent implements OnInit, OnDestroy {
       if (result.isDenied) this.taskListService.deleteTask(task);
     });
     
+  }
+
+  onCompleteTask(task: TaskInterface): void {
+    // Actualizamos el estado de la tarea
+    task = {
+      ...task,
+      completed: !task.completed
+    };
+
+    // Y llamamos al método del servicio que actualizará la tarea en la nube y ejecutará el dispatch
+    this.taskListService.updateTask(task);
   }
 
 }

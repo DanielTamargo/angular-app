@@ -168,7 +168,8 @@ export class TasklistService {
 
     // Actualizamos el estado del store a través de la acción hacia el reducer
     this.store.dispatch(TaskListActions.taskAdd({ task }));
-
+    
+    // Actualizamos los elementos a mostrar
     this.displayComponents(TLC.DISPLAY_INDEX);
   }
 
@@ -187,6 +188,7 @@ export class TasklistService {
     // Actualizamos el estado del store a través de la acción hacia el reducer
     this.store.dispatch(TaskListActions.taskUpdate({ task }));
 
+    // Actualizamos los elementos a mostrar
     this.displayComponents(TLC.DISPLAY_INDEX);
   }
 
