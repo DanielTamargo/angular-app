@@ -22,6 +22,7 @@ export class MapService {
 
   changeLayerVisibilitySubject$ = new Subject<LayerConfig>();
   newWFSLayerSubject$ = new Subject<TileLayer<TileWMS> | VectorImageLayer<VectorSource> | TileLayer<WMTS>>();
+  newWFSCanariasLayerSubject$ = new Subject<TileLayer<TileWMS> | VectorImageLayer<VectorSource> | TileLayer<WMTS>>();
   loadedLayersSubject$ = new Subject<LoadedLayer[]>();
   configResetedSubject$ = new Subject<boolean>();
 
@@ -137,6 +138,7 @@ export class MapService {
     }
   ];
   loadedLayers: LoadedLayer[] = [];
+  canariasLoadedLayers: LoadedLayer[] = [];
 
 
   constructor(private http: HttpClient) {
@@ -253,6 +255,37 @@ export class MapService {
         layer: WFS_layer
       });
 
+      // Si la CCAA es Canarias, lo movemos también al mapa
+      if (ca.toLowerCase() == 'canarias') {
+        const WFSCanarias_layer = new VectorImageLayer({
+          source: new VectorSource({
+            features: new GeoJSON().readFeatures(geojsonObject, {
+              dataProjection: 'EPSG:4326',
+              featureProjection: 'EPSG:25830'
+            }),
+            strategy: bboxStrategy
+          }),
+          style: new Style({
+            stroke: stroke,
+            fill: fill,
+            image: image
+          }),
+          visible: visible,
+          renderBuffer: 1000,
+          opacity: opacity
+        });
+
+        this.canariasLoadedLayers.push({
+          groupName: MC.LAYERGROUP_CCAA_NAME,
+          key: ca,
+          visible: visible,
+          layer: WFSCanarias_layer
+        });
+
+        this.newWFSCanariasLayerSubject$.next(WFSCanarias_layer);
+      }
+      
+
       // Lo mandamos al mapa
       this.newWFSLayerSubject$.next(WFS_layer);
     });
@@ -309,12 +342,18 @@ export class MapService {
 
         this.newOpenDataWFSLayer({ url: url, ca: layerKey, visible: visible})
       }
-      else layer.layer.setVisible(visible);
+      else {
+        layer.layer.setVisible(visible);
+        
+        const canariasLayer = this.canariasLoadedLayers.find(lay => lay.key == layer.key);
+        if (canariasLayer) {
+          canariasLayer.visible = visible;
+          canariasLayer.layer.setVisible(visible);
+        }
+      } 
 
       this.saveConfig();
 
-      console.log(this.layersConfig[0].layers.find(lay => lay.key == 'Cantabria'));
-      console.log(this.defaultLayersConfig[0].layers.find(lay => lay.key == 'Cantabria'));
     }
   }
 
@@ -330,6 +369,10 @@ export class MapService {
       if (layer.layer) layer.layer.setOpacity(opacity);
     }
     this.saveConfig();
+
+    this.canariasLoadedLayers.map(lay => {
+      lay.layer.setOpacity(opacity);
+    });
   }
 
   /**

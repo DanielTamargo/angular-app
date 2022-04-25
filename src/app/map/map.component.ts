@@ -15,6 +15,7 @@ import VectorImageLayer from 'ol/layer/VectorImage';
 import VectorSource from 'ol/source/Vector';
 
 import { Geometry } from 'ol/geom';
+import * as olInteraction from 'ol/interaction';
 
 import Rotate from 'ol/control/Rotate';
 import { ScaleLine } from 'ol/control';
@@ -23,6 +24,7 @@ import FullScreen from 'ol/control/FullScreen';
 
 import { MapService } from './services/map.service';
 import { Subscription } from 'rxjs';
+import Interaction from 'ol/interaction/Interaction';
 
 @Component({
   selector: 'app-map',
@@ -46,16 +48,19 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   layers: (TileLayer<TileWMS> | VectorImageLayer<VectorSource> | TileLayer<WMTS>)[] = [];
   baseLayers: (TileLayer<TileWMS> | VectorImageLayer<VectorSource<Geometry>> | TileLayer<WMTS> | TileLayer<OSM>)[] = [];
   map?: Map;
+  mapCanarias?: Map;
 
   loadedLayersSubscription$ = new Subscription;
   newWFSlayerSubscription$ = new Subscription;
+  newWFSCanariaslayerSubscription$ = new Subscription;
   configResetedSubscription$ = new Subscription;
 
   featureProperties: any = {};
   featureInfo: boolean = false;
 
   adminPanel: boolean = false;
-  defaultCenterCoordinates: number[] = [566349.3696978227, 4409951.952130745];
+  //defaultCenterCoordinates: number[] = [566349.3696978227, 4409951.952130745];
+  defaultCenterCoordinates: number[] = [301342.411962452, 4398858.63762089];
 
 
   constructor(private mapService: MapService) { }
@@ -94,6 +99,27 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     });
     this.map.getLayers().insertAt(0, capaBase);
 
+    // Inicializar mapa canarias
+    this.mapCanarias = new Map({
+      target: 'mapa-canarias',
+      layers: [ new TileLayer({ source: new OSM() }) ],
+      view: new View({
+        center: [-756284.3208675878, 3276106.672008284],
+        zoom: 6.5906451086787365,
+        projection: 'EPSG:25830'
+      }),
+      interactions: olInteraction.defaults({
+        doubleClickZoom    : false,
+        mouseWheelZoom     : false,
+        pinchRotate        : false,
+        pinchZoom          : false,
+        shiftDragZoom      : false,
+        dragPan            : false,
+        altShiftDragRotate : false,
+      }),
+      controls: []
+    });
+
     // Suscripción para recibir los layers ya cargados
     this.loadedLayersSubscription$
       = this.mapService.loadedLayersSubject$
@@ -126,21 +152,54 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
           this.map.addLayer(layer);
         }
       });
+
+    // Y a los layers de canarias para el mapa estático de Canarias
+    this.newWFSCanariaslayerSubscription$
+    = this.mapService.newWFSCanariasLayerSubject$
+    .subscribe({
+      next: layer => {
+        this.mapCanarias.addLayer(layer);
+      }
+    });
   }
 
   ngAfterViewInit(): void {
 
-    // LISTENER ONCLICK
+    // LISTENER ONCLICK MAPA CANARIAS
+    this.mapCanarias?.on('singleclick', evt => {
+        this.mapCanarias?.forEachFeatureAtPixel(evt.pixel, (feature, layer) => {
+          if (!layer) return;
+  
+          const featureProperties = feature.getProperties();
+          this.featureInfo = true;
+  
+          const keys = Object.keys(featureProperties);
+          const resp = [];
+  
+          let i = 0;
+          for (const key of keys) {
+            if (typeof featureProperties[key] == 'object') continue;
+  
+            resp[i] = { key: key, value: featureProperties[key] };
+            i++;
+          }
+  
+          this.featureProperties = resp;
+        });
+    });
+
+    // LISTENER ONCLICK MAPA GENERAL
     this.map.on('singleclick', evt => {
       // Obtener coordenadas click, coordenadas centro mapa, centrar en coordenadas del click, obtener zoom:
       //console.log('Coordenadas click: ', evt.coordinate);
       //console.log('Coordenadas centro mapa: ', this.map.getView().getCenter());
       //this.map?.getView().setCenter(evt.coordinate);
-      console.log('Zoom del mapa y ancho/alto de pantalla',
+      console.log(
         {
           zoom: this.map.getView().getZoom(),
           anchoPantalla: window.innerWidth,
           alturaPantalla: window.innerHeight,
+          coordenadas: evt.coordinate
         });
 
       // Ejecutar por cada feature en el pixel (con hitTolerance)
@@ -212,7 +271,11 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
       });
     });
 
+    
     // Quitamos el tooltip si nos movemos por el display de la información
+    document.getElementById('mapa-canarias').addEventListener('mouseenter', () => {
+      tooltip!.hidden = true;
+    });
     document.getElementById('feature-info').addEventListener('mouseenter', () => {
       tooltip!.hidden = true;
     });
@@ -223,6 +286,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     this.newWFSlayerSubscription$.unsubscribe();
     this.loadedLayersSubscription$.unsubscribe();
     this.configResetedSubscription$.unsubscribe();
+    this.newWFSCanariaslayerSubscription$.unsubscribe();
   }
 
   /**
@@ -237,32 +301,27 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     971 => 6.714234718575708 => 0.0069147628409637
     1540 => 7.105328475942655 => 0.004613849659703
     1904 => 7.255328475942655 => 0.0038105716785413;
+
+
+    1680 => 6.98710599404157
     */
-
-    const widthRef = 600;
-    const zoomRef = 5.880439327374903;
-    const percentageValue = 0.008;
-
+    
     const screenWidth = window.innerWidth;
-    const increase = screenWidth - widthRef;
-    const percentage = increase / widthRef * 100;
+    let percentageValue = 0.00415899166312;
 
-    return zoomRef + (percentageValue * percentage);
+    if (screenWidth < 500) {
+      percentageValue = 0.002
+    } else if (screenWidth < 1350) {
+      percentageValue = 0.0038
+    }
 
-
-    /*const width = window.innerWidth;
-    let increase: number;
-
-    if (width < 445) increase = 0.0204471826073649;
-    else if (width < 971) increase = 0.0130063900947292;
-    else if (width < 1540) increase = 0.0069147628409637;
-    else if (width < 1904) increase = 0.004613849659703;
-    else increase = 0.0038105716785413;
-
-    console.log(width);
-    console.log(increase);
-
-    return width * increase;*/
+    const widthRef = 1680;
+      const zoomRef = 6.98710599404157;
+  
+      const increase = screenWidth - widthRef;
+      const percentage = increase / widthRef * 100;
+  
+      return zoomRef + (percentageValue * percentage);
   }
 
   /**
