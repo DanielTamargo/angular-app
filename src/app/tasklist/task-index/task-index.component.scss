@@ -48,12 +48,18 @@ $activity-border-color: gray;
   & .filters-row {
     width: 100%;
     display: flex;
+    justify-content: center;
+    align-items: center;
     gap: 10px;
 
     & .form-control.custom-green:focus {
       border-color: #28a745;
       box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
     } 
+  }
+
+  & .filters-row + .filters-row {
+    margin-top: 10px;
   }
 
 }

@@ -1,12 +1,14 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { trigger, transition, animate, style, query, stagger } from '@angular/animations';
 import { Store } from '@ngrx/store';
-import { Subscription } from 'rxjs';
+import { catchError, map, of, Subscription } from 'rxjs';
 import { TaskInterface } from '../interfaces/task.interface';
 import { TaskListStateInterface } from '../interfaces/tasklist-state.interface';
 import * as TaskListActions from '../store/tasklist.actions';
 import { TasklistService } from '../services/tasklist.service';
 import Swal from 'sweetalert2';
+import { TaskListConstants } from '../constants/tasklist-constants';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-task-index',
@@ -49,15 +51,21 @@ export class TaskIndexComponent implements OnInit, OnDestroy {
 
   // Lista de tareas a obtener del Store
   tasks: TaskInterface[] = [];
+  displayTasks: TaskInterface[] = [];
   tasksSubscription$ = new Subscription;
   editedTask?: string;
   createdTask?: string;
+
+  // Filters
+  filterStatus = 1; // 1 all, 2 done, 3 todo
+  filterName: string = '';
 
   activityTotal = -1;
 
   constructor(
     private store: Store<{ taskList: TaskListStateInterface }>,
-    private taskListService: TasklistService
+    private taskListService: TasklistService,
+    private http: HttpClient
     ) { }
 
   ngOnInit(): void {
@@ -70,7 +78,8 @@ export class TaskIndexComponent implements OnInit, OnDestroy {
 
       this.tasks = state.tasks;
       this.loading = false;
-      console.log('State',state);
+
+      this.filterTasks();
     });    
   }
 
@@ -113,6 +122,60 @@ export class TaskIndexComponent implements OnInit, OnDestroy {
 
     // Y llamamos al método del servicio que actualizará la tarea en la nube y ejecutará el dispatch
     this.taskListService.updateTask(task);
+  }
+
+
+  // RANDOM TASK CREATE
+
+  onCreateRandomTask(): void {
+    this.filterStatus = 1;
+    this.filterName = '';
+
+    this.http.get(TaskListConstants.BORED_API_URL)
+      .pipe(
+        catchError(err => of(null)),
+        map<any, TaskInterface>(resp => {
+          if (!resp) return null;
+
+          return {
+            ...resp,
+            key: TaskListConstants.randomKey(),
+            created_at: new Date().getTime(),
+            completed: false,
+          }
+        })
+      )
+      .subscribe(task => {
+        if (!task) {
+          // TODO notificar error
+          
+          return;
+        }
+
+        this.taskListService.addTask(task);
+      });
+  }
+
+
+  // FILTER
+
+  onFilterStatusChange(status: number) {
+    this.filterStatus = status;
+    this.filterTasks();
+  }
+
+  filterTasks(): void {
+    this.displayTasks 
+      = this.tasks
+        .filter(task => {
+          if (this.filterName) return task.activity.toLocaleLowerCase().includes(this.filterName.toLowerCase());
+          return task;
+        })
+        .filter(task => {
+          if (this.filterStatus == 2) return task.completed;
+          else if (this.filterStatus == 3) return !task.completed;
+          return task;
+        });
   }
 
 }

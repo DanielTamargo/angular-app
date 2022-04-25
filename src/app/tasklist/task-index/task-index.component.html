@@ -7,32 +7,49 @@
 
 <br><br>
 
+<!-- TODO ocultar filtro e index si no existe tareas y mostrar un texto -->
+<div class="no-tasks"
+[hidden]="tasks.length > 0">
+  <h3>You haven't added tasks yet</h3> <!-- aplicar estilos -->
+  <!-- TODO botón create a new one / create a random one (el create a random one que aparezca también en los filtros) -->
+  <!-- si se crea nueva tarea se limpian filtros -->
+  <!-- TODO si en base a los filtros no existe ningún elemento mostrar mensaje -->
+  <!-- TODO map: añadir mapa canarias y en configuración permitir eliminarlo -->
+</div>
+
+
 <!-- Filtro actividades -->
-<div class="filters">
+<div class="filters" [hidden]="tasks.length <= 0">
   <p class="filters-title mb-0">FILTERS</p>
   <div class="filters-row">
-    <input type="text" class="form-control custom-green" placeholder="Task name...">
+    <input type="text" (keyup)="filterTasks()" [(ngModel)]="filterName" class="form-control custom-green" placeholder="Task name...">
     <div class="btn-group" role="group">
-      <input type="radio" class="btn-check" name="btnradio" id="show-all" autocomplete="off" checked>
+      <input type="radio" class="btn-check" name="btnradio" id="show-all" autocomplete="off" 
+      (change)="onFilterStatusChange(1)" [checked]="filterStatus == 1">
       <label class="btn btn-outline-success" for="show-all">All</label>
     
-      <input type="radio" class="btn-check" name="btnradio" id="show-completed" autocomplete="off">
+      <input type="radio" class="btn-check" name="btnradio" id="show-completed" autocomplete="off"
+      (change)="onFilterStatusChange(2)" [checked]="filterStatus == 2">
       <label class="btn btn-outline-success" for="show-completed">Done</label>
     
-      <input type="radio" class="btn-check" name="btnradio" id="show-uncompleted" autocomplete="off">
+      <input type="radio" class="btn-check" name="btnradio" id="show-uncompleted" autocomplete="off" 
+      (change)="onFilterStatusChange(3)" [checked]="filterStatus == 3">
       <label class="btn btn-outline-success" for="show-uncompleted">TODO</label>
     </div>
   </div>
   <div class="filters-row">
-    
+    <button type="button" class="btn btn-outline-success"
+    (click)="onCreateRandomTask()">Create a new random task</button>  
   </div>
 </div>
 
 <!-- Index actividades -->
-<div class="activities user-select-none" [@filterAnimation]="activityTotal">
+<div class="activities user-select-none" 
+[hidden]="tasks.length <= 0"
+[@filterAnimation]="activityTotal">
   <div 
   class="activity-card"
-  *ngFor="let task of tasks"
+  *ngFor="let task of displayTasks"
   >
     <!-- Info actividad -->
     <div class="activity-content" 

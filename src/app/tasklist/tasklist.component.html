@@ -21,7 +21,7 @@
   <div class="tasklist-logout">
     <div *ngIf="user && !userLoading" class="logout-section">
       <!-- LOGOUT -->
-      <p>Welcome <b>{{ user.displayName ? user.displayName : user.email }}</b>!</p>
+      <p>Welcome<b>{{ user.displayName | firstWord:' ' }}</b>!</p>
       <button class="btn btn-secondary" (click)="onUserSignOut()">Logout</button>
     </div>
   </div>
