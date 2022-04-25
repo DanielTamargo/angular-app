@@ -53,6 +53,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   loadedLayersSubscription$ = new Subscription;
   newWFSlayerSubscription$ = new Subscription;
   newWFSCanariaslayerSubscription$ = new Subscription;
+  showCanariasMapSubscription$ = new Subscription;
   configResetedSubscription$ = new Subscription;
 
   featureProperties: any = {};
@@ -161,6 +162,20 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         this.mapCanarias.addLayer(layer);
       }
     });
+
+    // Y al toggle del show del mapa de canarias
+    this.showCanariasMapSubscription$
+    = this.mapService.showCanariasMapSubject$
+    .subscribe({
+      next: this.toggleCanariasMap
+    });
+    // (ejecutamos la primera vez)
+    this.toggleCanariasMap(this.mapService.showCanariasMap);
+  }
+
+  toggleCanariasMap(show: boolean): void {
+    if (show) document.getElementById('mapa-canarias').classList.remove('d-none');
+    else if (!show) document.getElementById('mapa-canarias').classList.add('d-none');
   }
 
   ngAfterViewInit(): void {
@@ -287,6 +302,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     this.loadedLayersSubscription$.unsubscribe();
     this.configResetedSubscription$.unsubscribe();
     this.newWFSCanariaslayerSubscription$.unsubscribe();
+    this.showCanariasMapSubscription$.unsubscribe();
   }
 
   /**

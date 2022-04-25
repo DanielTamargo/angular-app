@@ -10,7 +10,7 @@ import TileWMS from 'ol/source/TileWMS';
 import WMTS from 'ol/source/WMTS';
 
 import { HttpClient } from '@angular/common/http';
-import { catchError, Subject, map } from 'rxjs';
+import { catchError, Subject, map, BehaviorSubject } from 'rxjs';
 
 import { MapConstants as MC } from '../constants/map-constants';
 import { LayerConfig, LayerGroupConfig, LoadedLayer } from '../interfaces/layer-config.interface';
@@ -25,6 +25,9 @@ export class MapService {
   newWFSCanariasLayerSubject$ = new Subject<TileLayer<TileWMS> | VectorImageLayer<VectorSource> | TileLayer<WMTS>>();
   loadedLayersSubject$ = new Subject<LoadedLayer[]>();
   configResetedSubject$ = new Subject<boolean>();
+
+  showCanariasMap = true;
+  showCanariasMapSubject$ = new Subject<boolean>();
 
   opacity: number;
 
@@ -156,6 +159,11 @@ export class MapService {
       this.layersConfig = JSON.parse(JSON.stringify(this.defaultLayersConfig));
     }
 
+    try {
+      this.showCanariasMap = JSON.parse(localStorage.getItem(MC.LS_SHOW_CANARIAS_CONFIG));
+    } catch (e) {
+      this.showCanariasMap = true;
+    }
   }
 
   /**
@@ -376,10 +384,20 @@ export class MapService {
   }
 
   /**
-   * Guarda la configuración en el localStorage
+   * Emite el resultado del toggle que será utilizado para mostrar u ocultar el mapa de canarias
+   */
+  toggleCanariasMap(): void {
+    this.showCanariasMapSubject$.next(this.showCanariasMap);
+    localStorage.setItem(MC.LS_SHOW_CANARIAS_CONFIG, JSON.stringify(this.showCanariasMap));
+  }
+
+
+  /**
+   * Guarda la configuración en el localStorage 
    */
   saveConfig() {
     localStorage.setItem(MC.LS_LAYERS_CONFIG_KEY, JSON.stringify(this.layersConfig));
+    localStorage.setItem(MC.LS_SHOW_CANARIAS_CONFIG, JSON.stringify(this.showCanariasMap));
   }
 
   /**
@@ -387,6 +405,8 @@ export class MapService {
    */
   resetConfiguration() {
     localStorage.removeItem(MC.LS_LAYERS_CONFIG_KEY);
+    localStorage.removeItem(MC.LS_SHOW_CANARIAS_CONFIG);
+    this.showCanariasMap = true;
     this.layersConfig = JSON.parse(JSON.stringify(this.defaultLayersConfig));
     this.loadedLayers = [];
     this.configResetedSubject$.next(true);

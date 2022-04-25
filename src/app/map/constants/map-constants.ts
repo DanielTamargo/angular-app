@@ -3,7 +3,8 @@
 export class MapConstants {
 
   /* ----- LOCAL STORAGE KEYS ----- */
-  static LS_LAYERS_CONFIG_KEY = "layers_saved_config";
+  static LS_LAYERS_CONFIG_KEY    = "layers_saved_config";
+  static LS_SHOW_CANARIAS_CONFIG = "show_canarias_config";
 
   /* ----------- KEYS ------------- */
   static KEY_DATASET = "{dataset}";
