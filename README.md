@@ -64,4 +64,5 @@ Esta es la mini aplicación *'personal, improvisando mientras aprendo, random pe
   - [Effects](https://ngrx.io/guide/effects)
   - [Actions](https://ngrx.io/guide/store/actions)
   - [Migraciones (ya que inicialmente me basé en ejemplos obsoletos)](https://ngrx.io/guide/migration/v13)
+  - [Guía NgRx en castellano](https://academia-binaria.com/el-patron-redux-con-ngrx-en-angular/)
 
