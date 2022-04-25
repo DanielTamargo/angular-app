@@ -89,6 +89,16 @@
     padding-left: 0;
     padding-top: 50px;
   }
+  
+  #mapa-canarias {
+    width: 100vw;
+    left: 0;
+
+    & .canarias-info {
+      margin: 0 auto;
+      text-align: center;
+    }
+  }
 
   #panel-toggler {
     left: 30px;
