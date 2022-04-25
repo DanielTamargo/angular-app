@@ -51,6 +51,7 @@ export class TaskIndexComponent implements OnInit, OnDestroy {
   tasks: TaskInterface[] = [];
   tasksSubscription$ = new Subscription;
   editedTask?: string;
+  createdTask?: string;
 
   activityTotal = -1;
 
@@ -65,6 +66,7 @@ export class TaskIndexComponent implements OnInit, OnDestroy {
       if (state.firstLoad) return;
 
       this.editedTask = state.editedTask;
+      this.createdTask = state.taskAdded;
 
       this.tasks = state.tasks;
       this.loading = false;

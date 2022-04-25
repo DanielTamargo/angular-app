@@ -45,7 +45,7 @@ export const taskListReducer = createReducer(
     ...state,
     ...resetOptions,
     tasks: [task, ...state.tasks],
-    newTask: task.key,
+    taskAdded: task.key,
   })),
   on(TaskListActions.taskCreateShow, (state) => ({
     ...state,

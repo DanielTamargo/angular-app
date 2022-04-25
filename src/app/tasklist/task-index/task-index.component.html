@@ -7,18 +7,40 @@
 
 <br><br>
 
-<!-- TODO filtros -->
+<!-- Filtro actividades -->
+<div class="filters">
+  <p class="filters-title mb-0">FILTERS</p>
+  <div class="filters-row">
+    <input type="text" class="form-control custom-green" placeholder="Task name...">
+    <div class="btn-group" role="group">
+      <input type="radio" class="btn-check" name="btnradio" id="show-all" autocomplete="off" checked>
+      <label class="btn btn-outline-success" for="show-all">All</label>
+    
+      <input type="radio" class="btn-check" name="btnradio" id="show-completed" autocomplete="off">
+      <label class="btn btn-outline-success" for="show-completed">Done</label>
+    
+      <input type="radio" class="btn-check" name="btnradio" id="show-uncompleted" autocomplete="off">
+      <label class="btn btn-outline-success" for="show-uncompleted">TODO</label>
+    </div>
+  </div>
+  <div class="filters-row">
+    
+  </div>
+</div>
+
+<!-- Index actividades -->
 <div class="activities user-select-none" [@filterAnimation]="activityTotal">
   <div 
   class="activity-card"
   *ngFor="let task of tasks"
   >
-    <div class="activity-content" [ngClass]="{ 'task-edited' : task.key == editedTask, 'completed' : task.completed }">
-      <!-- TODO Logo dependiendo del tipo? -->
-      <!-- <div class="act-type" [ngClass]="{ 'completed': task.completed }">
-        {{ task.type }}
-      </div> -->
-    
+    <!-- Info actividad -->
+    <div class="activity-content" 
+    [ngClass]="
+      { 'task-edited' : task.key == editedTask, 
+      'completed' : task.completed,
+      'task-created' : task.key == createdTask }">    
+
       <div class="act-info">
         <div class="act-name">
           [{{ task.type | titlecase }}] <b>{{ task.activity | stringCutter }}</b>

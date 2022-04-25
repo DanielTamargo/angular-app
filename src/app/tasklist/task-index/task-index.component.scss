@@ -32,6 +32,32 @@ $activity-border-color: gray;
   }
 }
 
+.filters {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  
+  margin-bottom: 1em;
+
+  & .filters-title {
+    font-family: 'Akshar', sans-serif;
+  }
+
+  & .filters-row {
+    width: 100%;
+    display: flex;
+    gap: 10px;
+
+    & .form-control.custom-green:focus {
+      border-color: #28a745;
+      box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+    } 
+  }
+
+}
+
 .activities {
   padding-bottom: 8em;
 }
@@ -63,7 +89,7 @@ $activity-border-color: gray;
       background-color: rgba(149, 211, 138, 0.141);
     }
 
-    &.task-edited {
+    &.task-edited, &.task-created {
       animation: taskEdited forwards 1500ms ease-in-out;
     }
 
@@ -192,6 +218,12 @@ $activity-border-color: gray;
 @media (min-width: 1140px) {
   .add-task {
     right: calc($add-task-pos-x + ((100vw - 1140px) / 2));
+  }
+}
+
+@media (max-width: 450px) {
+  .filters .filters-row { 
+    flex-direction: column;
   }
 }
 

@@ -227,8 +227,6 @@ export class TasklistService {
    * 1 - login, 2 - index, 3 - new / edit task, 4 - show task
    */
   displayComponents(displayIndex: number = 1): void {
-    console.log(displayIndex);
-    
     this.displayIndex = displayIndex;
     this.displayIndexSubject$.next(this.displayIndex);
   }
