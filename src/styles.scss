@@ -125,6 +125,20 @@ $task-form-invalid-color: #820909;
 }
 
 /*-------------------------------------------------------------------------------------------------*/
+/* FIREBASE UI */
+
+.custom-firebase-ui {
+  & .custom-firebase-ui-content {
+    position: relative;
+    z-index: 1000;
+  }
+
+  & li.firebaseui-list-item:hover {
+    box-shadow: 0 0 5px gray; 
+  }
+}
+
+/*-------------------------------------------------------------------------------------------------*/
 /* SWEET ALERTS 2 */
 
 .colored-toast.swal2-icon-success.pink {
