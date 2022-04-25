@@ -101,4 +101,17 @@ export const taskListReducer = createReducer(
       tasks: state.tasks.filter(t => t.key !== task.key),
     }
   }),
+  on(TaskListActions.todayTasksDelete, (state, { tasks }) => {
+    // Devolvemos el estado filtrando para obviar las tareas eliminadas
+    const keys = [];
+    for (const task of tasks) {
+      keys.push(task.key);
+    }
+
+    return {
+      ...state,
+      ...resetOptions,
+      tasks: state.tasks.filter(t => !keys.includes(t.key)),
+    }
+  }),
 );

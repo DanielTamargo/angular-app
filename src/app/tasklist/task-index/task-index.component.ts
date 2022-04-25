@@ -101,13 +101,14 @@ export class TaskIndexComponent implements OnInit, OnDestroy {
     Swal.fire({
       title: 'U sure mate?',
       text: 'Deleting it will be irreversible',
+      customClass: 'tasklist-swal',
       showCancelButton: true,
       showConfirmButton: false,
       showDenyButton: true,
       denyButtonText: "Do it!",
       cancelButtonText: "Hell no!",
     }).then((result) => {
-      // Si confirma, volvemos
+      // Si confirma, eliminamos
       if (result.isDenied) this.taskListService.deleteTask(task);
     });
     
@@ -124,9 +125,7 @@ export class TaskIndexComponent implements OnInit, OnDestroy {
     this.taskListService.updateTask(task);
   }
 
-
-  // RANDOM TASK CREATE
-
+  // ---------------------------------------------------------------------------------------------------
   onCreateRandomTask(): void {
     this.filterStatus = 1;
     this.filterName = '';
@@ -156,10 +155,31 @@ export class TaskIndexComponent implements OnInit, OnDestroy {
       });
   }
 
+  onRemoveTodayTasks(): void {
+    const todayTasks = this.tasks.filter(task => {
+      return new Date().toLocaleDateString("en-US") == new Date(task.created_at).toLocaleDateString("en-US");
+    });
 
-  // FILTER
+    if (todayTasks.length <= 0) return;
 
-  onFilterStatusChange(status: number) {
+    // TODO Confirmación
+    Swal.fire({
+      title: 'U sure mate?',
+      text: 'Deleting them will be irreversible',
+      customClass: 'tasklist-swal',
+      showCancelButton: true,
+      showConfirmButton: false,
+      showDenyButton: true,
+      denyButtonText: "Do it!",
+      cancelButtonText: "Hell no!",
+    }).then((result) => {
+      // Si confirma, eliminamos
+      if (result.isDenied) this.taskListService.deleteTodayTasks(todayTasks);
+    });
+  }
+
+  // ---------------------------------------------------------------------------------------------------
+  onFilterStatusChange(status: number): void {
     this.filterStatus = status;
     this.filterTasks();
   }

@@ -174,6 +174,7 @@ export class TaskFormComponent implements OnInit, OnDestroy {
       Swal.fire({
         title: 'Ey!',
         text: 'Your changes will be lost. Do you want to leave?',
+        customClass: 'tasklist-swal',
         showCancelButton: true,
         showConfirmButton: true,
         confirmButtonText: "Yes",

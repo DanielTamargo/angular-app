@@ -211,6 +211,16 @@ export class TasklistService {
     this.displayComponents(TLC.DISPLAY_INDEX);
   }
 
+  deleteTodayTasks(tasks: TaskInterface[]) {
+    // Eliminamos los items de la BBDD
+    for (const task of tasks) {
+      this.tasksDB$.remove(task.id);
+    }
+
+    // Actualizamos el estado del store a través de la acción hacia el reducer
+    this.store.dispatch(TaskListActions.todayTasksDelete({ tasks }));;
+  }
+
   /**
    * Para evitar que el estado no se actualice correctamente al salir de formulario, ejecutamos la acción
    */
