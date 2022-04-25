@@ -4,6 +4,14 @@ $add-task-pos-x: 26px;
 
 $activity-border-color: gray;
 
+@keyframes taskEdited {
+  0%, 50% {
+    background-color: white;
+  }
+  25%, 75% {
+    background-color: rgba(0, 128, 0, 0.201);
+  }
+}
 
 .add-task {
   font-size: 2em;
@@ -23,7 +31,6 @@ $activity-border-color: gray;
     transform: scale(1.3);
   }
 }
-
 
 .activities {
   padding-bottom: 8em;
@@ -45,21 +52,16 @@ $activity-border-color: gray;
     margin-top: 10px;
   }
 
-  @keyframes taskEdited {
-    0%, 50% {
-      background-color: white;
-    }
-    25%, 75% {
-      background-color: rgba(0, 128, 0, 0.201);
-    }
-  }
-
   & .activity-content {
     display: flex;
     width: 100%;
 
     gap: 10px;
     justify-content: space-between;
+
+    &.completed {
+      background-color: rgba(149, 211, 138, 0.141);
+    }
 
     &.task-edited {
       animation: taskEdited forwards 1500ms ease-in-out;

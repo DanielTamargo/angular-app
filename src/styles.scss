@@ -136,6 +136,10 @@ $task-form-invalid-color: #820909;
   & li.firebaseui-list-item:hover {
     box-shadow: 0 0 5px gray; 
   }
+
+  & .mdl-shadow--2dp {
+    box-shadow: none;
+  }
 }
 
 /*-------------------------------------------------------------------------------------------------*/

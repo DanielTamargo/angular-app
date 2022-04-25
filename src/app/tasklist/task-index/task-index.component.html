@@ -13,7 +13,7 @@
   class="activity-card"
   *ngFor="let task of tasks"
   >
-    <div class="activity-content" [ngClass]="{ 'task-edited' : task.key == editedTask }">
+    <div class="activity-content" [ngClass]="{ 'task-edited' : task.key == editedTask, 'completed' : task.completed }">
       <!-- TODO Logo dependiendo del tipo? -->
       <!-- <div class="act-type" [ngClass]="{ 'completed': task.completed }">
         {{ task.type }}
