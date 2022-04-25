@@ -150,6 +150,14 @@ $task-form-invalid-color: #820909;
   color: white;
 }
 
+.tasklist-swal .swal2-styled.swal2-confirm {
+  background-color: #2d813f;
+
+  &:focus {
+    box-shadow: 0 0 0 3px rgba(124, 224, 102, 0.5);
+  }
+}
+
 /*-------------------------------------------------------------------------------------------------*/
 /* OPEN LAYERS */
 
