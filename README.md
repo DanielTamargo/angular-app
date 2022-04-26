@@ -65,4 +65,16 @@ Esta es la mini aplicación *'personal, improvisando mientras aprendo, random pe
   - [Actions](https://ngrx.io/guide/store/actions)
   - [Migraciones (ya que inicialmente me basé en ejemplos obsoletos)](https://ngrx.io/guide/migration/v13)
   - [Guía NgRx en castellano](https://academia-binaria.com/el-patron-redux-con-ngrx-en-angular/)
+- OpenLayers
+  - [Generar VectorSource con un GeoJSON (+ estilos básicos)](https://openlayers.org/en/latest/examples/geojson.html)
+  - [Centrar y posicionar una vista de un mapa](https://openlayers.org/en/latest/examples/center.html)
 
+## Otros posts y guías de utilidad
+
+- [Cédric Exbrayat](https://github.com/cexbrayat) publicó unos posts explicando por partes cómo mejorar el rendimiento de nuestra aplicación con Angular
+  - [Part 1: First Load](https://blog.ninja-squad.com/2018/09/06/angular-performances-part-1/)
+  - [Part 2: Reload](https://blog.ninja-squad.com/2018/09/13/angular-performances-part-2/)
+  - [Part 3: Profiling and runtime performances](https://blog.ninja-squad.com/2018/09/20/angular-performances-part-3/)
+  - [Part 4: Change detection strategies](https://blog.ninja-squad.com/2018/09/27/angular-performances-part-4/)
+  - [Part 5: Pure pipes, attribute decorator and other tips](https://blog.ninja-squad.com/2018/10/04/angular-performances-part-5/)
+- [RxJS operadores de mapeo más utilizados, cuándo utilizar cada uno y por qué](https://blog.angular-university.io/rxjs-higher-order-mapping/)
