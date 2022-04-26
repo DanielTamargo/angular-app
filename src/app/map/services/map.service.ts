@@ -10,7 +10,7 @@ import TileWMS from 'ol/source/TileWMS';
 import WMTS from 'ol/source/WMTS';
 
 import { HttpClient } from '@angular/common/http';
-import { catchError, Subject, map, BehaviorSubject } from 'rxjs';
+import { catchError, Subject, map } from 'rxjs';
 
 import { MapConstants as MC } from '../constants/map-constants';
 import { LayerConfig, LayerGroupConfig, LoadedLayer } from '../interfaces/layer-config.interface';
@@ -181,14 +181,14 @@ export class MapService {
       ? ca_color.color
       : 'rgba(255, 255, 255, 0.4)';
 
-    let stroke = new Stroke({
+    const stroke = new Stroke({
       width: 1,
       color: '#2f2f2f'
     });
-    let fill = new Fill({
+    const fill = new Fill({
       color: color
     });
-    let image = new Circle({
+    const image = new Circle({
       stroke: stroke,
       fill: fill,
       radius: 4
