@@ -10,11 +10,13 @@
 <!-- TODO ocultar filtro e index si no existe tareas y mostrar un texto -->
 <div class="no-tasks"
 [hidden]="tasks.length > 0">
-  <h3>You haven't added tasks yet</h3> <!-- aplicar estilos -->
-  <!-- TODO botón create a new one / create a random one (el create a random one que aparezca también en los filtros) -->
-  <!-- si se crea nueva tarea se limpian filtros -->
-  <!-- TODO si en base a los filtros no existe ningún elemento mostrar mensaje -->
-  <!-- TODO map: añadir mapa canarias y en configuración permitir eliminarlo -->
+<div class="filters no-tasks">
+    <h3>You haven't added tasks yet</h3> <!-- aplicar estilos -->
+    <div class="filters-row">
+      <button type="button" class="btn btn-outline-success" (click)="onCreateTask()">New task</button>  
+      <button type="button" class="btn btn-outline-success" (click)="onCreateRandomTask()">Get a new random task</button>  
+    </div>
+  </div>
 </div>
 
 
@@ -38,7 +40,8 @@
     </div>
   </div>
   <div class="filters-row">
-    <button type="button" class="btn btn-outline-success" (click)="onCreateRandomTask()">Create a new random task</button>  
+    <button type="button" class="btn btn-outline-success" (click)="onCreateTask()">New task</button>  
+    <button type="button" class="btn btn-outline-success" (click)="onCreateRandomTask()">Get a new random task</button>  
     <button type="button" class="btn btn-outline-danger" (click)="onRemoveTodayTasks()">Remove today's all tasks</button>  
   </div>
 </div>

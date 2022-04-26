@@ -41,6 +41,10 @@ $activity-border-color: gray;
   
   margin-bottom: 1em;
 
+  &.no-tasks {
+    padding-top: 10vh;
+  }
+
   & .filters-title {
     font-family: 'Akshar', sans-serif;
   }

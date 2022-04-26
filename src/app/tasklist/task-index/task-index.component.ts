@@ -99,8 +99,9 @@ export class TaskIndexComponent implements OnInit, OnDestroy {
   onDeleteTask(task: TaskInterface): void {
     // Si el usuario ha modificado el formulario, mostramos alerta para la confirmación
     Swal.fire({
-      title: 'U sure mate?',
-      text: 'Deleting it will be irreversible',
+      title: 'Are you sure?',
+      html: 'Deleting it will be <b>irreversible</b>',
+      // text: 'Deleting it will be irreversible',
       customClass: 'tasklist-swal',
       showCancelButton: true,
       showConfirmButton: false,
@@ -164,8 +165,9 @@ export class TaskIndexComponent implements OnInit, OnDestroy {
 
     // TODO Confirmación
     Swal.fire({
-      title: 'U sure mate?',
-      text: 'Deleting them will be irreversible',
+      title: 'Be careful!',
+      html: `You're about to delete <b>${todayTasks.length}</b> tasks.<br>Deleting them will be <b>irreversible</b>`,
+      // text: `You're about to delete <b>${todayTasks.length}</b> tasks. Deleting them will be irreversible`,
       customClass: 'tasklist-swal',
       showCancelButton: true,
       showConfirmButton: false,
