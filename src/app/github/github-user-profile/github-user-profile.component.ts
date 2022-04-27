@@ -13,7 +13,7 @@ import { GitHubBasicUserInterface } from 'src/app/github/interfaces/github-basic
   selector: 'app-github-user-profile',
   templateUrl: './github-user-profile.component.html',
   styleUrls: ['./github-user-profile.component.scss'],
-  animations: [ // TODO 
+  animations: [
     trigger('slideInOut', [
       state('void', style({ opacity: '0' })),
       state('*', style({ opacity: '1' })),
@@ -88,7 +88,7 @@ export class GitHubUserProfileComponent implements OnInit, OnDestroy {
   /**
    * Dependiendo de la selección mostrará un componente u otro con la información correspondiente
    * Activará el spinner de carga, que será deshabilitado una vez se carguen los datos (o surja algún error)
-   * 
+   *
    * @param selectedElement elemento seleccionado
    * @param caseNumber opción seleccionada
    */
@@ -100,7 +100,7 @@ export class GitHubUserProfileComponent implements OnInit, OnDestroy {
     this.lastCase = caseNumber;
     this.follows_page = 1;
     this.loading = false;
-    
+
     // Actualizamos la selección en el servicio
     this.gitHubService.selectedSection = caseNumber;
 
