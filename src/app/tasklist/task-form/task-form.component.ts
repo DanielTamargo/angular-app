@@ -7,7 +7,7 @@ import Swal from 'sweetalert2';
 import { TaskInterface } from '../interfaces/task.interface';
 import { TaskListStateInterface } from '../interfaces/tasklist-state.interface';
 import { TasklistService } from '../services/tasklist.service';
-import { TaskListConstants as TLC } from '../constants/tasklist-constants';
+import { TaskListConstants, TaskListConstants as TLC } from '../constants/tasklist-constants';
 
 @Component({
   selector: 'app-task-form',
@@ -134,27 +134,7 @@ export class TaskFormComponent implements OnInit, OnDestroy {
   }
  
 
-  /**
-   * Genera una serie de tramos de una determinada longitud y los une para devolver una clave aleatoria
-   * 
-   * @param partLength longitud de cada tramo
-   * @param partsNumber número de tramos
-   * @returns clave aleatoria generada en base a los tramos configurados (unidos por un guión)
-   */
-  randomKey(partLength: number = 5, partsNumber: number = 3): string {
-    const result           = [];
-    const characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    const charactersLength = characters.length;
-    let part               = '';
-    for (let partIndex = 0; partIndex < partsNumber; partIndex++) {
-      for (var i = 0; i < partLength; i++ ) {
-        part += characters.charAt(Math.floor(Math.random() * charactersLength));
-      }
-      result.push(part);
-      part = '';
-    }
-    return result.join('-');
-  }
+
 
   /**
    * Crea la tarea y la envía al servicio para que la registre y añada al listado de tareas
@@ -168,7 +148,7 @@ export class TaskFormComponent implements OnInit, OnDestroy {
       
       id: this.task ? this.task.id : null,
       
-      key: this.task ? this.task.key : this.randomKey(),
+      key: this.task ? this.task.key : TaskListConstants.randomKey(),
       completed: this.task ? this.task.completed : false,
       accessibility: this.task ? this.task.accessibility : 0
     }
@@ -194,6 +174,7 @@ export class TaskFormComponent implements OnInit, OnDestroy {
       Swal.fire({
         title: 'Ey!',
         text: 'Your changes will be lost. Do you want to leave?',
+        customClass: 'tasklist-swal',
         showCancelButton: true,
         showConfirmButton: true,
         confirmButtonText: "Yes",

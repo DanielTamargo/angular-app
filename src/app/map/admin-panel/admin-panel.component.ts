@@ -18,12 +18,15 @@ export class AdminPanelComponent implements OnInit {
   layersConfig: LayerGroupConfig[];
   ccaaAllVisible: boolean = false;
 
+  showCanariasMap = true;
+
   constructor(private mapService: MapService) {
     this.checkIfAllCCAAVisible();
   }
 
   ngOnInit(): void {
     this.layersConfig = this.mapService.layersConfig;
+    this.showCanariasMap = this.mapService.showCanariasMap;
   }
 
   checkIfAllCCAAVisible(): void {
@@ -32,6 +35,12 @@ export class AdminPanelComponent implements OnInit {
     } else {
       this.ccaaAllVisible = false;
     }
+  }
+
+  onToggleCanariasMap(): void {
+    this.showCanariasMap = !this.showCanariasMap;
+    this.mapService.showCanariasMap = this.showCanariasMap;
+    this.mapService.toggleCanariasMap();
   }
 
   onOpacityChange(evt: MatSliderChange, layerGroupName: string): void {
@@ -62,6 +71,7 @@ export class AdminPanelComponent implements OnInit {
     }).then((result) => {
       // Si ha denegado, borramos la configuración
       if (result.isDenied) {
+        this.showCanariasMap = true;
         this.mapService.resetConfiguration();
         this.layersConfig = this.mapService.layersConfig;
         this.checkIfAllCCAAVisible();

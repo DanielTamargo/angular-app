@@ -22,8 +22,12 @@ export class MapService {
 
   changeLayerVisibilitySubject$ = new Subject<LayerConfig>();
   newWFSLayerSubject$ = new Subject<TileLayer<TileWMS> | VectorImageLayer<VectorSource> | TileLayer<WMTS>>();
+  newWFSCanariasLayerSubject$ = new Subject<TileLayer<TileWMS> | VectorImageLayer<VectorSource> | TileLayer<WMTS>>();
   loadedLayersSubject$ = new Subject<LoadedLayer[]>();
   configResetedSubject$ = new Subject<boolean>();
+
+  showCanariasMap = true;
+  showCanariasMapSubject$ = new Subject<boolean>();
 
   opacity: number;
 
@@ -137,6 +141,7 @@ export class MapService {
     }
   ];
   loadedLayers: LoadedLayer[] = [];
+  canariasLoadedLayers: LoadedLayer[] = [];
 
 
   constructor(private http: HttpClient) {
@@ -154,6 +159,13 @@ export class MapService {
       this.layersConfig = JSON.parse(JSON.stringify(this.defaultLayersConfig));
     }
 
+    try {
+      const showCanariasConfig = localStorage.getItem(MC.LS_SHOW_CANARIAS_CONFIG);
+      if (showCanariasConfig) this.showCanariasMap = JSON.parse(showCanariasConfig);
+      else this.showCanariasMap = true;
+    } catch (e) {
+      this.showCanariasMap = true;
+    }
   }
 
   /**
@@ -169,14 +181,14 @@ export class MapService {
       ? ca_color.color
       : 'rgba(255, 255, 255, 0.4)';
 
-    let stroke = new Stroke({
+    const stroke = new Stroke({
       width: 1,
       color: '#2f2f2f'
     });
-    let fill = new Fill({
+    const fill = new Fill({
       color: color
     });
-    let image = new Circle({
+    const image = new Circle({
       stroke: stroke,
       fill: fill,
       radius: 4
@@ -253,6 +265,37 @@ export class MapService {
         layer: WFS_layer
       });
 
+      // Si la CCAA es Canarias, lo movemos también al mapa
+      if (ca.toLowerCase() == 'canarias') {
+        const WFSCanarias_layer = new VectorImageLayer({
+          source: new VectorSource({
+            features: new GeoJSON().readFeatures(geojsonObject, {
+              dataProjection: 'EPSG:4326',
+              featureProjection: 'EPSG:25830'
+            }),
+            strategy: bboxStrategy
+          }),
+          style: new Style({
+            stroke: stroke,
+            fill: fill,
+            image: image
+          }),
+          visible: visible,
+          renderBuffer: 1000,
+          opacity: opacity
+        });
+
+        this.canariasLoadedLayers.push({
+          groupName: MC.LAYERGROUP_CCAA_NAME,
+          key: ca,
+          visible: visible,
+          layer: WFSCanarias_layer
+        });
+
+        this.newWFSCanariasLayerSubject$.next(WFSCanarias_layer);
+      }
+      
+
       // Lo mandamos al mapa
       this.newWFSLayerSubject$.next(WFS_layer);
     });
@@ -309,12 +352,18 @@ export class MapService {
 
         this.newOpenDataWFSLayer({ url: url, ca: layerKey, visible: visible})
       }
-      else layer.layer.setVisible(visible);
+      else {
+        layer.layer.setVisible(visible);
+        
+        const canariasLayer = this.canariasLoadedLayers.find(lay => lay.key == layer.key);
+        if (canariasLayer) {
+          canariasLayer.visible = visible;
+          canariasLayer.layer.setVisible(visible);
+        }
+      } 
 
       this.saveConfig();
 
-      console.log(this.layersConfig[0].layers.find(lay => lay.key == 'Cantabria'));
-      console.log(this.defaultLayersConfig[0].layers.find(lay => lay.key == 'Cantabria'));
     }
   }
 
@@ -330,13 +379,27 @@ export class MapService {
       if (layer.layer) layer.layer.setOpacity(opacity);
     }
     this.saveConfig();
+
+    this.canariasLoadedLayers.map(lay => {
+      lay.layer.setOpacity(opacity);
+    });
   }
 
   /**
-   * Guarda la configuración en el localStorage
+   * Emite el resultado del toggle que será utilizado para mostrar u ocultar el mapa de canarias
+   */
+  toggleCanariasMap(): void {
+    this.showCanariasMapSubject$.next(this.showCanariasMap);
+    localStorage.setItem(MC.LS_SHOW_CANARIAS_CONFIG, JSON.stringify(this.showCanariasMap));
+  }
+
+
+  /**
+   * Guarda la configuración en el localStorage 
    */
   saveConfig() {
     localStorage.setItem(MC.LS_LAYERS_CONFIG_KEY, JSON.stringify(this.layersConfig));
+    localStorage.setItem(MC.LS_SHOW_CANARIAS_CONFIG, JSON.stringify(this.showCanariasMap));
   }
 
   /**
@@ -344,10 +407,14 @@ export class MapService {
    */
   resetConfiguration() {
     localStorage.removeItem(MC.LS_LAYERS_CONFIG_KEY);
+    localStorage.removeItem(MC.LS_SHOW_CANARIAS_CONFIG);
+    this.showCanariasMap = true;
     this.layersConfig = JSON.parse(JSON.stringify(this.defaultLayersConfig));
     this.loadedLayers = [];
+    this.canariasLoadedLayers = [];
     this.configResetedSubject$.next(true);
     this.loadVisibleLayers();
+    this.showCanariasMapSubject$.next(this.showCanariasMap);
   }
 
 }

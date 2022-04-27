@@ -1,5 +1,4 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { SharedModule } from '../shared/shared.module';
 
 import { GitHubSearchComponent } from './github-search/github-search.component';
@@ -14,7 +13,6 @@ import { RetrieveGistFileNamesPipe } from './pipes/retrieve-gist-file-names.pipe
 
 @NgModule({
   imports: [
-    CommonModule,
     SharedModule,
   ],
   declarations: [

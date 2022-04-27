@@ -8,13 +8,16 @@ import { register } from 'ol/proj/proj4';
 
 import OSM from 'ol/source/OSM';
 import WMTS from 'ol/source/WMTS';
+import GeoJSON from 'ol/format/GeoJSON';
 
 import TileLayer from 'ol/layer/Tile';
 import TileWMS from 'ol/source/TileWMS';
 import VectorImageLayer from 'ol/layer/VectorImage';
 import VectorSource from 'ol/source/Vector';
 
-import { Geometry } from 'ol/geom';
+import { Geometry, SimpleGeometry } from 'ol/geom';
+import * as olInteraction from 'ol/interaction';
+import { bbox as bboxStrategy } from 'ol/loadingstrategy';
 
 import Rotate from 'ol/control/Rotate';
 import { ScaleLine } from 'ol/control';
@@ -23,6 +26,8 @@ import FullScreen from 'ol/control/FullScreen';
 
 import { MapService } from './services/map.service';
 import { Subscription } from 'rxjs';
+import VectorLayer from 'ol/layer/Vector';
+import { Fill, Stroke, Style } from 'ol/style';
 
 @Component({
   selector: 'app-map',
@@ -46,16 +51,60 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   layers: (TileLayer<TileWMS> | VectorImageLayer<VectorSource> | TileLayer<WMTS>)[] = [];
   baseLayers: (TileLayer<TileWMS> | VectorImageLayer<VectorSource<Geometry>> | TileLayer<WMTS> | TileLayer<OSM>)[] = [];
   map?: Map;
+  mapCanarias?: Map;
 
   loadedLayersSubscription$ = new Subscription;
   newWFSlayerSubscription$ = new Subscription;
+  newWFSCanariaslayerSubscription$ = new Subscription;
+  showCanariasMapSubscription$ = new Subscription;
   configResetedSubscription$ = new Subscription;
+  spainVectorLayer: VectorLayer<VectorSource<Geometry>>;
 
   featureProperties: any = {};
   featureInfo: boolean = false;
 
   adminPanel: boolean = false;
-  defaultCenterCoordinates: number[] = [566349.3696978227, 4409951.952130745];
+  //defaultCenterCoordinates: number[] = [566349.3696978227, 4409951.952130745];
+  defaultCenterCoordinates: number[] = [301342.411962452, 4398858.63762089];
+
+  geoJSONFitCenter = {
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "properties": {
+          "no_display": true
+        },
+        "geometry": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [
+                6.943359374999999,
+                44.5
+              ],
+              [
+                -14.809570312499998,
+                44.5
+              ],
+              [
+                -14.853515625,
+                35.11990857099681
+              ],
+              [
+                6.943359374999999,
+                35.11990857099681
+              ],
+              [
+                6.943359374999999,
+                44.5
+              ]
+            ]
+          ]
+        }
+      }
+    ]
+  }
 
 
   constructor(private mapService: MapService) { }
@@ -75,8 +124,31 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     const capaBase = new TileLayer({
       source: new OSM()
     });
+    const capaBaseCanarias = new TileLayer({
+      source: new OSM()
+    });
     this.baseLayers.push(capaBase);
 
+    // Capa mockeada para poder centrar el mapa en España
+    // Documentación: https://openlayers.org/en/latest/examples/geojson.html 
+    this.spainVectorLayer = new VectorLayer({
+      source: new VectorSource({
+        features: new GeoJSON().readFeatures(this.geoJSONFitCenter, {
+          dataProjection: 'EPSG:4326',
+          featureProjection: 'EPSG:25830'
+        }),
+        strategy: bboxStrategy
+      }),
+      style: new Style({
+        stroke: new Stroke({
+          width: 0,
+          color: 'rgba(255, 255, 255, 0)'
+        }),
+        fill: new Fill({
+          color: 'rgba(255, 255, 255, 0)'
+        })
+      })
+    });
 
     // Inicializar mapa
     this.map = new Map({
@@ -93,6 +165,29 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
       ]
     });
     this.map.getLayers().insertAt(0, capaBase);
+    this.map.getLayers().insertAt(1, this.spainVectorLayer);
+    this.centerMap();
+
+    // Inicializar mapa canarias
+    this.mapCanarias = new Map({
+      target: 'mapa-canarias',
+      layers: [ capaBaseCanarias ],
+      view: new View({
+        center: [-756284.3208675878, 3276106.672008284],
+        zoom: 6.5906451086787365,
+        projection: 'EPSG:25830'
+      }),
+      interactions: olInteraction.defaults({
+        doubleClickZoom    : false,
+        mouseWheelZoom     : false,
+        pinchRotate        : false,
+        pinchZoom          : false,
+        shiftDragZoom      : false,
+        dragPan            : false,
+        altShiftDragRotate : false,
+      }),
+      controls: []
+    });
 
     // Suscripción para recibir los layers ya cargados
     this.loadedLayersSubscription$
@@ -112,7 +207,10 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         .subscribe(reset => {
           if (reset) {
             for (const layer of this.map.getAllLayers()) {
-              if (layer != capaBase) this.map.removeLayer(layer);
+              if (layer != capaBase && layer != this.spainVectorLayer) this.map.removeLayer(layer);
+            }
+            for (const layer of this.mapCanarias.getAllLayers()) {
+              if (layer != capaBaseCanarias) this.mapCanarias.removeLayer(layer);
             }
           }
         });
@@ -126,22 +224,71 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
           this.map.addLayer(layer);
         }
       });
+
+    // Y a los layers de canarias para el mapa estático de Canarias
+    this.newWFSCanariaslayerSubscription$
+    = this.mapService.newWFSCanariasLayerSubject$
+    .subscribe({
+      next: layer => {
+        this.mapCanarias.addLayer(layer);
+      }
+    });
+
+    // Y al toggle del show del mapa de canarias
+    this.showCanariasMapSubscription$
+    = this.mapService.showCanariasMapSubject$
+    .subscribe({
+      next: this.toggleCanariasMap
+    });
+    // (ejecutamos la primera vez)
+    this.toggleCanariasMap(this.mapService.showCanariasMap);
+  }
+
+  toggleCanariasMap(show: boolean): void {
+    if (show) document.getElementById('mapa-canarias').classList.remove('d-none');
+    else if (!show) document.getElementById('mapa-canarias').classList.add('d-none');
   }
 
   ngAfterViewInit(): void {
 
-    // LISTENER ONCLICK
+    // LISTENER ONCLICK MAPA CANARIAS
+    this.mapCanarias?.on('singleclick', evt => {
+        this.mapCanarias?.forEachFeatureAtPixel(evt.pixel, (feature, layer) => {
+          if (!layer) return;
+  
+          const featureProperties = feature.getProperties();
+          this.featureInfo = true;
+  
+          const keys = Object.keys(featureProperties);
+          const resp = [];
+  
+          let i = 0;
+          for (const key of keys) {
+            if (typeof featureProperties[key] == 'object') continue;
+  
+            resp[i] = { key: key, value: featureProperties[key] };
+            i++;
+          }
+  
+          this.featureProperties = resp;
+        });
+    });
+
+    // LISTENER ONCLICK MAPA GENERAL
     this.map.on('singleclick', evt => {
       // Obtener coordenadas click, coordenadas centro mapa, centrar en coordenadas del click, obtener zoom:
       //console.log('Coordenadas click: ', evt.coordinate);
       //console.log('Coordenadas centro mapa: ', this.map.getView().getCenter());
       //this.map?.getView().setCenter(evt.coordinate);
-      console.log('Zoom del mapa y ancho/alto de pantalla',
+      /* 
+      console.table(
         {
           zoom: this.map.getView().getZoom(),
           anchoPantalla: window.innerWidth,
           alturaPantalla: window.innerHeight,
+          coordenadas: this.map.getView().getCenter()
         });
+      */
 
       // Ejecutar por cada feature en el pixel (con hitTolerance)
       let features = this.map?.getFeaturesAtPixel(evt.pixel);
@@ -151,7 +298,10 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         if (!layer) return;
 
         const featureProperties = feature.getProperties();
+        if (featureProperties['no_display']) return;
+
         this.featureInfo = true;
+        
 
         const keys = Object.keys(featureProperties);
         const resp = [];
@@ -167,10 +317,9 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         this.featureProperties = resp;
 
         // CCAA (Open Data)
-        if (feature.get('ccaa')) {
+        /* if (feature.get('ccaa')) {
           console.log('Info CCAA');
-          // TODO? algo distintos para CCAA cuando meta más capas?
-        }
+        } */
 
       });
 
@@ -192,14 +341,19 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         return;
       }
 
-      let features = this.map?.getFeaturesAtPixel(evt.pixel);
-      if (features!.length <= 0) {
+      let featuresLength = this.map?.getFeaturesAtPixel(evt.pixel).length;
+      if (featuresLength <= 0) {
         tooltip!.hidden = true;
       }
 
       // Obtener features seleccionadas
       this.map?.forEachFeatureAtPixel(evt.pixel, (feature, layer) => {
         if (!layer) return;
+        if (feature.get('no_display') && featuresLength == 1) {
+          tooltip!.hidden = true;
+          return;
+        }
+
 
         // CCAA (Open Data)
         if (feature.get('ccaa')) {
@@ -212,7 +366,11 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
       });
     });
 
+    
     // Quitamos el tooltip si nos movemos por el display de la información
+    document.getElementById('mapa-canarias').addEventListener('mouseenter', () => {
+      tooltip!.hidden = true;
+    });
     document.getElementById('feature-info').addEventListener('mouseenter', () => {
       tooltip!.hidden = true;
     });
@@ -223,6 +381,8 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     this.newWFSlayerSubscription$.unsubscribe();
     this.loadedLayersSubscription$.unsubscribe();
     this.configResetedSubscription$.unsubscribe();
+    this.newWFSCanariaslayerSubscription$.unsubscribe();
+    this.showCanariasMapSubscription$.unsubscribe();
   }
 
   /**
@@ -237,40 +397,37 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     971 => 6.714234718575708 => 0.0069147628409637
     1540 => 7.105328475942655 => 0.004613849659703
     1904 => 7.255328475942655 => 0.0038105716785413;
+
+
+    1680 => 6.98710599404157
     */
-
-    const widthRef = 600;
-    const zoomRef = 5.880439327374903;
-    const percentageValue = 0.008;
-
+    
     const screenWidth = window.innerWidth;
-    const increase = screenWidth - widthRef;
-    const percentage = increase / widthRef * 100;
+    let percentageValue = 0.00415899166312;
 
-    return zoomRef + (percentageValue * percentage);
+    if (screenWidth < 500) {
+      percentageValue = 0.002
+    } else if (screenWidth < 1350) {
+      percentageValue = 0.0038
+    }
 
-
-    /*const width = window.innerWidth;
-    let increase: number;
-
-    if (width < 445) increase = 0.0204471826073649;
-    else if (width < 971) increase = 0.0130063900947292;
-    else if (width < 1540) increase = 0.0069147628409637;
-    else if (width < 1904) increase = 0.004613849659703;
-    else increase = 0.0038105716785413;
-
-    console.log(width);
-    console.log(increase);
-
-    return width * increase;*/
+    const widthRef = 1680;
+      const zoomRef = 6.98710599404157;
+  
+      const increase = screenWidth - widthRef;
+      const percentage = increase / widthRef * 100;
+  
+      return zoomRef + (percentageValue * percentage);
   }
 
   /**
    * Centra el mapa en las coordenadas por defecto y el zoom calculado en base a la anchura de la pantalla
+   * Documentación: https://openlayers.org/en/latest/examples/center.html
    */
   centerMap(): void {
-    this.map.getView().setCenter(this.defaultCenterCoordinates);
-    this.map.getView().setZoom(this.getZoom());
+    const feature = this.spainVectorLayer.getSource().getFeatures()[0];
+    const polygon = feature.getGeometry();
+    this.map.getView().fit(polygon as SimpleGeometry, { padding: [0, 0, 0, 0] })
   }
 
   /**

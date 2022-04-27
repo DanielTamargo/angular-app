@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { animate, sequence, state, style, transition, trigger } from '@angular/animations';
+import { NavigationEnd, Router } from '@angular/router';
+import { filter } from 'rxjs';
 
 
 const NAV_LINKS = [ 'home', 'github', 'tasklist', 'map' ];
@@ -68,7 +70,21 @@ const NAV_COLORS = [
 export class NavbarComponent implements OnInit {
   navSlideState = NAV_LINKS[0];
 
-  constructor() { }
+  constructor(private router: Router) {
+    /**
+     * Nos suscribimos a los eventos de cambio de navegación 
+     * ya que de no hacerlo si el usuario intenta navegar hacia atrás el slider no se movería
+     */
+    this.router.events
+      .pipe(filter(evt => evt instanceof NavigationEnd))
+      .subscribe((val: NavigationEnd) => {
+        const url = val.url;
+        if (url.includes('github')) this.navSlideState = NAV_LINKS[1]; 
+        else if (url.includes('tasklist')) this.navSlideState = NAV_LINKS[2]; 
+        else if (url.includes('map')) this.navSlideState = NAV_LINKS[3]; 
+        else this.navSlideState = NAV_LINKS[0]; 
+      });
+  }
 
   ngOnInit(): void {
     // Comprobamos en qué ruta está para saber dónde poner el navSlider

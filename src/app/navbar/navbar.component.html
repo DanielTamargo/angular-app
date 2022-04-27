@@ -1,7 +1,6 @@
 <nav [@colorChange]="navSlideState">
     <!-- INICIO (logo) -->
     <div class="menu-button menu-logo"
-    (click)="navSlideState = 'home'"
     routerLinkActive="active"
     [routerLinkActiveOptions]="{ exact: true }"
     routerLink="/">
@@ -10,7 +9,6 @@
 
     <!-- GITHUB -->
     <div class="menu-button"
-    (click)="navSlideState = 'github'"
     routerLinkActive="active"
     routerLink="/github">
       <svg class="svg-logo" [ngClass]="{'pink': navSlideState == 'map', 'green': navSlideState == 'tasklist'}"
@@ -19,7 +17,6 @@
 
     <!-- LISTA DE TAREAS -->
     <div class="menu-button"
-    (click)="navSlideState = 'tasklist'"
     routerLinkActive="active"
     routerLink="/tasklist">
       <svg
@@ -41,7 +38,6 @@
 
     <!-- MAPA -->
     <div class="menu-button"
-    (click)="navSlideState = 'map'"
     routerLinkActive="active"
     routerLink="/map">
         <svg class="svg-logo" [ngClass]="{'pink': navSlideState == 'map', 'green': navSlideState == 'tasklist'}"

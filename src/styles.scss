@@ -113,12 +113,49 @@ $task-form-invalid-color: #820909;
   color: $task-form-valid-color !important;
 }
 
+
+// Switch que indica completado / sin completar en las tareas
+.mat-slide-task-completed {
+  &.mat-checked .mat-slide-toggle-thumb  {
+    background-color: rgb(25, 146, 3) !important;
+  }
+  &.mat-checked .mat-slide-toggle-bar {
+    background-color: rgba(43, 157, 23, 0.54) !important;
+  }
+}
+
+/*-------------------------------------------------------------------------------------------------*/
+/* FIREBASE UI */
+
+.custom-firebase-ui {
+  & .custom-firebase-ui-content {
+    position: relative;
+    z-index: 1000;
+  }
+
+  & li.firebaseui-list-item:hover {
+    box-shadow: 0 0 5px gray; 
+  }
+
+  & .mdl-shadow--2dp {
+    box-shadow: none;
+  }
+}
+
 /*-------------------------------------------------------------------------------------------------*/
 /* SWEET ALERTS 2 */
 
 .colored-toast.swal2-icon-success.pink {
   background-color: #ff4986 !important;
   color: white;
+}
+
+.tasklist-swal .swal2-styled.swal2-confirm {
+  background-color: #2d813f;
+
+  &:focus {
+    box-shadow: 0 0 0 3px rgba(124, 224, 102, 0.5);
+  }
 }
 
 /*-------------------------------------------------------------------------------------------------*/

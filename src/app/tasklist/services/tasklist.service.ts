@@ -168,7 +168,8 @@ export class TasklistService {
 
     // Actualizamos el estado del store a través de la acción hacia el reducer
     this.store.dispatch(TaskListActions.taskAdd({ task }));
-
+    
+    // Actualizamos los elementos a mostrar
     this.displayComponents(TLC.DISPLAY_INDEX);
   }
 
@@ -187,6 +188,7 @@ export class TasklistService {
     // Actualizamos el estado del store a través de la acción hacia el reducer
     this.store.dispatch(TaskListActions.taskUpdate({ task }));
 
+    // Actualizamos los elementos a mostrar
     this.displayComponents(TLC.DISPLAY_INDEX);
   }
 
@@ -209,6 +211,16 @@ export class TasklistService {
     this.displayComponents(TLC.DISPLAY_INDEX);
   }
 
+  deleteTodayTasks(tasks: TaskInterface[]) {
+    // Eliminamos los items de la BBDD
+    for (const task of tasks) {
+      this.tasksDB$.remove(task.id);
+    }
+
+    // Actualizamos el estado del store a través de la acción hacia el reducer
+    this.store.dispatch(TaskListActions.todayTasksDelete({ tasks }));;
+  }
+
   /**
    * Para evitar que el estado no se actualice correctamente al salir de formulario, ejecutamos la acción
    */
@@ -225,8 +237,6 @@ export class TasklistService {
    * 1 - login, 2 - index, 3 - new / edit task, 4 - show task
    */
   displayComponents(displayIndex: number = 1): void {
-    console.log(displayIndex);
-    
     this.displayIndex = displayIndex;
     this.displayIndexSubject$.next(this.displayIndex);
   }

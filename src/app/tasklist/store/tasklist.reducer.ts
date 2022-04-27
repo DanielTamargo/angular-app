@@ -45,7 +45,7 @@ export const taskListReducer = createReducer(
     ...state,
     ...resetOptions,
     tasks: [task, ...state.tasks],
-    newTask: task.key,
+    taskAdded: task.key,
   })),
   on(TaskListActions.taskCreateShow, (state) => ({
     ...state,
@@ -99,6 +99,19 @@ export const taskListReducer = createReducer(
       ...state,
       ...resetOptions,
       tasks: state.tasks.filter(t => t.key !== task.key),
+    }
+  }),
+  on(TaskListActions.todayTasksDelete, (state, { tasks }) => {
+    // Devolvemos el estado filtrando para obviar las tareas eliminadas
+    const keys = [];
+    for (const task of tasks) {
+      keys.push(task.key);
+    }
+
+    return {
+      ...state,
+      ...resetOptions,
+      tasks: state.tasks.filter(t => !keys.includes(t.key)),
     }
   }),
 );

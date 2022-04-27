@@ -4,6 +4,14 @@ $add-task-pos-x: 26px;
 
 $activity-border-color: gray;
 
+@keyframes taskEdited {
+  0%, 50% {
+    background-color: white;
+  }
+  25%, 75% {
+    background-color: rgba(0, 128, 0, 0.201);
+  }
+}
 
 .add-task {
   font-size: 2em;
@@ -24,6 +32,41 @@ $activity-border-color: gray;
   }
 }
 
+.filters {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  
+  margin-bottom: 1em;
+
+  &.no-tasks {
+    padding-top: 10vh;
+  }
+
+  & .filters-title {
+    font-family: 'Akshar', sans-serif;
+  }
+
+  & .filters-row {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+
+    & .form-control.custom-green:focus {
+      border-color: #28a745;
+      box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+    } 
+  }
+
+  & .filters-row + .filters-row {
+    margin-top: 10px;
+  }
+
+}
 
 .activities {
   padding-bottom: 8em;
@@ -51,6 +94,14 @@ $activity-border-color: gray;
 
     gap: 10px;
     justify-content: space-between;
+
+    &.completed {
+      background-color: rgba(149, 211, 138, 0.141);
+    }
+
+    &.task-edited, &.task-created {
+      animation: taskEdited forwards 1500ms ease-in-out;
+    }
 
     & > div {
       display: flex;
@@ -106,12 +157,12 @@ $activity-border-color: gray;
       justify-content: center;
       align-content: center;
       border-left: 1px solid $activity-border-color;
-      gap: 5px;
+      gap: 10px;
 
       & > div {
         display: flex;
 
-        &:hover {
+        &:not(.act-completed):hover {
           cursor: pointer;
         }
       }
@@ -119,6 +170,18 @@ $activity-border-color: gray;
       & .act-completed {
         justify-content: center;
         grid-area: com;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding-bottom: 10px;
+        
+        border-bottom: 1px solid gray;
+
+        & label {
+          cursor: pointer;
+        }
       }
       & .act-update {
         padding: 4px;
@@ -158,8 +221,6 @@ $activity-border-color: gray;
         border-radius: 5px;
       }
 
-      & .act-actions-svg {
-      }
     }
   }
 }
@@ -167,6 +228,12 @@ $activity-border-color: gray;
 @media (min-width: 1140px) {
   .add-task {
     right: calc($add-task-pos-x + ((100vw - 1140px) / 2));
+  }
+}
+
+@media (max-width: 450px) {
+  .filters .filters-row { 
+    flex-direction: column;
   }
 }
 

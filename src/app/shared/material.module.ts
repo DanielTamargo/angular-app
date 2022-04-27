@@ -14,6 +14,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSelectModule } from '@angular/material/select';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 // import { A11yModule } from '@angular/cdk/a11y';
 
 const modules = [
@@ -30,7 +31,8 @@ const modules = [
     MatCheckboxModule,
     MatSliderModule,
     MatTooltipModule,
-    MatSelectModule
+    MatSelectModule,
+    MatSlideToggleModule
 ]
 
 @NgModule({

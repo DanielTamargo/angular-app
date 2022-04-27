@@ -9,6 +9,8 @@ export const TASK_ADD    = '[TaskList] Add Task';
 export const TASK_UPDATE = '[TaskList] Update Task';
 export const TASK_DELETE = '[TaskList] Delete Task';
 
+export const TODAY_TASKS_DELETE = '[TaskList] Delete Today Tasks';
+
 export const TASK_FORM_GO_BACK = '[TaskList] Task Form Go Back';
 export const TASK_CREATE_SHOW  = '[TaskList] Show Create Task Form';
 export const TASK_UPDATE_SHOW  = '[TaskList] Show Update Task Form';
@@ -49,5 +51,10 @@ export const taskUpdate = createAction(
 export const taskDelete = createAction(
   TASK_DELETE,
   props<{ task: TaskInterface }>()
+);
+
+export const todayTasksDelete = createAction(
+  TODAY_TASKS_DELETE,
+  props<{ tasks: TaskInterface[] }>()
 );
 
