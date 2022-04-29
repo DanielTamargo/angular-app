@@ -6,5 +6,18 @@
         "a/**/*.code-search": true,
         "a/**/bower_components": true,
         "a/**/node_modules": true
-    }
+    },
+
+    "terminal.integrated.defaultProfile.windows": "Command Prompt",
+
+    "workbench.colorTheme": "One Dark Pro ++",
+    "workbench.iconTheme": "material-icon-theme",
+
+    "editor.tabSize": 2,
+    /*"editor.codeLensFontFamily": "'Cascadia Code', Consolas",
+    "editor.fontSize": 13,
+    "editor.fontFamily": "'Cascadia Code', Consolas",*/
+    "editor.fontLigatures": true,
+    "editor.bracketPairColorization.enabled": true,
+    "editor.guides.bracketPairs": true,
 }
