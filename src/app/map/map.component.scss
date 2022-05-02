@@ -1,4 +1,4 @@
-#mapa {
+#map {
   position: fixed;
   top: 0;
   left: 0;
@@ -8,7 +8,7 @@
   height: 100vh;
 }
 
-#mapa-canarias {
+#map-canarias {
   width: 350px;
   height: 200px;
   border: 1px solid rgb(255, 64, 129);
@@ -43,14 +43,14 @@
   position: fixed;
   z-index: 990;
   top: 15px;
-  left: 100px;
+  left: 105px;
 }
 
 #map-center {
   position: fixed;
   z-index: 5;
   top: 15px;
-  left: 210px;
+  left: 215px;
   background-color: white;
   box-shadow: 0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%);
 }
@@ -85,12 +85,12 @@
 }
 
 @media (max-width: 450px) {
-  #mapa {
+  #map {
     padding-left: 0;
     padding-top: 50px;
   }
   
-  #mapa-canarias {
+  #map-canarias {
     width: 100vw;
     left: 0;
 
@@ -101,13 +101,13 @@
   }
 
   #panel-toggler {
-    left: 30px;
+    left: 35px;
     top: 65px
   }
 
   #map-center {
     top: 65px;
-    left: 140px;
+    left: 145px;
   }
 
   #panel {
@@ -122,9 +122,16 @@
   }
 }
 
-@media (max-width: 307px) {
+@media (max-width: 315px) {
   #map-center {
     top: 110px;
-    left: 29px;
+    left: 35px;
+  }
+}
+
+
+@media (max-height: 450px) {
+  #map-canarias {
+    display: none;
   }
 }
