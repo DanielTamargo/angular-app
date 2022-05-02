@@ -54,7 +54,7 @@ export interface GitHubRepoInterface {
     ssh_url:           string;
     clone_url:         string;
     svn_url:           string;
-    homepage:          null;
+    homepage?:         string;
     size:              number;
     stargazers_count:  number;
     watchers_count:    number;
@@ -65,11 +65,11 @@ export interface GitHubRepoInterface {
     has_wiki:          boolean;
     has_pages:         boolean;
     forks_count:       number;
-    mirror_url:        null;
+    mirror_url?:       string;
     archived:          boolean;
     disabled:          boolean;
     open_issues_count: number;
-    license:           null;
+    license?:          any;
     allow_forking:     boolean;
     is_template:       boolean;
     topics:            any[];
