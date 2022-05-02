@@ -42,54 +42,61 @@ describe('NavbarComponent', () => {
     map = fixture.debugElement.query(By.css('[routerLink="/map"]'))
   })
 
-  it('should create the navbar', () => {
-    expect(component).toBeTruthy()
-  })
-
-  it('should contain links', () => {
-    expect(home).toBeTruthy()
-    expect(github).toBeTruthy()
-    expect(tasklist).toBeTruthy()
-    expect(map).toBeTruthy()
+  describe('Navbar DOM', () => {
+    it('should create the navbar', () => {
+      expect(component).toBeTruthy()
+    })
+  
+    it('should contain links', () => {
+      expect(home).toBeTruthy()
+      expect(github).toBeTruthy()
+      expect(tasklist).toBeTruthy()
+      expect(map).toBeTruthy()
+    })
   })
 
   /* Tests de navegación */
-  it('should navigate to home', fakeAsync(() => {
-    let location: Location = TestBed.inject(Location);
+  describe('Navbar Navigation', () => {
+    it('should navigate to home', fakeAsync(() => {
+      let location: Location = TestBed.inject(Location);
+  
+      (home.nativeElement as HTMLButtonElement).click()
+      fixture.detectChanges()
+      fixture.whenStable().then(() => {
+        expect(location.path()).toBe('/')
+      })
+    }))
+    
+    it('should navigate to github', fakeAsync(() => {
+      let location: Location = TestBed.inject(Location);
+  
+      (github.nativeElement as HTMLButtonElement).click()
+      fixture.detectChanges()
+      fixture.whenStable().then(() => {
+        expect(location.path()).toBe('/github')
+      })
+    }))
 
-    (home.nativeElement as HTMLButtonElement).click()
-    fixture.detectChanges()
-    fixture.whenStable().then(() => {
-      expect(location.path()).toBe('/')
-    })
-  }))
-  it('should navigate to github', fakeAsync(() => {
-    let location: Location = TestBed.inject(Location);
-
-    (github.nativeElement as HTMLButtonElement).click()
-    fixture.detectChanges()
-    fixture.whenStable().then(() => {
-      expect(location.path()).toBe('/github')
-    })
-  }))
-  it('should navigate to tasklist', fakeAsync(() => {
-    let location: Location = TestBed.inject(Location);
-
-    (tasklist.nativeElement as HTMLButtonElement).click()
-    fixture.detectChanges()
-    fixture.whenStable().then(() => {
-      expect(location.path()).toBe('/tasklist')
-    })
-  }))
-  it('should navigate to map', fakeAsync(() => {
-    let location: Location = TestBed.inject(Location);
-
-    (map.nativeElement as HTMLButtonElement).click()
-    fixture.detectChanges()
-    fixture.whenStable().then(() => {
-      expect(location.path()).toBe('/map')
-    })
-  }))
+    it('should navigate to tasklist', fakeAsync(() => {
+      let location: Location = TestBed.inject(Location);
+  
+      (tasklist.nativeElement as HTMLButtonElement).click()
+      fixture.detectChanges()
+      fixture.whenStable().then(() => {
+        expect(location.path()).toBe('/tasklist')
+      })
+    }))
+    
+    it('should navigate to map', fakeAsync(() => {
+      let location: Location = TestBed.inject(Location);
+  
+      (map.nativeElement as HTMLButtonElement).click()
+      fixture.detectChanges()
+      fixture.whenStable().then(() => {
+        expect(location.path()).toBe('/map')
+      })
+    }))
+  })
   
 })
 
