@@ -152,7 +152,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // Inicializar mapa
     this.map = new Map({
-      target: 'mapa',
+      target: 'map',
       layers: [],
       view: new View({
         center: this.defaultCenterCoordinates,
@@ -170,7 +170,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // Inicializar mapa canarias
     this.mapCanarias = new Map({
-      target: 'mapa-canarias',
+      target: 'map-canarias',
       layers: [ capaBaseCanarias ],
       view: new View({
         center: [-756284.3208675878, 3276106.672008284],
@@ -245,8 +245,8 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   toggleCanariasMap(show: boolean): void {
-    if (show) document.getElementById('mapa-canarias').classList.remove('d-none');
-    else if (!show) document.getElementById('mapa-canarias').classList.add('d-none');
+    if (show) document.getElementById('map-canarias').classList.remove('d-none');
+    else if (!show) document.getElementById('map-canarias').classList.add('d-none');
   }
 
   ngAfterViewInit(): void {
@@ -368,7 +368,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
 
     
     // Quitamos el tooltip si nos movemos por el display de la información
-    document.getElementById('mapa-canarias').addEventListener('mouseenter', () => {
+    document.getElementById('map-canarias').addEventListener('mouseenter', () => {
       tooltip!.hidden = true;
     });
     document.getElementById('feature-info').addEventListener('mouseenter', () => {

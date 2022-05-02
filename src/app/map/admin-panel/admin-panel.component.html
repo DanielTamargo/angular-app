@@ -26,6 +26,7 @@
       <div>
         <button mat-button color="accent" matStepperPrevious>Go to layers configuration</button>
       </div>
+      <p>Please note that if display height is lower than 450 pixels the map will always autohide.</p>
       <button class="mt-4 me-2" mat-raised-button color="accent" (click)="onToggleCanariasMap()">{{ showCanariasMap ? 'Hide Canarias map' : 'Show Canarias map' }}</button>
       <button class="mt-4" mat-raised-button color="warn" (click)="onRestoreDefaultConfiguration()">Reset to default configuration</button>
     </mat-step>
