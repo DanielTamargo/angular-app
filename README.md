@@ -68,6 +68,9 @@ Esta es la mini aplicación *'personal, improvisando mientras aprendo, random pe
 - OpenLayers
   - [Generar VectorSource con un GeoJSON (+ estilos básicos)](https://openlayers.org/en/latest/examples/geojson.html)
   - [Centrar y posicionar una vista de un mapa](https://openlayers.org/en/latest/examples/center.html)
+- Jasmine (testing)
+  - [Spy on properties](https://jasmine.github.io/tutorials/spying_on_properties)
+  - [Testing timers with fakeAsync](https://www.damirscorner.com/blog/posts/20210917-TestingTimersWithFakeAsync.html)
 
 ## Otros posts y guías de utilidad
 
@@ -78,3 +81,4 @@ Esta es la mini aplicación *'personal, improvisando mientras aprendo, random pe
   - [Part 4: Change detection strategies](https://blog.ninja-squad.com/2018/09/27/angular-performances-part-4/)
   - [Part 5: Pure pipes, attribute decorator and other tips](https://blog.ninja-squad.com/2018/10/04/angular-performances-part-5/)
 - [RxJS operadores de mapeo más utilizados, cuándo utilizar cada uno y por qué](https://blog.angular-university.io/rxjs-higher-order-mapping/)
+- [Unit testing en Angular con Jasmine y Karma (35 vídeos cortos)](https://www.youtube.com/playlist?list=PL8jcXf-CLpxolmjV5_taFP0c5LyCveDF1)
