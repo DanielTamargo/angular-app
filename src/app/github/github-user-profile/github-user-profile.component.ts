@@ -51,6 +51,22 @@ export class GitHubUserProfileComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     // Obtenemos el usuario cargado y nos suscribimos a los cambios
+    this.getUser();
+
+    // Comprobamos si ya había estado anteriormente en la vista
+    this.checkLastCase();
+
+    // Nos suscribimos a la notificación de errores
+    this.getUserSearchError();
+
+    // También nos suscribimos para comprobar si el usuario está escribiendo y se está buscando
+    this.isTyping();
+
+    // Y a la obtención de los usuarios siguiendo / seguidores
+    this.getFollows();
+  }
+
+  private getUser(): void {
     this.userSubscription$ = this.gitHubService.userSubject$.subscribe(user => {
       this.user = user;
 
@@ -60,25 +76,30 @@ export class GitHubUserProfileComponent implements OnInit, OnDestroy {
       this.displayFollows = [];
       if (user) this.error = null;
     });
+  }
 
+  private checkLastCase(): void {
     this.lastCase = this.gitHubService.selectedSection;
     if (this.lastCase == this.CASE_FOLLOWERS) this.follows_number = this.user.followers;
     else if (this.lastCase == this.CASE_FOLLOWING) this.follows_number = this.user.following;
+  }
 
-    // Nos suscribimos a la notificación de errores
+  private getUserSearchError(): void {
     this.errorSubscription$ = this.gitHubService.userSearchError$.subscribe(err => {
       this.error = err;
       this.displayFollows = [];
       this.follows_page = 1;
       this.lastCase = 0;
     });
+  }
 
-    // También nos suscribimos para comprobar si el usuario está escribiendo y se está buscando
+  private isTyping(): void {
     this.typingSubscription$ = this.gitHubService.typingSubject$.subscribe(typing => {
       this.typing = typing;
     });
+  }
 
-    // Y a la obtención de los usuarios siguiendo / seguidores
+  private getFollows(): void {
     this.followsSubscription$ = this.gitHubService.userFollowsSubject$.subscribe(follows => {
       this.displayFollows = [...this.displayFollows, ...follows];
       this.loading = false;
@@ -92,7 +113,7 @@ export class GitHubUserProfileComponent implements OnInit, OnDestroy {
    * @param selectedElement elemento seleccionado
    * @param caseNumber opción seleccionada
    */
-  onChangeDisplayInfoSelection(selectedElement: HTMLElement, caseNumber: number): void {
+  public onChangeDisplayInfoSelection(selectedElement: HTMLElement, caseNumber: number): void {
     // Evitamos el spam al seleccionar múltiples veces el mismo botón
     if (this.lastCase == caseNumber) return;
 
@@ -129,11 +150,8 @@ export class GitHubUserProfileComponent implements OnInit, OnDestroy {
         this.loading = true;
         this.gitHubService.onUserFollowsRequest(this.user.url + "/following", this.follows_per_query, this.follows_page)
     }
-
-    // Realizamos la petición a la API
   }
 
-  // Carga más follows
   loadMoreFollows(): void {
     this.follows_page++;
     let key = '/following';

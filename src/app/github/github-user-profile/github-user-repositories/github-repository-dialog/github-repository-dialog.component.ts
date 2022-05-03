@@ -27,8 +27,4 @@ export class GitHubRepositoryDialogComponent implements OnInit {
     });
   }
 
-  setRepo(): void {
-
-  }
-
 }
