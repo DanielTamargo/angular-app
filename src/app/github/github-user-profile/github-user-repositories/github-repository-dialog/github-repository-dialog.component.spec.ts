@@ -12,6 +12,7 @@ import { GitHubTestHelper } from "src/app/github/github-test-helper";
 import { GitHubService } from "src/app/github/services/github.service";
 import { SizeFormatterPipe } from "src/app/shared/pipes/size-formatter.pipe";
 import { MatChipsModule } from "@angular/material/chips";
+import { MatButtonModule } from "@angular/material/button";
 
 
 describe('GitHubRepositoryDialogComponent', () => {
@@ -29,18 +30,19 @@ describe('GitHubRepositoryDialogComponent', () => {
 
     // Configuramos el módulo que utilizará en la fase de testing
     TestBed.configureTestingModule({
-      imports: [ 
+      imports: [
         MatPaginatorModule,
         MatInputModule,
         MatTableModule,
         MatSortModule,
         MatDialogModule,
         MatChipsModule,
+        MatButtonModule,
         BrowserAnimationsModule,
       ],
-      declarations: [ 
+      declarations: [
         GitHubRepositoryDialogComponent,
-        SizeFormatterPipe, 
+        SizeFormatterPipe,
       ],
       providers: [
         // Override del GitHubService por el GitHubMockedService
@@ -63,16 +65,16 @@ describe('GitHubRepositoryDialogComponent', () => {
   })
 
   it('should have more than one contributtor', () => {
-    expect(component.repoContributors.length).toBeGreaterThan(0)    
+    expect(component.repoContributors.length).toBeGreaterThan(0)
   })
-  
+
   it('should have commits', () => {
     expect(component.totalCommits).toBeGreaterThan(0)
   })
 
 })
 
-/* 
+/*
 class GitHubMockedService {
   userReposSubject$ = new BehaviorSubject<GitHubRepoInterface[]>(this.repos)
   loadingSubject$ = new BehaviorSubject<boolean>(false)
@@ -80,5 +82,5 @@ class GitHubMockedService {
   pageIndex: number = 0
   filtro_active: string = 'updated_at'
   filtro_direction: SortDirection = 'desc'
-} 
+}
 */

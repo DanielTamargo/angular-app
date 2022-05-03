@@ -16,6 +16,7 @@ import { GitHubUserRepositoriesComponent } from "./github-user-repositories.comp
 import { GitHubTestHelper } from "../../github-test-helper";
 import { GitHubRepositoryDialogComponent } from "./github-repository-dialog/github-repository-dialog.component";
 import { MatChipsModule } from "@angular/material/chips";
+import { MatButtonModule } from "@angular/material/button";
 
 describe('GitHubUserRepositoriesComponent', () => {
   let component: GitHubUserRepositoriesComponent
@@ -32,13 +33,13 @@ describe('GitHubUserRepositoriesComponent', () => {
     gitHubMockedService.repos = GitHubTestHelper.githubRepos
     gitHubMockedService.userReposSubject$ = new BehaviorSubject<GitHubRepoInterface[]>(gitHubMockedService.repos)
     gitHubMockedService.loadingSubject$ = new BehaviorSubject<boolean>(false)
-  
+
     gitHubMockedService.pageIndex = 0
     gitHubMockedService.filtro_active = 'updated_at'
     gitHubMockedService.filtro_direction = 'desc'
 
     TestBed.configureTestingModule({
-      imports: [ 
+      imports: [
         MatPaginatorModule,
         MatInputModule,
         MatTableModule,
@@ -46,10 +47,11 @@ describe('GitHubUserRepositoriesComponent', () => {
         MatDialogModule,
         MatChipsModule,
         MatDialogModule,
+        MatButtonModule,
         BrowserAnimationsModule,
       ],
-      declarations: [ 
-        GitHubUserRepositoriesComponent, 
+      declarations: [
+        GitHubUserRepositoriesComponent,
         GitHubRepositoryDialogComponent,
         SizeFormatterPipe
       ],
@@ -72,35 +74,35 @@ describe('GitHubUserRepositoriesComponent', () => {
       fixture.detectChanges()
       expect(ghHelper.countElements('tbody tr')).toEqual(2)
     })
-  
+
     it("first repo's link should be 'https://github.com/DanielTamargo/angular-app'", () => {
       fixture.detectChanges()
       const tr_repos = ghHelper.getAllElements('tbody tr')
       expect((tr_repos[0].children[0].children[0].nativeElement as HTMLLinkElement).href).toBe('https://github.com/DanielTamargo/angular-app')
     })
-  
+
     it("first repo's name should be 'angular-app'", () => {
       fixture.detectChanges()
       const tr_repos = ghHelper.getAllElements('tbody tr')
       expect((tr_repos[0].children[0].children[0].nativeElement as HTMLElement).innerHTML).toBe('angular-app')
     })
-  
+
     it("after resorting list first repo's name should NOT be 'angular-app'", () => {
       // Modificamos el ancho de la pantalla porque si es bajo ocultará la columna created_at
       // https://jasmine.github.io/tutorials/spying_on_properties
       spyOnProperty(window, 'innerWidth').and.returnValue(800)
       window.dispatchEvent(new Event('resize'))
       fixture.detectChanges() // ngOnInit
-  
+
       const sorts = ghHelper.getAllElements('.mat-sort-header-content')
-      const sortCreatedAt = 
+      const sortCreatedAt =
         sorts.find(
           sort => (sort.nativeNode as HTMLElement).innerText.toLocaleLowerCase() == 'created at'
         ).nativeElement as HTMLButtonElement
-      
+
       sortCreatedAt.click() // descendente
       sortCreatedAt.click() // ascendente
-  
+
       fixture.detectChanges() // detectar cambios producidos por los clicks
       const tr_repos = fixture.debugElement.queryAll(By.css('tbody tr'))
       expect((tr_repos[0].children[0].children[0].nativeElement as HTMLElement).innerText == 'angular-app').toBeFalse()
@@ -108,9 +110,9 @@ describe('GitHubUserRepositoriesComponent', () => {
     })
   })
 
-
-
   describe('Open Repository Dialog', () => {
+    let dialog: MatDialog;
+
     beforeEach(() => {
       fixture.detectChanges()
     })
@@ -120,7 +122,7 @@ describe('GitHubUserRepositoriesComponent', () => {
       const linkInfo = ghHelper.getFirstElement('.link-info')
       linkInfo.triggerEventHandler('click', null)
       fixture.detectChanges()
-  
+
       //expect(spyOpenDialog).toHaveBeenCalledOnceWith(GitHubTestHelper.githubRepos[0])
       //  Lo divido en dos expects porque el debug se complica al ser objetos grandes, así sabemos qué parte falla al momento
       expect(spyOpenDialog).toHaveBeenCalledTimes(1)
@@ -128,22 +130,27 @@ describe('GitHubUserRepositoriesComponent', () => {
     })
 
     it("should create a dialog with repository info", () => {
-      let dialog: MatDialog;
+      dialog = TestBed.inject(MatDialog)
       const spyOpenDialog = spyOn(component, 'openRepositoryDialog')
+      const selectedRepo = GitHubTestHelper.githubRepos[0]
+      const selectedRepoContributors = GitHubTestHelper.githubRepoContributors
 
-      // TODO open dialog (quizás inyectar el dialogmodule)
       spyOpenDialog.and.callFake((repo) => {
-        /* const repo = GitHubTestHelper.githubRepos[0]
-        const contributors = GitHubTestHelper.githubRepoContributors */
-        expect(true).toBe(true)
-        dialog.open(GitHubRepositoryDialogComponent);
+        gitHubMockedService.selectedRepository = repo
+        gitHubMockedService.selectedRepositoryContributors = selectedRepoContributors
+        dialog.open(GitHubRepositoryDialogComponent)
       })
 
-      component.openRepositoryDialog(GitHubTestHelper.githubRepos[0])
+      component.openRepositoryDialog(selectedRepo)
+      fixture.detectChanges()
+
+      expect(gitHubMockedService.selectedRepository).toEqual(selectedRepo)
+      expect(gitHubMockedService.selectedRepositoryContributors).toEqual(selectedRepoContributors)
+      expect(document.querySelector('app-github-repository-dialog')).toBeTruthy()
     })
   })
 
- 
+
 
 
 })
