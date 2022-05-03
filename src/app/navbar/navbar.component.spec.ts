@@ -1,20 +1,21 @@
 import { Location } from "@angular/common";
 import { Component, DebugElement } from "@angular/core";
-import { ComponentFixture, fakeAsync, TestBed } from "@angular/core/testing";
-import { By } from "@angular/platform-browser";
+import { ComponentFixture, fakeAsync, TestBed, tick } from "@angular/core/testing";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { RouterTestingModule } from "@angular/router/testing";
+import { GitHubTestHelper } from "../github/github-test-helper";
 
 import { NavbarComponent } from "./navbar.component";
 
 describe('NavbarComponent', () => {
   let component: NavbarComponent
   let fixture: ComponentFixture<NavbarComponent>
+  let ghHelper: GitHubTestHelper<NavbarComponent>
 
-  let home: DebugElement;
-  let github: DebugElement;
-  let tasklist: DebugElement;
-  let map: DebugElement;
+  let home: DebugElement
+  let github: DebugElement
+  let tasklist: DebugElement
+  let map: DebugElement
 
   beforeEach(fakeAsync(() => TestBed.configureTestingModule({
     imports: [ 
@@ -35,11 +36,12 @@ describe('NavbarComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(NavbarComponent)
     component = fixture.debugElement.componentInstance
+    ghHelper = new GitHubTestHelper(fixture)
 
-    home = fixture.debugElement.query(By.css('[routerLink="/"]'))
-    github = fixture.debugElement.query(By.css('[routerLink="/github"]'))
-    tasklist = fixture.debugElement.query(By.css('[routerLink="/tasklist"]'))
-    map = fixture.debugElement.query(By.css('[routerLink="/map"]'))
+    home = ghHelper.getFirstElement('[routerLink="/"]')
+    github = ghHelper.getFirstElement('[routerLink="/github"]')
+    tasklist = ghHelper.getFirstElement('[routerLink="/tasklist"]')
+    map = ghHelper.getFirstElement('[routerLink="/map"]')
   })
 
   describe('Navbar DOM', () => {
@@ -57,9 +59,13 @@ describe('NavbarComponent', () => {
 
   /* Tests de navegación */
   describe('Navbar Navigation', () => {
+    let location: Location
+
+    beforeEach(() => {
+      location = TestBed.inject(Location);
+    })
+
     it('should navigate to home', fakeAsync(() => {
-      let location: Location = TestBed.inject(Location);
-  
       (home.nativeElement as HTMLButtonElement).click()
       fixture.detectChanges()
       fixture.whenStable().then(() => {
@@ -68,8 +74,6 @@ describe('NavbarComponent', () => {
     }))
     
     it('should navigate to github', fakeAsync(() => {
-      let location: Location = TestBed.inject(Location);
-  
       (github.nativeElement as HTMLButtonElement).click()
       fixture.detectChanges()
       fixture.whenStable().then(() => {
@@ -78,8 +82,6 @@ describe('NavbarComponent', () => {
     }))
 
     it('should navigate to tasklist', fakeAsync(() => {
-      let location: Location = TestBed.inject(Location);
-  
       (tasklist.nativeElement as HTMLButtonElement).click()
       fixture.detectChanges()
       fixture.whenStable().then(() => {
@@ -88,8 +90,6 @@ describe('NavbarComponent', () => {
     }))
     
     it('should navigate to map', fakeAsync(() => {
-      let location: Location = TestBed.inject(Location);
-  
       (map.nativeElement as HTMLButtonElement).click()
       fixture.detectChanges()
       fixture.whenStable().then(() => {
@@ -97,7 +97,31 @@ describe('NavbarComponent', () => {
       })
     }))
   })
-  
+
+  // TODO
+/* 
+  describe('Navbar Navigation Color Changes', () => {
+    let initialColor: string
+    let nav: any
+
+    beforeEach(() => {
+      fixture.detectChanges()
+      nav = ghHelper.getFirstElement('nav')
+      // https://developer.mozilla.org/es/docs/Web/API/Window/getComputedStyle
+      initialColor = getComputedStyle(nav).backgroundColor
+    })
+
+    it('should change color after navigating', fakeAsync(() => {
+      (map.nativeElement as HTMLButtonElement).click()
+      tick(50)
+
+      fixture.detectChanges()
+      
+      debugger
+    }))
+
+  })
+ */  
 })
 
 @Component({ template: '' })
