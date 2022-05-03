@@ -29,8 +29,24 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 /** PERSONALIZAR ANGULAR **/
 .mat-sort-header-container:not(.mat-sort-header-sorted) .mat-sort-header-arrow {
-    opacity: 0.20 !important;
-    /* transform: translateY(0px) !important; */
+  opacity: 0.20 !important;
+  transform: translateY(0px) !important;
+  &:hover {
+    opacity: 0.56 !important;
+  }
+}
+.mat-sort-header-container.mat-focus-indicator {
+  &:hover .mat-sort-header-arrow {
+    opacity: 0.56 !important;
+  }
+}
+
+thead .mat-header-row  {
+  pointer-events: none;
+  
+  & .mat-sort-header-container {
+    pointer-events: all;
+  }
 }
 
 .cdk-overlay-container {
