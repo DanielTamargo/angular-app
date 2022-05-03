@@ -3,7 +3,7 @@ import { By } from "@angular/platform-browser";
 import { BehaviorSubject } from "rxjs";
 
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { MatDialogModule } from "@angular/material/dialog";
+import { MatDialog, MatDialogModule } from "@angular/material/dialog";
 import { MatInputModule } from "@angular/material/input";
 import { MatPaginatorModule } from "@angular/material/paginator";
 import { MatSortModule } from "@angular/material/sort";
@@ -16,7 +16,6 @@ import { GitHubUserRepositoriesComponent } from "./github-user-repositories.comp
 import { GitHubTestHelper } from "../../github-test-helper";
 import { GitHubRepositoryDialogComponent } from "./github-repository-dialog/github-repository-dialog.component";
 import { MatChipsModule } from "@angular/material/chips";
-import { ajax } from "rxjs/ajax";
 
 describe('GitHubUserRepositoriesComponent', () => {
   let component: GitHubUserRepositoriesComponent
@@ -46,6 +45,7 @@ describe('GitHubUserRepositoriesComponent', () => {
         MatSortModule,
         MatDialogModule,
         MatChipsModule,
+        MatDialogModule,
         BrowserAnimationsModule,
       ],
       declarations: [ 
@@ -90,7 +90,6 @@ describe('GitHubUserRepositoriesComponent', () => {
       // https://jasmine.github.io/tutorials/spying_on_properties
       spyOnProperty(window, 'innerWidth').and.returnValue(800)
       window.dispatchEvent(new Event('resize'))
-      
       fixture.detectChanges() // ngOnInit
   
       const sorts = ghHelper.getAllElements('.mat-sort-header-content')
@@ -103,43 +102,48 @@ describe('GitHubUserRepositoriesComponent', () => {
       sortCreatedAt.click() // ascendente
   
       fixture.detectChanges() // detectar cambios producidos por los clicks
-  
       const tr_repos = fixture.debugElement.queryAll(By.css('tbody tr'))
       expect((tr_repos[0].children[0].children[0].nativeElement as HTMLElement).innerText == 'angular-app').toBeFalse()
       // tr_repos[0].children[0].children[0].innerText para acceder a la primera fila, al primer TD y al <a> que contendrá el texto
     })
   })
 
-/*   beforeEach(function() {
-    jasmine.Ajax.install();
-  });
 
-  afterEach(function() {
-    jasmine.Ajax.uninstall();
-  });
 
-  it("should create a dialog with repository info", fakeAsync(() => {
+  describe('Open Repository Dialog', () => {
+    beforeEach(() => {
+      fixture.detectChanges()
+    })
 
-    fixture.detectChanges()
-    component.openRepositoryDialog(GitHubTestHelper.githubRepos[0])
-    tick(50)
-    
-    fixture.detectChanges()
-    debugger
-
-  })) */
+    it("should trigger 'openRepositoryDialog' method ONCE and with specific repo", () => {
+      const spyOpenDialog = spyOn(component, 'openRepositoryDialog')
+      const linkInfo = ghHelper.getFirstElement('.link-info')
+      linkInfo.triggerEventHandler('click', null)
+      fixture.detectChanges()
   
-  /*
-    ajax<GitHubRepoInterface[]>(repo.contributors_url)
-    .pipe(pluck('response'))
-    .subscribe(
-      {
-        next: contributors => {
-          this.githubService.selectedRepositoryContributors = contributors;
-          this.dialog.open(GitHubRepositoryDialogComponent);
-        },
-        error: (err) => {
-        }
-      }
-    ); */
+      //expect(spyOpenDialog).toHaveBeenCalledOnceWith(GitHubTestHelper.githubRepos[0])
+      //  Lo divido en dos expects porque el debug se complica al ser objetos grandes, así sabemos qué parte falla al momento
+      expect(spyOpenDialog).toHaveBeenCalledTimes(1)
+      expect(spyOpenDialog).toHaveBeenCalledWith(GitHubTestHelper.githubRepos[0])
+    })
+
+    it("should create a dialog with repository info", () => {
+      let dialog: MatDialog;
+      const spyOpenDialog = spyOn(component, 'openRepositoryDialog')
+
+      // TODO open dialog (quizás inyectar el dialogmodule)
+      spyOpenDialog.and.callFake((repo) => {
+        /* const repo = GitHubTestHelper.githubRepos[0]
+        const contributors = GitHubTestHelper.githubRepoContributors */
+        expect(true).toBe(true)
+        dialog.open(GitHubRepositoryDialogComponent);
+      })
+
+      component.openRepositoryDialog(GitHubTestHelper.githubRepos[0])
+    })
+  })
+
+ 
+
+
 })
