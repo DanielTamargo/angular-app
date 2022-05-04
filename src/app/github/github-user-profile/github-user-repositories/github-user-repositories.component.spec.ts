@@ -90,6 +90,13 @@ describe('GitHubUserRepositoriesComponent', () => {
       expect((tr_repos[0].children[0].children[0].nativeElement as HTMLElement).innerHTML).toBe('angular-app')
     })
 
+    it("should call 'onSortChange' method once", () => {
+      fixture.detectChanges()
+      const onSortChangeSpy = spyOn(component, 'onSortChange')
+      ghHelper.getFirstElement('.mat-sort-header-content')?.nativeElement?.click()
+      expect(onSortChangeSpy).toHaveBeenCalledTimes(1)
+    })
+
     /* AUTOMATIZAR TESTEOS DE ORDENAR LA TABLA */
     const automateSortTets = [
       { key: 'created at', repo: 'angular-app' },
@@ -158,10 +165,19 @@ describe('GitHubUserRepositoriesComponent', () => {
   })
 
   describe('Paginator', () => {
-    it("should create the paginator", () => {
+    beforeEach(() => {
       fixture.detectChanges()
+    })
+
+    it("should create the paginator", () => {
       const paginator = ghHelper.getFirstElement('mat-paginator')
       expect(paginator).toBeTruthy()  
+    })
+
+    it("should 'onPaginateChange' method should update service's paginator index", () => {
+      const pageIndex = 2;
+      component.onPaginateChange({ length: 20, pageIndex: pageIndex, pageSize: 5, previousPageIndex: 0})
+      expect(gitHubMockedService.pageIndex).toEqual(pageIndex)
     })
   })
 
@@ -207,6 +223,7 @@ describe('GitHubUserRepositoriesComponent', () => {
 
       expect(gitHubMockedService.selectedRepository).toEqual(selectedRepo)
       expect(gitHubMockedService.selectedRepositoryContributors).toEqual(GitHubTestHelper.githubRepoContributors)
+      expect(ajax.get).toHaveBeenCalledWith(selectedRepo.contributors_url)
       expect(document.querySelector('app-github-repository-dialog')).toBeTruthy()
     })
   })

@@ -3,7 +3,7 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { MatSort, Sort, SortDirection } from '@angular/material/sort';
 
-import { pluck, Subscription } from 'rxjs';
+import { catchError, pluck, Subscription } from 'rxjs';
 import { GitHubRepoInterface } from 'src/app/github/interfaces/github-repo.interface';
 import { GitHubService } from 'src/app/github/services/github.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -51,7 +51,7 @@ export class GitHubUserRepositoriesComponent implements OnInit, AfterViewInit, O
 
   constructor(private githubService: GitHubService, private dialog: MatDialog) { }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     // Obtenemos los repositorios del usuario
     this.reposSubscription$ = this.githubService.userReposSubject$.subscribe(repos => {
       this.repos = repos;
@@ -86,7 +86,7 @@ export class GitHubUserRepositoriesComponent implements OnInit, AfterViewInit, O
     }
   }
 
-  ngAfterViewInit(): void {
+  public ngAfterViewInit(): void {
     // Configuramos el sorting de la tabla
     this.dataSource.sort = this.sort;
 
@@ -94,20 +94,20 @@ export class GitHubUserRepositoriesComponent implements OnInit, AfterViewInit, O
     this.dataSource.paginator = this.paginator;
   }
 
-  ngOnDestroy(): void {
+  public ngOnDestroy(): void {
     // Limpiamos suscripciones para evitar pérdidas de memoria y rendimiento
     this.reposSubscription$.unsubscribe();
     this.loadingSubscription$.unsubscribe();
   }
 
   // Función llamada cuando se cambie de página en la paginación
-  onPaginateChange(pageEvent: PageEvent): void {
+  public onPaginateChange(pageEvent: PageEvent): void {
     // Actualizamos en el servicio por si navega entre componentes mantener integridad
     this.githubService.pageIndex = pageEvent.pageIndex;
   }
 
   // Función llamada cuando utilice el sorting
-  onSortChange(sortState: Sort): void {
+  public onSortChange(sortState: Sort): void {
     // Al reordenar, volvemos a la primera página
     this.paginator.firstPage();
 
@@ -117,14 +117,16 @@ export class GitHubUserRepositoriesComponent implements OnInit, AfterViewInit, O
   }
 
   // Lanza un modal con la información detallada del repositorio
-  openRepositoryDialog(repo: GitHubRepoInterface) {
+  public openRepositoryDialog(repo: GitHubRepoInterface) {
     this.githubService.selectedRepository = repo;
 
     // TODO mostrar spinner modal
 
     // Obtenemos los contributors como información extra
     ajax.get<GitHubContributorInterface[]>(repo.contributors_url)
-    .pipe(pluck('response'))
+    .pipe(pluck('response'), catchError(() => {
+      throw new Error('Contributors request error')
+    }))
     .subscribe(
       {
         next: contributors => {

@@ -12,6 +12,8 @@ import { GitHubService } from "../services/github.service";
 import { GitHubTestHelper } from "../github-test-helper";
 import { GitHubConstants } from "../constants/github-constants";
 import { of } from "rxjs";
+import { GitHubUserGistsComponent } from "./github-user-gists/github-user-gists.component";
+import { GitHubUserRepositoriesComponent } from "./github-user-repositories/github-user-repositories.component";
 
 
 describe('GitHubUserProfileComponent', () => {
@@ -29,6 +31,12 @@ describe('GitHubUserProfileComponent', () => {
     gitHubMockedService.userFollowsSubject$ = of([])
     gitHubMockedService.userSearchError$ = of(null)
     gitHubMockedService.selectedSection = 0
+    // Para sub componente repo
+    gitHubMockedService.userReposSubject$ = of(GitHubTestHelper.githubRepos)
+    gitHubMockedService.loadingSubject$ = of(true)
+    // Para sub componente gist
+    gitHubMockedService.userGistsSubject$ = of(GitHubTestHelper.githubGists)
+
 
     // Configuramos el módulo que utilizará en la fase de testing
     TestBed.configureTestingModule({
@@ -41,7 +49,9 @@ describe('GitHubUserProfileComponent', () => {
         BrowserAnimationsModule,
       ],
       declarations: [ 
-        GitHubUserProfileComponent, 
+        GitHubUserProfileComponent,
+        GitHubUserRepositoriesComponent, 
+        GitHubUserGistsComponent,
       ],
       providers: [
         // Override del GitHubService por el GitHubMockedService
@@ -79,16 +89,197 @@ describe('GitHubUserProfileComponent', () => {
       expect(ghHelper.getFirstElement('.spinner-border.text-primary')).toBeTruthy()
     })
   })
+
+  describe('IF PATHs: getUser method', () => {
+    it('should update follows_number when FOLLOWERS section already selected', () => {
+      component.lastCase = GitHubConstants.CASE_FOLLOWERS
+      fixture.detectChanges()
+      expect(component.follows_number).toBe(component.user.followers)
+    })
+
+    it('should update follows_number when FOLLOWING section already selected', () => {
+      component.lastCase = GitHubConstants.CASE_FOLLOWING
+      fixture.detectChanges()
+      expect(component.follows_number).toBe(component.user.following)
+    })
+  })
+
+  describe('IF PATHs: checkLastCase method', () => {
+    it('should update follows_number when FOLLOWERS section already selected', () => {
+      gitHubMockedService.selectedSection = GitHubConstants.CASE_FOLLOWERS
+      fixture.detectChanges()
+      expect(component.follows_number).toBe(component.user.followers)
+    })
+
+    it('should update follows_number when FOLLOWING section already selected', () => {
+      gitHubMockedService.selectedSection = GitHubConstants.CASE_FOLLOWING
+      fixture.detectChanges()
+      expect(component.follows_number).toBe(component.user.following)
+    })
+  })
+
+
+  it('trackBy should track the item id properly', () => {
+    const id = component.trackByFollows(0, GitHubTestHelper.githubUser)
+    expect(id).toEqual(GitHubTestHelper.githubUser.id)
+  })
+
+
+  describe('Display Info Selection', () => {
+    let selection: number
+    let element: HTMLElement
+
+    let func: any
+    let funcTimes: number
+    let isComponentLoading: boolean
+
+    beforeEach(() => {
+      component.loading = true
+      component.lastCase = 0
+      component.user = GitHubTestHelper.githubUser
+      gitHubMockedService.selectedSection = 0
+      element = document.createElement('div')
+
+      gitHubMockedService.onUserReposRequest = () => {}
+      gitHubMockedService.onUserGistsRequest = () => {}
+      gitHubMockedService.onUserFollowsRequest = () => {}
+      gitHubMockedService.onUserFollowsRequest = () => {}
+    })
+    
+    it('should return if same section got selected', () => {
+      selection = 0
+
+      component.onChangeDisplayInfoSelection(element, selection)
+      expect(element.classList.length).toBe(0)
+    })
+
+    it('should update values and execute service onUserReposRequest when selecting repos', () => {
+      selection = GitHubConstants.CASE_REPOS
+      func = spyOn(gitHubMockedService, 'onUserReposRequest')
+
+      component.onChangeDisplayInfoSelection(element, selection)
+      expect(element.classList.length).toBeGreaterThan(0)
+      funcTimes = 1
+      expect(func).toHaveBeenCalledWith(component.user.url + '/repos', component.user.public_repos)
+      isComponentLoading = false
+    })
+
+    it('should update values and execute service onUserGistsRequest when selecting gists', () => {
+      selection = GitHubConstants.CASE_GISTS
+      func = spyOn(gitHubMockedService, 'onUserGistsRequest')
+      
+      component.onChangeDisplayInfoSelection(element, selection)
+      expect(element.classList.length).toBeGreaterThan(0)
+      
+      funcTimes = 1
+      expect(func).toHaveBeenCalledWith(component.user.url + '/gists', component.user.public_gists)
+      isComponentLoading = false
+    })
+
+    it('should update values and execute service onUserFollowsRequest when selecting followers', () => {
+      selection = GitHubConstants.CASE_FOLLOWERS
+      func = spyOn(gitHubMockedService, 'onUserFollowsRequest')
+
+      component.onChangeDisplayInfoSelection(element, selection)
+      expect(element.classList.length).toBeGreaterThan(0)
+      expect(component.follows_number).toBe(component.user.followers)
+
+      funcTimes = 1
+      expect(func).toHaveBeenCalledWith(component.user.url + '/followers', component.follows_per_query, component.follows_page)
+      isComponentLoading = true
+    })
+
+    it('should update values and execute service onUserFollowsRequest when selecting followings', () => {
+      selection = GitHubConstants.CASE_FOLLOWING
+      func = spyOn(gitHubMockedService, 'onUserFollowsRequest')
+
+      component.onChangeDisplayInfoSelection(element, selection)
+      expect(element.classList.length).toBeGreaterThan(0)
+      expect(component.follows_number).toBe(component.user.following)
+      
+      funcTimes = 1
+      expect(func).toHaveBeenCalledWith(component.user.url + '/following', component.follows_per_query, component.follows_page)
+      isComponentLoading = true
+    })
+
+    it('should change active class on selected display section when selecting a diferent section', () => {
+      fixture.detectChanges()
+      component.lastCase = GitHubConstants.CASE_REPOS
+      fixture.detectChanges()
+
+      const previousSelectedElement = ghHelper.getFirstElement('.user-details .stats.active')
+
+      selection = GitHubConstants.CASE_GISTS
+      const onChangeDisplayInfoSelectionSpy = spyOn(component, 'onChangeDisplayInfoSelection').and.callThrough()
+      func = spyOn(gitHubMockedService, 'onUserGistsRequest')
+      fixture.detectChanges()
+
+      const section = ghHelper.getFirstElement('.user-details .public-gists')
+      section.nativeElement.click()
+      fixture.detectChanges()
+
+      const finalSelectedElement = ghHelper.getFirstElement('.user-details .stats.active')
+      expect(previousSelectedElement == finalSelectedElement).toBeFalse()
+      expect(onChangeDisplayInfoSelectionSpy).toHaveBeenCalledTimes(1)
+      expect(onChangeDisplayInfoSelectionSpy).toHaveBeenCalledWith(section.nativeElement, selection)
+
+      funcTimes = 1
+      isComponentLoading = false
+    })
+
+    afterEach(() => {
+      if (selection > 0) {
+        expect(func).toHaveBeenCalledTimes(funcTimes)
+        expect(component.loading).toBe(isComponentLoading)
+        
+        expect(component.displayFollows.length).toBe(0)
+        expect(component.lastCase).toBe(selection)
+        expect(component.follows_page).toBe(1)
+      }
+
+      expect(gitHubMockedService.selectedSection).toBe(selection)
+    })
+  })
+
+  describe('Follows', () => {
+    let initialFollowsPage: number
+    let onUserFollowsRequestSpy: jasmine.Spy<any>
+
+    beforeEach(() => {
+      gitHubMockedService.onUserFollowsRequest = () => {}
+      initialFollowsPage = component.follows_page
+      onUserFollowsRequestSpy = spyOn(gitHubMockedService, 'onUserFollowsRequest')
+      component.lastCase = GitHubConstants.CASE_FOLLOWING
+      fixture.detectChanges()
+    }) 
+
+    it('should increase follows page by 1', () => {
+      component.loadMoreFollows()
+      expect(initialFollowsPage + 1).toBe(component.follows_page)
+    })
+
+    it('should call the function with correct params', () => {
+      component.loadMoreFollows()
+      expect(onUserFollowsRequestSpy).toHaveBeenCalledOnceWith(component.user.url + '/following', component.follows_per_query, component.follows_page)
+    })
+
+    it('should select correct key', () => {
+      component.lastCase = GitHubConstants.CASE_FOLLOWERS
+      component.loadMoreFollows()
+      expect(onUserFollowsRequestSpy).toHaveBeenCalledOnceWith(component.user.url + '/followers', component.follows_per_query, component.follows_page)
+    })
+  })
   
 })
 
 /* 
-class GitHubMockedService {
-  userReposSubject$ = new BehaviorSubject<GitHubRepoInterface[]>(this.repos)
-  loadingSubject$ = new BehaviorSubject<boolean>(false)
-
-  pageIndex: number = 0
-  filtro_active: string = 'updated_at'
-  filtro_direction: SortDirection = 'desc'
-} 
+     public loadMoreFollows(): void {
+    this.follows_page++;
+    let key = '/following';
+    Iif (this.lastCase == this.CASE_FOLLOWERS) {
+      key = '/followers';
+    }
+ 
+    this.gitHubService.onUserFollowsRequest(this.user.url + key, this.follows_per_query, this.follows_page);
+  }
 */

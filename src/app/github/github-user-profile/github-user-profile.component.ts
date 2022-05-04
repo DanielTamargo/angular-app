@@ -152,7 +152,7 @@ export class GitHubUserProfileComponent implements OnInit, OnDestroy {
     }
   }
 
-  loadMoreFollows(): void {
+  public loadMoreFollows(): void {
     this.follows_page++;
     let key = '/following';
     if (this.lastCase == this.CASE_FOLLOWERS) {
