@@ -105,7 +105,7 @@ export class GitHubService {
     }
 
     const url = GHC.BASE_URL + GHC.USER.replace(GHC.KEY_USERNAME, username);
-    ajax<GitHubUserInterface>(url)
+    ajax.get<GitHubUserInterface>(url)
       .pipe(
         pluck('response'),
         tap(() => { // Utilizamos el tap para notificar que ya no está escribiendo
