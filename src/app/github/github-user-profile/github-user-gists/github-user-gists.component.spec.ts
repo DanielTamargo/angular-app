@@ -57,24 +57,21 @@ describe('GitHubUserGistsComponent', () => {
     expect((tr_gists[0].children[0].children[0].nativeElement as HTMLLinkElement).innerText).toBe('web-component.md (Markdown)')
   })
 
-  it("after resorting list first gists's file should NOT be 'web-component.md (Markdown)'", () => {
-    // Modificamos el ancho de la pantalla porque si es bajo ocultará la columna created_at
-    // https://jasmine.github.io/tutorials/spying_on_properties
-    spyOnProperty(window, 'innerWidth').and.returnValue(800)
-    window.dispatchEvent(new Event('resize'))
+  it("after resorting list by updated at (asc) first gists's file should NOT be 'web-component.md (Markdown)'", () => {
     fixture.detectChanges()
 
     const sorts = fixture.debugElement.queryAll(By.css('.mat-sort-header-content'))
     const sortCreatedAt = 
       sorts.find(
-        sort => (sort.nativeNode as HTMLElement).innerText.toLocaleLowerCase().trim() == 'created at'
+        sort => (sort.nativeNode as HTMLElement).innerText.toLocaleLowerCase().trim() == 'updated at'
       ).nativeElement as HTMLButtonElement
 
     sortCreatedAt.click()
     fixture.detectChanges()
 
-    const tr_repos = fixture.debugElement.queryAll(By.css('tbody tr'))
-    expect((tr_repos[0].children[0].children[0].nativeElement as HTMLElement).innerText == 'web-component.md (Markdown)').toBeFalse()
+    const tr_gists = fixture.debugElement.queryAll(By.css('tbody tr'))
+    const tr_gist_filename = (tr_gists[0].children[0].children[0].nativeElement as HTMLElement).innerText
+    expect(tr_gist_filename == 'web-component.md (Markdown)').toBeFalse()
 
   })
 })

@@ -9,6 +9,7 @@ import { GitHubConstants as GHC } from 'src/app/github/constants/github-constant
 import { SortDirection } from '@angular/material/sort';
 import { GitHubGistInterface } from '../interfaces/github-gist.interface';
 import { GitHubBasicUserInterface } from '../interfaces/github-basicuser.interface';
+import { GitHubContributorInterface } from '../interfaces/github-contributor.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -33,7 +34,7 @@ export class GitHubService {
   filtro_direction: SortDirection = 'desc';
   // Repositorio seleccionado para mostrar su info en el diálogo
   selectedRepository: GitHubRepoInterface = null;
-  selectedRepositoryContributors: any = null;
+  selectedRepositoryContributors: GitHubContributorInterface[] = null;
 
   user?: GitHubUserInterface = null;
   repos: GitHubRepoInterface[] = [];

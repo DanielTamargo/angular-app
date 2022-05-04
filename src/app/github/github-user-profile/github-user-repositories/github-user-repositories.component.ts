@@ -9,6 +9,7 @@ import { GitHubService } from 'src/app/github/services/github.service';
 import { MatDialog } from '@angular/material/dialog';
 import { GitHubRepositoryDialogComponent } from './github-repository-dialog/github-repository-dialog.component';
 import { ajax } from 'rxjs/ajax';
+import { GitHubContributorInterface } from '../../interfaces/github-contributor.interface';
 
 @Component({
   selector: 'app-github-user-repositories',
@@ -122,22 +123,21 @@ export class GitHubUserRepositoriesComponent implements OnInit, AfterViewInit, O
     // TODO mostrar spinner modal
 
     // Obtenemos los contributors como información extra
-    ajax<GitHubRepoInterface[]>(repo.contributors_url)
-      .pipe(pluck('response'))
-      .subscribe(
-        {
-          next: contributors => {
-            this.githubService.selectedRepositoryContributors = contributors;
-            this.dialog.open(GitHubRepositoryDialogComponent);
+    ajax.get<GitHubContributorInterface[]>(repo.contributors_url)
+    .pipe(pluck('response'))
+    .subscribe(
+      {
+        next: contributors => {
+          this.githubService.selectedRepositoryContributors = contributors;
+          this.dialog.open(GitHubRepositoryDialogComponent);
 
-            // TODO quitar spinner modal
-          },
-          error: (err) => {
-            // TODO quitar spinner modal
-          }
+          // TODO quitar spinner modal
+        },
+        error: (err) => {
+          // TODO quitar spinner modal
         }
-      );
-
+      }
+    );
   }
 
 }
