@@ -130,7 +130,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     this.baseLayers.push(capaBase);
 
     // Capa mockeada para poder centrar el mapa en España
-    // Documentación: https://openlayers.org/en/latest/examples/geojson.html 
+    // Documentación: https://openlayers.org/en/latest/examples/geojson.html
     this.spainVectorLayer = new VectorLayer({
       source: new VectorSource({
         features: new GeoJSON().readFeatures(this.geoJSONFitCenter, {
@@ -147,7 +147,8 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         fill: new Fill({
           color: 'rgba(255, 255, 255, 0)'
         })
-      })
+      }),
+      visible: false
     });
 
     // Inicializar mapa
@@ -255,21 +256,21 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     this.mapCanarias?.on('singleclick', evt => {
         this.mapCanarias?.forEachFeatureAtPixel(evt.pixel, (feature, layer) => {
           if (!layer) return;
-  
+
           const featureProperties = feature.getProperties();
           this.featureInfo = true;
-  
+
           const keys = Object.keys(featureProperties);
           const resp = [];
-  
+
           let i = 0;
           for (const key of keys) {
             if (typeof featureProperties[key] == 'object') continue;
-  
+
             resp[i] = { key: key, value: featureProperties[key] };
             i++;
           }
-  
+
           this.featureProperties = resp;
         });
     });
@@ -280,7 +281,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
       //console.log('Coordenadas click: ', evt.coordinate);
       //console.log('Coordenadas centro mapa: ', this.map.getView().getCenter());
       //this.map?.getView().setCenter(evt.coordinate);
-      /* 
+      /*
       console.table(
         {
           zoom: this.map.getView().getZoom(),
@@ -301,7 +302,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         if (featureProperties['no_display']) return;
 
         this.featureInfo = true;
-        
+
 
         const keys = Object.keys(featureProperties);
         const resp = [];
@@ -349,11 +350,6 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
       // Obtener features seleccionadas
       this.map?.forEachFeatureAtPixel(evt.pixel, (feature, layer) => {
         if (!layer) return;
-        if (feature.get('no_display') && featuresLength == 1) {
-          tooltip!.hidden = true;
-          return;
-        }
-
 
         // CCAA (Open Data)
         if (feature.get('ccaa')) {
@@ -366,7 +362,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
       });
     });
 
-    
+
     // Quitamos el tooltip si nos movemos por el display de la información
     document.getElementById('map-canarias').addEventListener('mouseenter', () => {
       tooltip!.hidden = true;
@@ -401,7 +397,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
 
     1680 => 6.98710599404157
     */
-    
+
     const screenWidth = window.innerWidth;
     let percentageValue = 0.00415899166312;
 
@@ -413,10 +409,10 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
 
     const widthRef = 1680;
       const zoomRef = 6.98710599404157;
-  
+
       const increase = screenWidth - widthRef;
       const percentage = increase / widthRef * 100;
-  
+
       return zoomRef + (percentageValue * percentage);
   }
 
@@ -425,9 +421,11 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
    * Documentación: https://openlayers.org/en/latest/examples/center.html
    */
   centerMap(): void {
+    this.spainVectorLayer.setVisible(true);
     const feature = this.spainVectorLayer.getSource().getFeatures()[0];
     const polygon = feature.getGeometry();
     this.map.getView().fit(polygon as SimpleGeometry, { padding: [0, 0, 0, 0] })
+    this.spainVectorLayer.setVisible(false);
   }
 
   /**

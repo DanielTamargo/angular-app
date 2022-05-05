@@ -7,16 +7,19 @@
       </div>
       <div *ngFor="let layerGroup of layersConfig">
         <h5 class="text-muted">{{ layerGroup.displayName }}</h5>
-        <mat-slider class="me-2" min="0.1" max="1" step="0.1" (change)="onOpacityChange($event, layerGroup.name)" [(value)]="layerGroup.opacity"></mat-slider><label>Opacity: {{ layerGroup.opacity }}</label>
+        <mat-slider
+        class="me-2" min="0.1" max="1" step="0.1"
+        (change)="onOpacityChange($event, layerGroup.name)"
+        [(value)]="layerGroup.opacity"></mat-slider><label>Opacity: {{ layerGroup.opacity }}</label>
         <br>
         <mat-checkbox *ngIf="layerGroup.name == 'open_data_ccaa'" class="mb-3"
-          (change)="onAllLayersVisibleChange($event, layerGroup.name)" 
+          (change)="onAllLayersVisibleChange($event, layerGroup.name)"
           [checked]="ccaaAllVisible"
-        >Show all</mat-checkbox>
+        >{{ ccaaAllVisible ? 'Hide all': 'Show all' }}</mat-checkbox>
         <div class="layer-config" *ngFor="let layer of layerGroup.layers | filterVisibleLayers:showOnlyVisible">
-          <mat-checkbox 
-            (change)="onLayerVisibleChange($event, layer.key, layerGroup.name)" 
-            [checked]="layer.visible" 
+          <mat-checkbox
+            (change)="onLayerVisibleChange($event, layer.key, layerGroup.name)"
+            [checked]="layer.visible"
             >{{ layer.key | fixCCAAnames }}</mat-checkbox>
         </div>
       </div>
