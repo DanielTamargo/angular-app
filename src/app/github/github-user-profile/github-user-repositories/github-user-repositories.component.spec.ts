@@ -28,10 +28,10 @@ describe('GitHubUserRepositoriesComponent', () => {
   beforeEach(fakeAsync(() => {
     // Configuramos el mock del servicio
     gitHubMockedService = jasmine.createSpyObj('GitHubService', [''])
-    gitHubMockedService.selectedRepository = GitHubTestHelper.githubRepos[0]
-    gitHubMockedService.selectedRepositoryContributors = GitHubTestHelper.githubRepoContributors
+    gitHubMockedService.selectedRepository = GitHubTestHelper.dummyGitHubRepos[0]
+    gitHubMockedService.selectedRepositoryContributors = GitHubTestHelper.dummyGithubRepoContributors
 
-    gitHubMockedService.repos = GitHubTestHelper.githubRepos
+    gitHubMockedService.repos = GitHubTestHelper.dummyGitHubRepos
     gitHubMockedService.userReposSubject$ = new BehaviorSubject<GitHubRepoInterface[]>(gitHubMockedService.repos)
     gitHubMockedService.loadingSubject$ = new BehaviorSubject<boolean>(false)
 
@@ -107,7 +107,7 @@ describe('GitHubUserRepositoriesComponent', () => {
     for (const sortTest of automateSortTets) {
       it(`after sorting list by ${sortTest.key} ASC first repo's name should NOT be '${sortTest.repo}'`, () => {
         fixture.detectChanges()
-  
+
         const sorts = ghHelper.getAllElements('.mat-sort-header-content')
         const sortSize =
           sorts.find(
@@ -116,7 +116,7 @@ describe('GitHubUserRepositoriesComponent', () => {
 
         // Updated at es el filtro por defecto, si es distinto lo aplicamos
         if (sortTest.key != 'updated at') sortSize.click()
-        sortSize.click() 
+        sortSize.click()
 
         fixture.detectChanges()
         const tr_repos = ghHelper.getAllElements('tbody tr')
@@ -126,16 +126,16 @@ describe('GitHubUserRepositoriesComponent', () => {
 
       it(`after sorting list by ${sortTest.key} DESC first repo's name should be '${sortTest.repo}'`, () => {
         fixture.detectChanges()
-  
+
         const sorts = ghHelper.getAllElements('.mat-sort-header-content')
         const sortSize =
           sorts.find(
             sort => (sort.nativeNode as HTMLElement).innerText.toLocaleLowerCase().trim() == sortTest.key
           ).nativeElement as HTMLButtonElement
-  
+
         // Updated at es el filtro por defecto, si es distinto lo aplicamos
         if (sortTest.key != 'updated at') sortSize.click()
-  
+
         fixture.detectChanges()
         const tr_repos = fixture.debugElement.queryAll(By.css('tbody tr'))
         const tableFirstRepoName = (tr_repos[0].children[0].children[0].nativeElement as HTMLElement).innerText.trim()
@@ -151,7 +151,7 @@ describe('GitHubUserRepositoriesComponent', () => {
       const sortUpdatedAt = sorts.find(sort => (sort.nativeNode as HTMLElement).innerText.toLocaleLowerCase().trim() == 'updated at')
 
       console.log(window.innerWidth);
-      
+
       // Si la ventana es inferior a 700, estarán ocultos, si es mayor, se mostrarán
       // Utilizo 725 porque Karma crea la instancia del componente dentro de un div con overflow-y scrollbar visible
       if (window.innerWidth < 726) {
@@ -171,7 +171,7 @@ describe('GitHubUserRepositoriesComponent', () => {
 
     it("should create the paginator", () => {
       const paginator = ghHelper.getFirstElement('mat-paginator')
-      expect(paginator).toBeTruthy()  
+      expect(paginator).toBeTruthy()
     })
 
     it("should 'onPaginateChange' method should update service's paginator index", () => {
@@ -195,7 +195,7 @@ describe('GitHubUserRepositoriesComponent', () => {
       //expect(spyOpenDialog).toHaveBeenCalledOnceWith(GitHubTestHelper.githubRepos[0])
       //  Lo divido en dos expects porque el debug se complica al ser objetos grandes, así sabemos qué parte falla al momento
       expect(spyOpenDialog).toHaveBeenCalledTimes(1)
-      expect(spyOpenDialog).toHaveBeenCalledWith(GitHubTestHelper.githubRepos[0])
+      expect(spyOpenDialog).toHaveBeenCalledWith(GitHubTestHelper.dummyGitHubRepos[0])
     })
 
     it("should create a dialog with repository info and contributtors", () => {
@@ -209,20 +209,20 @@ describe('GitHubUserRepositoriesComponent', () => {
         gitHubMockedService.selectedRepository = repo
         gitHubMockedService.selectedRepositoryContributors = selectedRepoContributors
         dialog.open(GitHubRepositoryDialogComponent)
-      }) 
+      })
       */
 
       /* Mockeando la respuesta de Ajax de la cual solo nos interesa response ya que el pluck se ejecuta sobre este */
       jasmine.createSpyObj(AjaxResponse, ['response'])
-      const ajaxResponse: Observable<AjaxResponse<GitHubRepoInterface[]>> | Observable<any> = of({ response: GitHubTestHelper.githubRepoContributors })
+      const ajaxResponse: Observable<AjaxResponse<GitHubRepoInterface[]>> | Observable<any> = of({ response: GitHubTestHelper.dummyGithubRepoContributors })
       spyOn(ajax, 'get').and.returnValue(ajaxResponse)
 
-      const selectedRepo = GitHubTestHelper.githubRepos[0]
+      const selectedRepo = GitHubTestHelper.dummyGitHubRepos[0]
       component.openRepositoryDialog(selectedRepo)
       fixture.detectChanges()
 
       expect(gitHubMockedService.selectedRepository).toEqual(selectedRepo)
-      expect(gitHubMockedService.selectedRepositoryContributors).toEqual(GitHubTestHelper.githubRepoContributors)
+      expect(gitHubMockedService.selectedRepositoryContributors).toEqual(GitHubTestHelper.dummyGithubRepoContributors)
       expect(ajax.get).toHaveBeenCalledWith(selectedRepo.contributors_url)
       expect(document.querySelector('app-github-repository-dialog')).toBeTruthy()
     })

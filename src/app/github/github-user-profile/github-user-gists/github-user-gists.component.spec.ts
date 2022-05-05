@@ -21,7 +21,7 @@ describe('GitHubUserGistsComponent', () => {
   let fixture: ComponentFixture<GitHubUserGistsComponent>
 
   beforeEach(fakeAsync(() => TestBed.configureTestingModule({
-    imports: [ 
+    imports: [
       MatPaginatorModule,
       MatInputModule,
       MatTableModule,
@@ -29,8 +29,8 @@ describe('GitHubUserGistsComponent', () => {
       MatDialogModule,
       BrowserAnimationsModule,
     ],
-    declarations: [ 
-      GitHubUserGistsComponent, 
+    declarations: [
+      GitHubUserGistsComponent,
       SizeFormatterPipe,
       RetrieveGistFileNamesPipe
     ],
@@ -61,7 +61,7 @@ describe('GitHubUserGistsComponent', () => {
     fixture.detectChanges()
 
     const sorts = fixture.debugElement.queryAll(By.css('.mat-sort-header-content'))
-    const sortCreatedAt = 
+    const sortCreatedAt =
       sorts.find(
         sort => (sort.nativeNode as HTMLElement).innerText.toLocaleLowerCase().trim() == 'updated at'
       ).nativeElement as HTMLButtonElement
@@ -77,7 +77,7 @@ describe('GitHubUserGistsComponent', () => {
 })
 
 class GitHubMockedService {
-  gists: GitHubGistInterface[] = GitHubTestHelper.githubGists
+  gists: GitHubGistInterface[] = GitHubTestHelper.dummyGitHubGists
   userGistsSubject$ = new BehaviorSubject<GitHubGistInterface[]>(this.gists)
   loadingSubject$ = new BehaviorSubject<boolean>(false)
 

@@ -26,21 +26,21 @@ describe('GitHubUserProfileComponent', () => {
   beforeEach(fakeAsync(() => {
     // Configuramos el mock del servicio
     gitHubMockedService = jasmine.createSpyObj('GitHubService', [''])
-    gitHubMockedService.userSubject$ = of(GitHubTestHelper.githubUser)
+    gitHubMockedService.userSubject$ = of(GitHubTestHelper.dummyGithubUser)
     gitHubMockedService.typingSubject$ = of(true)
     gitHubMockedService.userFollowsSubject$ = of([])
     gitHubMockedService.userSearchError$ = of(null)
     gitHubMockedService.selectedSection = 0
     // Para sub componente repo
-    gitHubMockedService.userReposSubject$ = of(GitHubTestHelper.githubRepos)
+    gitHubMockedService.userReposSubject$ = of(GitHubTestHelper.dummyGitHubRepos)
     gitHubMockedService.loadingSubject$ = of(true)
     // Para sub componente gist
-    gitHubMockedService.userGistsSubject$ = of(GitHubTestHelper.githubGists)
+    gitHubMockedService.userGistsSubject$ = of(GitHubTestHelper.dummyGitHubGists)
 
 
     // Configuramos el módulo que utilizará en la fase de testing
     TestBed.configureTestingModule({
-      imports: [ 
+      imports: [
         MatPaginatorModule,
         MatInputModule,
         MatTableModule,
@@ -48,9 +48,9 @@ describe('GitHubUserProfileComponent', () => {
         MatDialogModule,
         BrowserAnimationsModule,
       ],
-      declarations: [ 
+      declarations: [
         GitHubUserProfileComponent,
-        GitHubUserRepositoriesComponent, 
+        GitHubUserRepositoriesComponent,
         GitHubUserGistsComponent,
       ],
       providers: [
@@ -68,7 +68,7 @@ describe('GitHubUserProfileComponent', () => {
     ghHelper = new GitHubTestHelper(fixture)
   })
 
-  
+
   describe('Followings / Followers check', () => {
     beforeEach(() => {
       fixture.detectChanges()
@@ -120,8 +120,8 @@ describe('GitHubUserProfileComponent', () => {
 
 
   it('trackBy should track the item id properly', () => {
-    const id = component.trackByFollows(0, GitHubTestHelper.githubUser)
-    expect(id).toEqual(GitHubTestHelper.githubUser.id)
+    const id = component.trackByFollows(0, GitHubTestHelper.dummyGithubUser)
+    expect(id).toEqual(GitHubTestHelper.dummyGithubUser.id)
   })
 
 
@@ -136,7 +136,7 @@ describe('GitHubUserProfileComponent', () => {
     beforeEach(() => {
       component.loading = true
       component.lastCase = 0
-      component.user = GitHubTestHelper.githubUser
+      component.user = GitHubTestHelper.dummyGithubUser
       gitHubMockedService.selectedSection = 0
       element = document.createElement('div')
 
@@ -145,7 +145,7 @@ describe('GitHubUserProfileComponent', () => {
       gitHubMockedService.onUserFollowsRequest = () => {}
       gitHubMockedService.onUserFollowsRequest = () => {}
     })
-    
+
     it('should return if same section got selected', () => {
       selection = 0
 
@@ -167,10 +167,10 @@ describe('GitHubUserProfileComponent', () => {
     it('should update values and execute service onUserGistsRequest when selecting gists', () => {
       selection = GitHubConstants.CASE_GISTS
       func = spyOn(gitHubMockedService, 'onUserGistsRequest')
-      
+
       component.onChangeDisplayInfoSelection(element, selection)
       expect(element.classList.length).toBeGreaterThan(0)
-      
+
       funcTimes = 1
       expect(func).toHaveBeenCalledWith(component.user.url + '/gists', component.user.public_gists)
       isComponentLoading = false
@@ -196,7 +196,7 @@ describe('GitHubUserProfileComponent', () => {
       component.onChangeDisplayInfoSelection(element, selection)
       expect(element.classList.length).toBeGreaterThan(0)
       expect(component.follows_number).toBe(component.user.following)
-      
+
       funcTimes = 1
       expect(func).toHaveBeenCalledWith(component.user.url + '/following', component.follows_per_query, component.follows_page)
       isComponentLoading = true
@@ -231,7 +231,7 @@ describe('GitHubUserProfileComponent', () => {
       if (selection > 0) {
         expect(func).toHaveBeenCalledTimes(funcTimes)
         expect(component.loading).toBe(isComponentLoading)
-        
+
         expect(component.displayFollows.length).toBe(0)
         expect(component.lastCase).toBe(selection)
         expect(component.follows_page).toBe(1)
@@ -251,7 +251,7 @@ describe('GitHubUserProfileComponent', () => {
       onUserFollowsRequestSpy = spyOn(gitHubMockedService, 'onUserFollowsRequest')
       component.lastCase = GitHubConstants.CASE_FOLLOWING
       fixture.detectChanges()
-    }) 
+    })
 
     it('should increase follows page by 1', () => {
       component.loadMoreFollows()
@@ -269,17 +269,17 @@ describe('GitHubUserProfileComponent', () => {
       expect(onUserFollowsRequestSpy).toHaveBeenCalledOnceWith(component.user.url + '/followers', component.follows_per_query, component.follows_page)
     })
   })
-  
+
 })
 
-/* 
+/*
      public loadMoreFollows(): void {
     this.follows_page++;
     let key = '/following';
     Iif (this.lastCase == this.CASE_FOLLOWERS) {
       key = '/followers';
     }
- 
+
     this.gitHubService.onUserFollowsRequest(this.user.url + key, this.follows_per_query, this.follows_page);
   }
 */

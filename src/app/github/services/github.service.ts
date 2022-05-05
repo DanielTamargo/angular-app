@@ -17,8 +17,8 @@ import { GitHubContributorInterface } from '../interfaces/github-contributor.int
 export class GitHubService {
 
   // Usuarios buscados anteriormente
-  suggestedUsernames: string[] 
-    = localStorage.getItem(GHC.LS_GITHUB_RECENT_USERNAMES) 
+  suggestedUsernames: string[]
+    = localStorage.getItem(GHC.LS_GITHUB_RECENT_USERNAMES)
       ? JSON.parse(localStorage.getItem(GHC.LS_GITHUB_RECENT_USERNAMES))
       : [];
   suggedUsernamesSubject$ = new BehaviorSubject<string[]>(this.suggestedUsernames);
@@ -94,7 +94,7 @@ export class GitHubService {
       this.typingSubject$.next(false);
       return;
     }
-    
+
     this.username = username;
 
     // Si no ha escrito nada, reiniciamos
@@ -124,9 +124,9 @@ export class GitHubService {
   /**
    * Recibe el usuario encontrado y lo emite a sus observers, también dependiendo de si ya existía una elección previa
    * de información a mostrar la mantiene, por lo que cargará los elementos necesarios.
-   * 
+   *
    * Guarda el usuario buscado utilizando el método [onSaveSearchedUser]{@link GitHubService#onSaveSearchedUser}
-   * 
+   *
    * @emits GitHubUserInterface
    *
    * @param user usuario encontrado en la búsqueda de la app
@@ -164,7 +164,7 @@ export class GitHubService {
 
   /**
    * Guarda el usuario buscado en el localStorage para luego utilizar dicha lista como sugerencias según el usuario vaya escribiendo
-   * 
+   *
    * @param username username del usuario buscado
    */
   onSaveSearchedUser(username: string): void {
@@ -229,13 +229,12 @@ export class GitHubService {
     // Generamos un observable con cada página
     const observables: Observable<GitHubRepoInterface[]>[] = [];
     for (let page of pages) {
-      observables.push(ajax<GitHubRepoInterface[]>({
-        url: url,
-        queryParams: {
-          per_page: perPage,
-          page: page
-        }
-      }).pipe(pluck('response')));
+      observables.push(
+        ajax.get<GitHubRepoInterface[]>(
+          url + `?per_page=${perPage}&page=${page}`
+        ).pipe(
+          pluck('response')
+        ));
     }
 
     // Combinamos todos los resultados
