@@ -1,6 +1,6 @@
 import { ComponentFixture, fakeAsync, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-import { BehaviorSubject } from "rxjs";
+import { BehaviorSubject, of, Subject } from "rxjs";
 
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { MatDialogModule } from "@angular/material/dialog";
@@ -30,7 +30,7 @@ describe('GitHubUserGistsComponent', () => {
 
     gitHubMockedService.gists = GitHubTestHelper.dummyGitHubGists
     gitHubMockedService.userGistsSubject$ = new BehaviorSubject<GitHubGistInterface[]>(gitHubMockedService.gists)
-    gitHubMockedService.loadingSubject$ = new BehaviorSubject<boolean>(false)
+    gitHubMockedService.loadingSubject$ = new Subject<boolean>()
 
     gitHubMockedService.pageIndex = 0
     gitHubMockedService.filtro_active = 'updated_at'
@@ -101,5 +101,30 @@ describe('GitHubUserGistsComponent', () => {
 
     component.onPaginateChange({ pageIndex: 2, pageSize: 2, length: 5, previousPageIndex: 1 })
     expect(gitHubMockedService.pageIndex).toBe(2)
+  })
+
+  it("should instance component succesfully when gists quantity is 0", () => {
+    component.firstLoad = false
+    component.gists_qt = 0
+    fixture.detectChanges()
+    expect(component.loading).toBe(false)
+  })
+
+  describe('Loading status', () => {
+    beforeEach(() => {
+      gitHubMockedService.userGistsSubject$ = new BehaviorSubject<GitHubGistInterface[]>([])
+    })
+
+    it("should set loading to true when retrieves 0 gists and it's first load ", () => {
+      component.firstLoad = true
+      fixture.detectChanges()
+      expect(component.loading).toBe(true)
+    })
+
+    it("should set loading to false retrieves 0 gists but it's not first load", () => {
+      component.firstLoad = false
+      fixture.detectChanges()
+      expect(component.loading).toBe(false)
+    })
   })
 })

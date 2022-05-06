@@ -1,6 +1,6 @@
 import { ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-import { BehaviorSubject, Observable, of, throwError } from "rxjs";
+import { BehaviorSubject, Observable, of, Subject, throwError } from "rxjs";
 
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { MatDialogModule } from "@angular/material/dialog";
@@ -33,7 +33,7 @@ describe('GitHubUserRepositoriesComponent', () => {
 
     gitHubMockedService.repos = GitHubTestHelper.dummyGitHubRepos
     gitHubMockedService.userReposSubject$ = new BehaviorSubject<GitHubRepoInterface[]>(gitHubMockedService.repos)
-    gitHubMockedService.loadingSubject$ = new BehaviorSubject<boolean>(false)
+    gitHubMockedService.loadingSubject$ = new Subject<boolean>()
 
     gitHubMockedService.pageIndex = 0
     gitHubMockedService.filtro_active = 'updated_at'
@@ -246,7 +246,29 @@ describe('GitHubUserRepositoriesComponent', () => {
     })
   })
 
+  it("should instance component succesfully when repos quantity is 0", () => {
+    component.firstLoad = false
+    component.repos_qt = 0
+    fixture.detectChanges()
+    expect(component.loading).toBe(false)
+  })
 
+  describe('Loading status', () => {
+    beforeEach(() => {
+      gitHubMockedService.userReposSubject$ = new BehaviorSubject<GitHubRepoInterface[]>([])
+    })
 
+    it("should set loading to true when retrieves 0 gists and it's first load ", () => {
+      component.firstLoad = true
+      fixture.detectChanges()
+      expect(component.loading).toBe(true)
+    })
+
+    it("should set loading to false retrieves 0 gists but it's not first load", () => {
+      component.firstLoad = false
+      fixture.detectChanges()
+      expect(component.loading).toBe(false)
+    })
+  })
 
 })

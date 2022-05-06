@@ -29,13 +29,17 @@ export class GitHubComponent implements OnInit {
     // Nos suscribimos a la posibilidad de exceder el límite de peticiones y entonces mostrar un modal
     this.apiRateExceededDialogSubscription$ = this.githubService.rateLimitExceededSubject$.subscribe(show => {
       if (show) {
-        let apiRateExceededDialog = this.dialog.open(GithubApiExceededDialogComponent);
-        apiRateExceededDialog.afterClosed().subscribe(result => {
-          this.router.navigate(['/']);
-        });
+        this.openGitHubAPIExceededDialog();
       }
     })
 
+  }
+
+  public openGitHubAPIExceededDialog(): void {
+    let apiRateExceededDialog = this.dialog.open(GithubApiExceededDialogComponent);
+    apiRateExceededDialog.afterClosed().subscribe(result => {
+      this.router.navigate(['/']);
+    });
   }
 
 }
