@@ -1,6 +1,6 @@
 import { ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-import { BehaviorSubject, Observable, of } from "rxjs";
+import { BehaviorSubject, Observable, of, throwError } from "rxjs";
 
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { MatDialogModule } from "@angular/material/dialog";
@@ -196,6 +196,24 @@ describe('GitHubUserRepositoriesComponent', () => {
       //  Lo divido en dos expects porque el debug se complica al ser objetos grandes, así sabemos qué parte falla al momento
       expect(spyOpenDialog).toHaveBeenCalledTimes(1)
       expect(spyOpenDialog).toHaveBeenCalledWith(GitHubTestHelper.dummyGitHubRepos[0])
+    })
+
+    it("should get error when trying to get response from ajax get and won't open dialog", () => {
+      gitHubMockedService.selectedRepositoryContributors = null
+
+      const linkInfo = ghHelper.getFirstElement('.link-info')
+      let ajaxError$ = throwError(() => {
+        const error: any = new Error('404 Not found')
+        error.status = 404
+        return error;
+      })
+      spyOn(ajax, 'get').and.returnValue(ajaxError$)
+      linkInfo.triggerEventHandler('click', null)
+      fixture.detectChanges()
+
+      //expect(spyOpenDialog).toHaveBeenCalledOnceWith(GitHubTestHelper.githubRepos[0])
+      //  Lo divido en dos expects porque el debug se complica al ser objetos grandes, así sabemos qué parte falla al momento
+      expect(gitHubMockedService.selectedRepositoryContributors).toEqual(null)
     })
 
     it("should create a dialog with repository info and contributtors", () => {

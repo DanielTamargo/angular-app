@@ -438,26 +438,7 @@ export class GitHubTestHelper<T> {
       name: "",
       full_name: "dummyRepo",
       private: false,
-      owner: {
-        login: "DanielTamargo",
-        id: 1,
-        node_id: "",
-        avatar_url: "",
-        gravatar_id: "",
-        url: "",
-        html_url: "",
-        followers_url: "",
-        following_url: "",
-        gists_url: "",
-        starred_url: "",
-        subscriptions_url: "",
-        organizations_url: "",
-        repos_url: "",
-        events_url: "",
-        received_events_url: "",
-        type: "",
-        site_admin: false
-      },
+      owner: null,
       html_url: "",
       description: "",
       fork: false,
@@ -529,7 +510,30 @@ export class GitHubTestHelper<T> {
       open_issues: 0,
       watchers: 0,
       default_branch: ""
-    }
+  }
+
+  public static dummyGitHubEmptyGist = {
+    url: "",
+    forks_url: "",
+    commits_url: "",
+    id: "",
+    node_id: "",
+    git_pull_url: "",
+    git_push_url: "",
+    html_url: "",
+    files: null,
+    public: true,
+    created_at: "",
+    updated_at: "",
+    description: "",
+    comments: 0,
+    user: null,
+    comments_url: "",
+    owner: null,
+    truncated: false
+  }
+
+  public static dummyEmptyObj = {}
 
 
 }

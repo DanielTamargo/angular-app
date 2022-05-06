@@ -1,4 +1,4 @@
-import { fakeAsync, TestBed, tick } from "@angular/core/testing";
+import { fakeAsync, TestBed, tick, waitForAsync } from "@angular/core/testing";
 import { catchError, Observable, of, throwError } from "rxjs";
 import { ajax, AjaxError, AjaxResponse } from "rxjs/ajax";
 import { GitHubConstants as GHC} from "../constants/github-constants";
@@ -25,6 +25,7 @@ describe('GitHubService', () => {
   it('should be created', () => {
     expect(service).toBeTruthy()
   })
+
 
   describe('Method: checkApiErrors', () => {
     let userSearchErrorSpy: jasmine.Spy<any>
@@ -91,6 +92,7 @@ describe('GitHubService', () => {
     })
   })
 
+
   describe('Method: onUserSearch', () => {
     let typingSubjectSpy: jasmine.Spy<any>
     let userSubjectSpy: jasmine.Spy<any>
@@ -136,7 +138,6 @@ describe('GitHubService', () => {
         expect(typingSubjectSpy).toHaveBeenCalledTimes(1)
         expect(onUserResultSpy).toHaveBeenCalledOnceWith(user)
       })
-
     })
 
     describe('AJAX errors', () => {
@@ -169,9 +170,9 @@ describe('GitHubService', () => {
         service.onUserSearch('danieltamargosdfsdf')
         expect(checkApiErrorsSpy).toHaveBeenCalledOnceWith(new Error(errMsg) as AjaxError, true)
       })
-
     })
   })
+
 
   describe('Method: onUserResult', () => {
     let userSubjectSpy: jasmine.Spy<any>
@@ -258,8 +259,8 @@ describe('GitHubService', () => {
       expect(service.gists.length).toBe(0)
       expect(service.follows.length).toBe(0)
     })
-
   })
+
 
   describe('Method: onSaveSearchedUser', () => {
     const LS_KEY = GHC.LS_GITHUB_RECENT_USERNAMES
@@ -289,11 +290,11 @@ describe('GitHubService', () => {
       service.onSaveSearchedUser(username)
       expect(onSaveSearchedUserSpy).toHaveBeenCalledTimes(1)
     })
-
   })
 
+
   describe('Method: onUserReposRequest', () => {
-    const repo = GitHubTestHelper.dummyGitHubEmptyRepo
+    const repo = GitHubTestHelper.dummyEmptyObj
     const user = GitHubTestHelper.dummyGithubUser
     let userReposSubjectSpy: jasmine.Spy<any>
     let numberOfAjaxCalls: number
@@ -345,15 +346,15 @@ describe('GitHubService', () => {
       ajaxGetSpy = spyOn(ajax, 'get')
     })
 
-    it('should emit userRepository subject once with 0 repositories using ajax get 1 time', () => {
+    it('should emit userRepos subject once with 0 repositories using ajax get 1 time', () => {
       qt = 2
     })
 
-    it('should emit userRepository subject once with 101 repositories using ajax get 2 times (using pagination)', fakeAsync(() => {
+    it('should emit userRepos subject once with 101 repositories using ajax get 2 times (using pagination)', fakeAsync(() => {
       qt = 101
     }))
 
-    it('should emit userRepository subject once with 0 repositories using ajax get 0 times', fakeAsync(() => {
+    it('should emit userRepos subject once with 0 repositories using ajax get 0 times', fakeAsync(() => {
       qt = 0
     }))
 
@@ -383,45 +384,201 @@ describe('GitHubService', () => {
       expect(ajaxGetSpy).toHaveBeenCalledTimes(numberOfAjaxCalls)
       expect((userReposSubjectSpy.calls.argsFor(0)[0] as any).length).toBe(expectedResult(qt).length)
     }))
-
-
   })
 
 
-})
+  describe('Method: onUserGistsRequest', () => {
+    const gist = GitHubTestHelper.dummyEmptyObj
+    const user = GitHubTestHelper.dummyGithubUser
+    let userGistsRequestSpy: jasmine.Spy<any>
+    let numberOfAjaxCalls: number
+    let ajaxGetSpy: jasmine.Spy<any>
 
-/*
-  onUserSearch(username: string) {
-    // Si ha buscado el mismo usuario, obviamos
-    if (this.username.toLocaleLowerCase() == username.toLocaleLowerCase()) {
-      this.typingSubject$.next(false);
-      return;
+    const arrResult = (qt: number): any[] => {
+      let arr = []
+      if (qt > 100) qt = 100
+      for (let i = 0; i < qt; i++) {
+        arr[i] = gist
+      }
+      return arr
     }
 
-    this.username = username;
+    const expectedResult = (qt: number): any[] => {
+      let arr = []
+      const multiply = qt / 100
 
-    // Si no ha escrito nada, reiniciamos
-    if (!username) {
-      this.userSubject$.next(null);
-      this.userSearchError$.next(null);
-      return;
-    }
+      if (qt > 100) qt = 100
 
-    const url = GHC.BASE_URL + GHC.USER.replace(GHC.KEY_USERNAME, username);
-    ajax<GitHubUserInterface>(url)
-      .pipe(
-        pluck('response'),
-        tap(() => { // Utilizamos el tap para notificar que ya no está escribiendo
-          this.typingSubject$.next(false);
-        }),) // <- si trabajamos con ajax de rxjs en vez de httpclient lo recibimos distinto
-      .subscribe({
-        next: user => {
-          this.onUserResult(user);
-        },
-        error: (err: AjaxError) => {
-          this.checkApiErrors(err, true);
+      for (let i = 0; i < qt; i++) {
+        arr[i] = gist
+      }
+
+      if (multiply > 1) {
+        const aux_arr = [...arr]
+        arr = []
+        for (let i = 0; i < multiply; i++) {
+          arr = [...arr, ...aux_arr]
         }
-      });
-  }
+      }
 
-  */
+      return arr
+    }
+
+    let ajaxResponse: AjaxResponse<unknown>
+      = {
+        request: null, originalEvent: null, type: null, responseHeaders: null,
+        responseType: null, loaded: null, total: null, xhr: null,
+        status: 200,
+        response: gist,
+      }
+
+    let qt: number
+
+    beforeEach(() => {
+      service.user = {...GitHubTestHelper.dummyGithubUser}
+      userGistsRequestSpy = spyOn(service.userGistsSubject$, 'next')
+      ajaxGetSpy = spyOn(ajax, 'get')
+    })
+
+    it('should emit userGists subject once with 0 gists using ajax get 1 time', () => {
+      qt = 2
+    })
+
+    it('should emit userGists subject once with 101 gists using ajax get 2 times (using pagination)', () => {
+      qt = 101
+    })
+
+    it('should emit userGists subject once with 0 gists using ajax get 0 times', () => {
+      qt = 0
+    })
+
+    it('should use default number per_page and work correctly', () => {
+      service.user.name = 'different_name'
+      qt = -1
+    })
+
+    afterEach(fakeAsync(() => {
+      ajaxResponse = {
+        ...ajaxResponse,
+        response: arrResult(qt)
+      }
+
+      ajaxGetSpy.and.returnValue(of(ajaxResponse))
+      if (qt < 0) {
+        numberOfAjaxCalls = 1
+        service.onUserGistsRequest(user.url + '/repos')
+        qt = 0
+      } else {
+        numberOfAjaxCalls = Math.ceil(qt / 100)
+        service.onUserGistsRequest(user.url + '/repos', qt)
+      }
+
+      tick(500)
+      expect(userGistsRequestSpy).toHaveBeenCalledTimes(1)
+      expect(ajaxGetSpy).toHaveBeenCalledTimes(numberOfAjaxCalls)
+      expect((userGistsRequestSpy.calls.argsFor(0)[0] as any).length).toBe(expectedResult(qt).length)
+    }))
+  })
+
+
+  describe('Method: onUserFollowsRequest', () => {
+    const user = GitHubTestHelper.dummyGithubUser
+    const follow = GitHubTestHelper.dummyEmptyObj
+    let userFollowsSpy: jasmine.Spy<any>
+    let ajaxGetSpy: jasmine.Spy<any>
+
+    const arrResult = (qt: number): any[] => {
+      let arr = []
+      for (let i = 0; i < qt; i++) {
+        arr[i] = follow
+      }
+      return arr
+    }
+
+    let ajaxResponse: AjaxResponse<unknown>
+      = {
+        request: null, originalEvent: null, type: null, responseHeaders: null,
+        responseType: null, loaded: null, total: null, xhr: null,
+        status: 200,
+        response: follow,
+      }
+
+    let qt: number
+    let page: number
+
+    beforeEach(() => {
+      service.user = {...GitHubTestHelper.dummyGithubUser}
+      userFollowsSpy = spyOn(service.userFollowsSubject$, 'next')
+      ajaxGetSpy = spyOn(ajax, 'get')
+    })
+
+    it('should emit userFollows subject once with 2 follows using page 2', () => {
+      qt = 2
+      page = 2
+
+      ajaxResponse = {
+        ...ajaxResponse,
+        response: arrResult(qt)
+      }
+      ajaxGetSpy.and.returnValue(of(ajaxResponse))
+      service.onUserFollowsRequest(user.url + '/repos', qt, page)
+    })
+
+    it('should emit userFollows subject once correctly using default method values', () => {
+      qt = 5
+
+      ajaxResponse = {
+        ...ajaxResponse,
+        response: arrResult(qt)
+      }
+      ajaxGetSpy.and.returnValue(of(ajaxResponse))
+      service.onUserFollowsRequest(user.url + '/repos')
+    })
+
+    afterEach(() => {
+      expect(userFollowsSpy).toHaveBeenCalledTimes(1)
+      expect(ajaxGetSpy).toHaveBeenCalledTimes(1)
+      expect((userFollowsSpy.calls.argsFor(0)[0] as any).length).toBe(qt)
+    })
+  })
+
+
+  describe('Methods onUserGistsRequest and onUserReposRequest on username change', () => {
+    const user = GitHubTestHelper.dummyGithubUser
+    let requestSpy: jasmine.Spy<any>
+    let ajaxGetSpy: jasmine.Spy<any>
+    let loadingSubjectSpy: jasmine.Spy<any>
+
+    let url: string
+
+    beforeEach(() => {
+      service.user = user
+      service.user.name = 'original_name'
+      ajaxGetSpy = spyOn(ajax, 'get')
+      loadingSubjectSpy = spyOn(service.loadingSubject$, 'next')
+    })
+
+    it('onUserRepos should not emit results, call ajax request 0 times and return void', fakeAsync(() => {
+      requestSpy = spyOn(service.userReposSubject$, 'next')
+      service.onUserReposRequest(user.url + '/repos', 0)
+      tick(200)
+      service.user.name = 'different_name'
+      tick(300)
+    }))
+
+    it('onUserGists should not emit results, call ajax request 0 times and return void', fakeAsync(() => {
+      requestSpy = spyOn(service.userGistsSubject$, 'next')
+      service.onUserGistsRequest(user.url + '/gists', 0)
+      tick(200)
+      service.user.name = 'different_name'
+      tick(300)
+    }))
+
+    afterEach(() => {
+      expect(ajaxGetSpy).toHaveBeenCalledTimes(0)
+      expect(requestSpy).toHaveBeenCalledTimes(0)
+      expect(loadingSubjectSpy).toHaveBeenCalledTimes(0)
+    })
+
+  })
+})

@@ -72,28 +72,34 @@ export class NavbarComponent implements OnInit {
 
   constructor(private router: Router) {
     /**
-     * Nos suscribimos a los eventos de cambio de navegación 
+     * Nos suscribimos a los eventos de cambio de navegación
      * ya que de no hacerlo si el usuario intenta navegar hacia atrás el slider no se movería
      */
     this.router.events
       .pipe(filter(evt => evt instanceof NavigationEnd))
       .subscribe((val: NavigationEnd) => {
         const url = val.url;
-        if (url.includes('github')) this.navSlideState = NAV_LINKS[1]; 
-        else if (url.includes('tasklist')) this.navSlideState = NAV_LINKS[2]; 
-        else if (url.includes('map')) this.navSlideState = NAV_LINKS[3]; 
-        else this.navSlideState = NAV_LINKS[0]; 
+        if (url.includes('github')) this.navSlideState = NAV_LINKS[1];
+        else if (url.includes('tasklist')) this.navSlideState = NAV_LINKS[2];
+        else if (url.includes('map')) this.navSlideState = NAV_LINKS[3];
+        else this.navSlideState = NAV_LINKS[0];
       });
   }
 
   ngOnInit(): void {
+    const locationPathName = this.getLocationPathName()
+
     // Comprobamos en qué ruta está para saber dónde poner el navSlider
     NAV_LINKS.forEach(navLink => {
-      if (window.location.href.includes(navLink)) {
+      if (locationPathName.includes(navLink)) {
         this.navSlideState = navLink;
       }
     })
 
+  }
+
+  public getLocationPathName(): string {
+    return window.location.href
   }
 
   /*openGitHubRepo(): void {
