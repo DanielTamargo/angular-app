@@ -1,4 +1,4 @@
-import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from "@angular/core/testing"
+import { ComponentFixture, fakeAsync, TestBed, tick } from "@angular/core/testing"
 import { MatAutocompleteModule } from "@angular/material/autocomplete"
 import { MatButtonModule } from "@angular/material/button"
 import { MatDialog, MatDialogModule, MatDialogRef } from "@angular/material/dialog"
@@ -15,7 +15,6 @@ import { GitHubUserProfileComponent } from "./github-user-profile/github-user-pr
 import { GitHubComponent } from "./github.component"
 import { GitHubService } from "./services/github.service"
 import { Location } from "@angular/common";
-import { Router } from "@angular/router"
 import { GithubApiExceededDialogComponent } from "./github-api-exceeded-dialog/github-api-exceeded-dialog.component"
 
 describe('GitHubComponent', () => {
