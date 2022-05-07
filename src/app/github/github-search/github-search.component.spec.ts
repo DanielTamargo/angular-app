@@ -25,10 +25,10 @@ describe('GitHubSearchComponent', () => {
     // ------------------------------------------------------------------------------------------------------------
     // Mockeando servicio para el component
     gitHubMockedService = jasmine.createSpyObj('GitHubService', [''])
-    gitHubMockedService.username = 'danieltamargo'
+    gitHubMockedService.username = ''
     gitHubMockedService.userSubject$ = of(GitHubTestHelper.dummyGithubUser)
     gitHubMockedService.typingSubject$ = of(true)
-    gitHubMockedService.suggedUsernamesSubject$ = of([])
+    gitHubMockedService.suggedUsernamesSubject$ = new BehaviorSubject<string[]>(['danieltamargo', 'irunemendez', 'usta'])
     gitHubMockedService.onUserSearch = (username) => {}
     // ------------------------------------------------------------------------------------------------------------
 
@@ -55,9 +55,8 @@ describe('GitHubSearchComponent', () => {
     expect(component).toBeTruthy()
   })
 
-
-  it('should tap the keyup and filter suggested usernames', fakeAsync(() => {
-    const filterSuggestedUsernamesSpy = spyOn(component, 'filterSuggestedUsernames')
+  it('should tap the keyup and set typing to false because input has no value', fakeAsync(() => {
+    const filterSuggestedUsernamesSpy = spyOn(component, 'filterSuggestedUsernames').and.callThrough()
     fixture.detectChanges()
 
     const elm = ghHelper.getFirstElement('#username').nativeElement as HTMLInputElement
@@ -66,6 +65,23 @@ describe('GitHubSearchComponent', () => {
 
     tick(750)
     expect(filterSuggestedUsernamesSpy).toHaveBeenCalledTimes(1)
+    expect(component.typing).toBeFalse()
   }))
+
+  it('should tap the keyup and filter suggested usernames', fakeAsync(() => {
+    const filterSuggestedUsernamesSpy = spyOn(component, 'filterSuggestedUsernames').and.callThrough()
+    fixture.detectChanges()
+
+    const elm = ghHelper.getFirstElement('#username').nativeElement as HTMLInputElement
+    const event = new KeyboardEvent('keyup', { key: 't' })
+    elm.value = 'danieltamargo'
+    elm.dispatchEvent(event)
+
+    tick(750)
+    expect(filterSuggestedUsernamesSpy).toHaveBeenCalled()
+    // Debería checkear el resultado del observable que contiene el filtrado, pero no consigo obtenerlo
+    //    igualmente con el code coverage se observa que el código se recorre correctamente
+  }))
+
 
 })
