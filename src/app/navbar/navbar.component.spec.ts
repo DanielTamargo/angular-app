@@ -18,7 +18,7 @@ describe('NavbarComponent', () => {
   let map: DebugElement
 
   beforeEach(fakeAsync(() => TestBed.configureTestingModule({
-    imports: [ 
+    imports: [
       BrowserAnimationsModule,
       RouterTestingModule.withRoutes(
         [
@@ -48,7 +48,7 @@ describe('NavbarComponent', () => {
     it('should create the navbar', () => {
       expect(component).toBeTruthy()
     })
-  
+
     it('should contain links', () => {
       expect(home).toBeTruthy()
       expect(github).toBeTruthy()
@@ -72,7 +72,7 @@ describe('NavbarComponent', () => {
         expect(location.path()).toBe('/')
       })
     }))
-    
+
     it('should navigate to github', fakeAsync(() => {
       (github.nativeElement as HTMLButtonElement).click()
       fixture.detectChanges()
@@ -88,7 +88,7 @@ describe('NavbarComponent', () => {
         expect(location.path()).toBe('/tasklist')
       })
     }))
-    
+
     it('should navigate to map', fakeAsync(() => {
       (map.nativeElement as HTMLButtonElement).click()
       fixture.detectChanges()
@@ -96,10 +96,16 @@ describe('NavbarComponent', () => {
         expect(location.path()).toBe('/map')
       })
     }))
+
+    it('should change succesfully navSlideState when loaded url is /map', () => {
+      spyOn(component, 'getLocationPathName').and.returnValue('/map')
+      fixture.detectChanges()
+      expect(component.navSlideState).toBe('map')
+    })
   })
 
   // TODO
-/* 
+/*
   describe('Navbar Navigation Color Changes', () => {
     let initialColor: string
     let nav: any
@@ -116,12 +122,12 @@ describe('NavbarComponent', () => {
       tick(50)
 
       fixture.detectChanges()
-      
+
       debugger
     }))
 
   })
- */  
+ */
 })
 
 @Component({ template: '' })

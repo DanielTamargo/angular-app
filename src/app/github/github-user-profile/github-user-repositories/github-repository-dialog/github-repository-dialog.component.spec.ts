@@ -25,8 +25,8 @@ describe('GitHubRepositoryDialogComponent', () => {
   beforeEach(fakeAsync(() => {
     // Configuramos el mock del servicio
     gitHubMockedService = jasmine.createSpyObj('GitHubService', [''])
-    gitHubMockedService.selectedRepository = GitHubTestHelper.githubRepos[0]
-    gitHubMockedService.selectedRepositoryContributors = GitHubTestHelper.githubRepoContributors
+    gitHubMockedService.selectedRepository = GitHubTestHelper.dummyGitHubRepos[0]
+    gitHubMockedService.selectedRepositoryContributors = GitHubTestHelper.dummyGithubRepoContributors
 
     // Configuramos el módulo que utilizará en la fase de testing
     TestBed.configureTestingModule({

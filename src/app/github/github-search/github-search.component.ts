@@ -46,6 +46,14 @@ export class GitHubSearchComponent implements OnInit, OnDestroy {
       }
     );
 
+    // Configuramos el comportamiento del input
+    this.inputBehaviour();
+  }
+
+  /**
+   * Método para configurar el comportamiento del input, filtrando los usuarios recientes y realizando búsquedas
+   */
+  inputBehaviour(): void {
     // Obtenemos el input y creamos un observable con su evento 'keyup' y otro con el evento 'focus'
     const inputUsername = document.getElementById('username');
     this.usernameChange$ = fromEvent<KeyboardEvent>(inputUsername, 'keyup');

@@ -17,8 +17,8 @@ import { GitHubContributorInterface } from '../interfaces/github-contributor.int
 export class GitHubService {
 
   // Usuarios buscados anteriormente
-  suggestedUsernames: string[] 
-    = localStorage.getItem(GHC.LS_GITHUB_RECENT_USERNAMES) 
+  suggestedUsernames: string[]
+    = localStorage.getItem(GHC.LS_GITHUB_RECENT_USERNAMES)
       ? JSON.parse(localStorage.getItem(GHC.LS_GITHUB_RECENT_USERNAMES))
       : [];
   suggedUsernamesSubject$ = new BehaviorSubject<string[]>(this.suggestedUsernames);
@@ -94,7 +94,7 @@ export class GitHubService {
       this.typingSubject$.next(false);
       return;
     }
-    
+
     this.username = username;
 
     // Si no ha escrito nada, reiniciamos
@@ -124,9 +124,9 @@ export class GitHubService {
   /**
    * Recibe el usuario encontrado y lo emite a sus observers, también dependiendo de si ya existía una elección previa
    * de información a mostrar la mantiene, por lo que cargará los elementos necesarios.
-   * 
+   *
    * Guarda el usuario buscado utilizando el método [onSaveSearchedUser]{@link GitHubService#onSaveSearchedUser}
-   * 
+   *
    * @emits GitHubUserInterface
    *
    * @param user usuario encontrado en la búsqueda de la app
@@ -164,7 +164,7 @@ export class GitHubService {
 
   /**
    * Guarda el usuario buscado en el localStorage para luego utilizar dicha lista como sugerencias según el usuario vaya escribiendo
-   * 
+   *
    * @param username username del usuario buscado
    */
   onSaveSearchedUser(username: string): void {
@@ -196,8 +196,6 @@ export class GitHubService {
    */
   onUserReposRequest(url: string, total: number = 30): void {
     const username = this.user.name;
-    console.log('API Repos: ' + (this.user.name ? this.user.name : this.user.login));
-
     // Contemplamos si es necesario realizar múltiples peticiones, por página podemos pedir máximo 100 valores a la api
     let perPage = 1;
     if (total > perPage) {
@@ -227,15 +225,19 @@ export class GitHubService {
     }
 
     // Generamos un observable con cada página
+
     const observables: Observable<GitHubRepoInterface[]>[] = [];
     for (let page of pages) {
-      observables.push(ajax<GitHubRepoInterface[]>({
-        url: url,
-        queryParams: {
-          per_page: perPage,
-          page: page
-        }
-      }).pipe(pluck('response')));
+      const urlWithParams = new URL(url)
+      urlWithParams.searchParams.set('per_page', perPage+'')
+      urlWithParams.searchParams.set('page', page+'')
+
+      observables.push(
+        ajax.get<GitHubRepoInterface[]>(
+          urlWithParams.toString()
+        ).pipe(
+          pluck('response')
+        ));
     }
 
     // Combinamos todos los resultados
@@ -266,8 +268,6 @@ export class GitHubService {
    */
   onUserGistsRequest(url: string, total: number = 30): void {
     const username = this.user.name;
-    console.log('API Gists: ' + (this.user.name ? this.user.name : this.user.login));
-
     // Contemplamos si es necesario realizar múltiples peticiones, por página podemos pedir máximo 100 valores a la api
     let perPage = 5;
     if (total > perPage) {
@@ -299,13 +299,16 @@ export class GitHubService {
     // Generamos un observable con cada página
     const observables: Observable<GitHubGistInterface[]>[] = [];
     for (let page of pages) {
-      observables.push(ajax<GitHubGistInterface[]>({
-        url: url,
-        queryParams: {
-          per_page: perPage,
-          page: page
-        }
-      }).pipe(pluck('response')));
+      const urlWithParams = new URL(url)
+      urlWithParams.searchParams.set('per_page', perPage+'')
+      urlWithParams.searchParams.set('page', page+'')
+
+      observables.push(
+        ajax.get<GitHubGistInterface[]>(
+        urlWithParams.toString()
+      ).pipe(
+        pluck('response')
+      ));
     }
 
     // Combinamos todos los resultados
@@ -336,16 +339,16 @@ export class GitHubService {
    * @param page paginación de la petición
    */
   onUserFollowsRequest(url: string, follows_per_query: number = 5, page: number = 1): void {
-    console.log('API Follows: ' + (this.user.name ? this.user.name : this.user.login));
-
     // Generamos un observable con cada página
-    ajax<GitHubBasicUserInterface[]>({
-        url: url,
-        queryParams: {
-          per_page: follows_per_query,
-          page: page
-        }
-    }).pipe(pluck('response')).subscribe(
+    const urlWithParams = new URL(url);
+    urlWithParams.searchParams.set('per_page', follows_per_query+'');
+    urlWithParams.searchParams.set('page', page+'');
+
+    ajax.get<GitHubBasicUserInterface[]>(
+      urlWithParams.toString()
+    ).pipe(
+      pluck('response')
+    ).subscribe(
       {
         next: results => {
           this.userFollowsSubject$.next(results);

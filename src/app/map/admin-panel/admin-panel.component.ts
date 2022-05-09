@@ -13,7 +13,7 @@ import { MapService } from '../services/map.service';
 })
 export class AdminPanelComponent implements OnInit {
   duration = 2000;
-  
+
   showOnlyVisible = false;
   layersConfig: LayerGroupConfig[];
   ccaaAllVisible: boolean = false;
@@ -53,6 +53,8 @@ export class AdminPanelComponent implements OnInit {
   }
 
   onAllLayersVisibleChange(evt: MatCheckboxChange, layerGroupName: string): void {
+    this.ccaaAllVisible = !this.ccaaAllVisible;
+
     for (const layer of this.layersConfig.find(lg => lg.name == layerGroupName).layers) {
       this.mapService.onLayerVisibilityChange(evt.checked, layer.key, layerGroupName);
     }
@@ -91,7 +93,7 @@ export class AdminPanelComponent implements OnInit {
           title: 'Success'
         })
       }
-      
+
     })
   }
 }
