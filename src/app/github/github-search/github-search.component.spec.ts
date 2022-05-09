@@ -1,5 +1,5 @@
 import { ComponentFixture, fakeAsync, TestBed, tick } from "@angular/core/testing"
-import { MatAutocompleteModule } from "@angular/material/autocomplete"
+import { MatAutocompleteModule, MatAutocompleteTrigger } from "@angular/material/autocomplete"
 import { MatButtonModule } from "@angular/material/button"
 import { MatDialog, MatDialogModule, MatDialogRef } from "@angular/material/dialog"
 import { MatInputModule } from "@angular/material/input"
@@ -13,6 +13,7 @@ import { Location } from "@angular/common";
 import { GitHubService } from "../services/github.service"
 import { GitHubSearchComponent } from "./github-search.component"
 import { GitHubTestHelper } from "../github-test-helper"
+import { GitHubConstants as GHC } from "../constants/github-constants"
 
 describe('GitHubSearchComponent', () => {
   let component: GitHubSearchComponent
@@ -82,6 +83,57 @@ describe('GitHubSearchComponent', () => {
     // Debería checkear el resultado del observable que contiene el filtrado, pero no consigo obtenerlo
     //    igualmente con el code coverage se observa que el código se recorre correctamente
   }))
+
+
+  describe('Clear recent usernames', () => {
+    beforeEach(() => {
+      const recent_usernames = ['danieltamargo', 'irunemendez']
+      localStorage.setItem(GHC.LS_GITHUB_RECENT_USERNAMES, JSON.stringify(recent_usernames))
+      gitHubMockedService.recentUsernames = recent_usernames
+      fixture.detectChanges()
+    })
+
+    it('should clear recent usernames from localStorage', () => {
+      component.clearRecentUsernames()
+      expect(localStorage.getItem(GHC.LS_GITHUB_RECENT_USERNAMES)).toBeFalsy()
+    })
+
+    it('should clear recent usernames on gitHubService', () => {
+      component.clearRecentUsernames()
+      expect(gitHubMockedService.suggestedUsernames).toEqual([])
+    })
+  })
+
+
+  describe('Select autocomplete recent username', () => {
+    beforeEach(() => {
+      localStorage.setItem(GHC.LS_GITHUB_RECENT_USERNAMES, JSON.stringify(['danieltamargo', 'irunemendez']))
+      fixture.detectChanges()
+    })
+
+    it('should select autocomplete option', fakeAsync(() => {
+      const onUserSearchSpy = spyOn(gitHubMockedService, 'onUserSearch')
+      component.onAutoCompleteOptionSelected('danieltamargo')
+      tick(700)
+      expect(onUserSearchSpy).toHaveBeenCalledTimes(1)
+    }))
+
+    it('should return if selectedUsernameTimeout was started and not finished and avoid select autocomplete option', fakeAsync(() => {
+      const onUserSearchSpy = spyOn(gitHubMockedService, 'onUserSearch')
+      component.selectedUsernameTimeout = setTimeout(() => { }, 400);
+      component.onAutoCompleteOptionSelected('danieltamargo')
+      tick(700)
+
+      expect(onUserSearchSpy).toHaveBeenCalledTimes(0)
+    }))
+
+    afterEach(() => {
+      localStorage.removeItem(GHC.LS_GITHUB_RECENT_USERNAMES)
+    })
+  })
+
+
+
 
 
 })
