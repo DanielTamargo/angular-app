@@ -70,7 +70,8 @@ Esta es la mini aplicación *'personal, improvisando mientras aprendo, random pe
   - [Centrar y posicionar una vista de un mapa](https://openlayers.org/en/latest/examples/center.html)
 - Jasmine (testing)
   - [Spy on properties](https://jasmine.github.io/tutorials/spying_on_properties)
-  - [Testing timers with fakeAsync](https://www.damirscorner.com/blog/posts/20210917-TestingTimersWithFakeAsync.html)
+  - [Testeando timers con FakeAsync](https://www.damirscorner.com/blog/posts/20210917-TestingTimersWithFakeAsync.html)
+  - [Cómo tratar la asincronía en Unit Testing en Angular](https://codecraft.tv/courses/angular/unit-testing/asynchronous/#_summary)
 
 ## Otros posts y guías de utilidad
 
