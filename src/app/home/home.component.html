@@ -2,6 +2,8 @@
 OPCIONES:
 - Mostrar mini aplicaciones
 - Mostrar qué se ha utilizado -->
+<div class="home-background"></div>
+
 <div class="home-content">
   <h3 id="author">DANIEL TAMARGO</h3>
   <h1 id="app-title">ANGULAR</h1>
@@ -10,20 +12,38 @@ OPCIONES:
   <h3>App developed in order to learn everything about <a target="_blank" href="https://angular.io/">Angular</a></h3>
   <br>
 
-  <h4>Hi! I'm <b>Daniel Tamargo</b> and this is my Angular teaser.<br>What do you want to know about this project?</h4>
+  <!-- <h4>Hi! I'm <b>Daniel Tamargo</b> and this is my Angular teaser.<br>What do you want to know about this project?</h4> -->
 
   <div class="cards">
-    <div class="info-card">
-      <h3>Technologies used</h3>
-      <h5>Check out which libraries did I use!</h5>
+    <div class="info-card technologies">
+      <app-info-card
+      title="Technologies used"
+      description="Check out which stuff did I use!"
+      ></app-info-card>
     </div>
-    <div class="info-card">
-      <h3>What does this project contain</h3>
-      <h5>Which miniapps are built inside this project</h5>
+    <div class="info-card projects">
+      <app-info-card
+      title="What does this project contain"
+      description="Which miniapps are built inside this project"
+      ></app-info-card>
     </div>
-    <div class="info-card">
-      <h3>Who is Daniel Tamargo?</h3>
-      <h5>Wanna know a bit more about me?</h5>
+    <div class="info-card about-me">
+      <app-info-card
+      title="Who is Daniel Tamargo?"
+      description="Wanna know a bit more about me?"
+      ></app-info-card>
     </div>
   </div>
+</div>
+
+<div class="technologies">
+
+</div>
+
+<div class="projects">
+
+</div>
+
+<div class="about-me">
+
 </div>

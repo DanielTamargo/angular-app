@@ -1,4 +1,16 @@
+.home-background {
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  z-index: -100;
+  // background-color: #5584AC;
+}
+
 .home-content {
+  user-select: none;
+
   display: flex;
   flex-direction: column;
   gap: 0;
@@ -7,12 +19,10 @@
 
   font-family: 'Oswald', sans-serif;
 
-  margin-top: 5vh;
-  background-color: rgba(255, 0, 0, 0.11);
+  margin-top: 10vh;
   width: 100%;
 
   & > * {
-    border: 1px solid rgba(255, 0, 0, 0.068);
     padding: 0;
     margin: 0;
 
@@ -32,7 +42,7 @@
   }
 
   .cards {
-    width: 70%;
+    width: 90%;
     display: flex;
     flex-direction: column;
   }
@@ -41,29 +51,55 @@
     cursor: pointer;
     margin-top: 1em;
 
-    align-self: flex-start;
+    align-self: stretch;
     text-align: start;
 
-    transition: 400ms ease-in;
-    background-color: red;
+    transition: 300ms ease-in;
 
-    &:nth-child(even) {
-      align-self: flex-end;
-      text-align: end;
+    border-top: 4px solid;
+    background-color: whitesmoke;
+
+    &:hover {
+      transform: scale(1.1);
     }
-    &:nth-child(even):hover {
-      // transform: translateX(-50px);
-      padding-right: 50px;
+
+
+
+    &.technologies {
+      border-color: #ee8128;
     }
-    &:nth-child(odd):hover {
-      // transform: translateX(50px);
-      padding-left: 50px;
+    &.projects {
+      border-color: #113f94;
+    }
+    &.about-me {
+      border-color: #197219;
     }
 
 
   }
 }
 
+@media (min-width: 640px) {
+  .cards {
+    width: 70% !important;
+
+    & .info-card {
+      &:nth-child(even) {
+        align-self: flex-end;
+        text-align: end;
+      }
+      &:nth-child(odd) {
+        align-self: flex-start;
+      }
+      &:nth-child(even):hover {
+        padding-right: 50px;
+      }
+      &:nth-child(odd):hover {
+        padding-left: 50px;
+      }
+    }
+  }
+}
 
 @media (max-width: 450px) {
   .home-content {

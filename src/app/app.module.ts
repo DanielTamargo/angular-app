@@ -22,12 +22,14 @@ import { SharedModule } from './shared/shared.module';
 // Interceptors
 import { AuthInterceptor } from './tasklist/auth.interceptor';
 import { TasklistService } from './tasklist/services/tasklist.service';
+import { InfoCardComponent } from './home/info-card/info-card.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavbarComponent,
     HomeComponent,
+    InfoCardComponent,
   ],
   imports: [
     BrowserModule,
