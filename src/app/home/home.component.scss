@@ -46,9 +46,37 @@
   }
 }
 
+// ------------------------------------------------------
+/* Home - About me */
+.about-me {
+  &_content {
+    max-width: 1000px;
+    margin-top: 1em;
+    font-family: Roboto;
+    padding-inline: 20px;
+
+    & p {
+      margin-bottom: 0;
+    }
+
+    &_contact {
+
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      & svg {
+        max-width: 30px;
+      }
+    }
+  }
+}
+
 
 // ------------------------------------------------------
+/* Home - Apps */
 .apps {
+  display: none !important; // TODO remove
 
   &_content {
     max-width: 1000px;
@@ -79,7 +107,6 @@
     margin-bottom: 0;
   }
 }
-
 
 // ------------------------------------------------------
 /* Home - Tecnologías */

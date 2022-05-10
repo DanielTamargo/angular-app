@@ -48,6 +48,9 @@ nav {
   & .menu-button:hover .svg-logo.green, & .menu-button:hover .svg-logo.green g > path {
     fill: rgba(23, 134, 82, 0.755) !important;
   }
+  & .menu-button:hover .svg-logo.gray, & .menu-button:hover .svg-logo.gray g > path {
+    fill: rgba(48, 48, 48, 0.755) !important;
+  }
 
   & .menu-button:active {
     background-color: rgba(63, 63, 63, 0.3) !important;
