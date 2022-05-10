@@ -47,9 +47,45 @@
 }
 
 
-//
+// ------------------------------------------------------
+.apps {
+
+  &_content {
+    max-width: 1000px;
+
+    font-family: Roboto;
+
+    &_info {
+      margin-top: 1em;
+      padding: 1em;
+
+      & > h4 {
+        cursor: pointer;
+      }
+      &_github:hover {
+        color: #113f94;
+      }
+      &_tasklist:hover {
+        color: #279411;
+      }
+      &_map:hover {
+        color: rgb(236, 2, 147)
+      }
+    }
+
+  }
+
+  & p {
+    margin-bottom: 0;
+  }
+}
+
+
+// ------------------------------------------------------
 /* Home - Tecnologías */
 .technologies {
+  display: none !important; // TODO remove
+
   &_title {
     font-weight: bold;
     font-size: 2.5em;
@@ -65,6 +101,7 @@
       background-color: whitesmoke;
       overflow: hidden;
 
+      box-shadow: 0px 4px 5px 0px black;
       max-height: 2.5em;
       transition: all 250ms ease-in-out;
 
@@ -112,7 +149,7 @@
 
 // ------------------------------------------------------
 /* Home - Portada */
-$info-card-transition-duration: 300ms;
+$info-card-transition-duration: 200ms;
 $info-card-transition-timing-function: ease-in;
 
 .home-content {
@@ -200,7 +237,7 @@ $info-card-transition-timing-function: ease-in;
       }
     }
 
-    &.technologies {
+    &.techs {
       border-color: #ee8128;
     }
     &.projects {

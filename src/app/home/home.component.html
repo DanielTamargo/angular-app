@@ -17,7 +17,7 @@ OPCIONES:
     <!-- <h4>Hi! I'm <b>Daniel Tamargo</b> and this is my Angular teaser.<br>What do you want to know about this project?</h4> -->
 
     <div class="cards">
-      <div class="info-card technologies">
+      <div class="info-card techs">
         <app-info-card
         title="Technologies used"
         description="Check out which stuff did I use!"
@@ -49,7 +49,9 @@ OPCIONES:
 
       <div class="technologies_content_details">
         <h5 class="technologies_content_details_header">Framework</h5>
-        <p class="technologies_content_details_text"><a href="https://angular.io/" target="_blank">Angular</a> was my choice and I tried to use all its features like angular animations, services, guards, canActivate, canDeactivate, custom pipes, routes, modules...</p>
+        <p class="technologies_content_details_text">
+          <a href="https://angular.io/" target="_blank">Angular</a> was my choice and I tried to use all its features like angular animations, services, guards, canActivate, canDeactivate, custom pipes, routes, modules...<br>
+          Also it was a perfect oportunity to learn more <a href="https://www.typescriptlang.org/" target="_blank">TypeScript</a>.</p>
       </div>
 
       <div class="technologies_content_details">
@@ -72,7 +74,7 @@ OPCIONES:
       <div class="technologies_content_details">
         <h5 class="technologies_content_details_header">Libraries</h5>
         <ul class="technologies_content_details_text">
-          <li><a href="https://openlayers.org/" target="_blank">Open Layers</a>: loading map and its layers (awesome library! an alternative would be Leaflet)</li>
+          <li><a href="https://openlayers.org/" target="_blank">Open Layers</a>: loading map and its layers (awesome library! an alternative would be <a href="https://leafletjs.com/" target="_blank">Leaflet</a>)</li>
           <li><a href="https://github.com/angular/angularfire" target="_blank">AngularFire</a>: to implement firebase with Angular in a easy way</li>
           <li><a href="https://github.com/RaphaelJenni/firebaseui-angular" target="_blank">FirebaseUI-Angular</a>: fast login screen for firebase</li>
         </ul>
@@ -83,6 +85,7 @@ OPCIONES:
         <ul class="technologies_content_details_text">
           <li><a href="https://docs.github.com/en/rest" target="_blank">GitHub</a>: open API used to scout profile's surface</li>
           <li><a href="https://data.opendatasoft.com/api/v2/console" target="_blank">OpenDataSoft</a>: used to load GeoJSONs as feature layers for the maps</li>
+          <li><a href="https://www.boredapi.com/" target="_blank">Bored API</a>: are you bored? this API gives you random activities to do!</li>
         </ul>
       </div>
 
@@ -90,7 +93,30 @@ OPCIONES:
   </div>
 
   <!-- Apps en el proyecto -->
-  <div class="projects">
+  <div class="apps">
+    <h3 class="apps_title">APPs inside this project</h3>
+    <p class="apps_text">You can find 3 mini-apps inside this project</p>
+
+    <div class="apps_content">
+      <div class="apps_content_info">
+        <h4 class="apps_content_info_github" routerLink="/github">GitHub Profile Scouter</h4>
+        <p>Use this mini-app to check user profile's basic info, repos, gists, followers and followings</p>
+        <p>You can display repository's info and check how many commits it have and who were the contributors to the repo.</p>
+      </div>
+
+      <div class="apps_content_info">
+        <h4 class="apps_content_info_tasklist" routerLink="/tasklist">Tasklist</h4>
+        <p>The classic TODO mini-app. You can create tasks, delete or mark them as completed or even get a random one.</p>
+        <p>You have to log in in order to use this app, so you can check your tasks from any device!</p>
+      </div>
+
+      <div class="apps_content_info">
+        <h4 class="apps_content_info_map" routerLink="/map">Map</h4>
+        <p>Wanna know which autonomous communities are in Spain?</p>
+        <p>Go ahead and use this mini app! Use the panel and load any autonomous cumminity (or go big and load them all!)</p>
+        <p>This app was a great way to learn basics about <b>GIS</b> (like WMS, WMTS, OSM, EPG projections, GeoJSON...)</p>
+      </div>
+    </div>
 
   </div>
 
