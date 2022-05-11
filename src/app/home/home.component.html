@@ -1,12 +1,9 @@
-<!-- TITULO EN MEDIO
-OPCIONES:
-- Mostrar mini aplicaciones
-- Mostrar qué se ha utilizado -->
-<div class="home-background"></div>
+<!-- <div class="home-background"></div> -->
 
 <div class="displays">
+
   <!-- Portada inicio -->
-  <div class="home-content">
+  <div class="home-content" id="display-home">
     <h3 id="author">DANIEL TAMARGO</h3>
     <h1 id="app-title">ANGULAR</h1>
     <br><br>
@@ -17,19 +14,19 @@ OPCIONES:
     <!-- <h4>Hi! I'm <b>Daniel Tamargo</b> and this is my Angular teaser.<br>What do you want to know about this project?</h4> -->
 
     <div class="cards">
-      <div class="info-card techs">
+      <div class="info-card" id="technologies">
         <app-info-card
         title="Technologies used"
         description="Check out which stuff did I use!"
         ></app-info-card>
       </div>
-      <div class="info-card projects">
+      <div class="info-card" id="apps">
         <app-info-card
         title="What does this project contain"
         description="Which miniapps are built inside this project"
         ></app-info-card>
       </div>
-      <div class="info-card about-me">
+      <div class="info-card" id="about-me">
         <app-info-card
         title="Who is Daniel Tamargo?"
         description="Wanna know a bit more about me?"
@@ -39,18 +36,18 @@ OPCIONES:
   </div>
 
   <!-- Tecnologías utilizadas -->
-  <div class="technologies">
+  <div class="technologies" id="display-technologies"v>
     <h3 class="technologies_title">Technologies used</h3>
     <br>
     <div class="technologies_content">
       <p>I wanted to start developing my own projects as web developer in order to get better.<br>
         I realized that in Spain tons (literally, tons) of companies are looking for <b>frontend developers</b> and <b>Angular</b> was one of the most requested.</p>
-      <p>As I said, my objective was to leave my comfort zone and try new things. So... What did I use?</p>
+      <p>My objective was to leave my comfort zone and try new things. So... What did I use?</p>
 
       <div class="technologies_content_details">
         <h5 class="technologies_content_details_header">Framework</h5>
         <p class="technologies_content_details_text">
-          <a href="https://angular.io/" target="_blank">Angular</a> was my choice and I tried to use all its features like angular animations, services, guards, canActivate, canDeactivate, custom pipes, routes, modules...<br>
+          <a href="https://angular.io/" target="_blank">Angular</a> was my choice and I tried to use all its features like angular animations, services, guards, interceptors, custom pipes, routes, modules...<br>
           Also it was a perfect oportunity to learn more <a href="https://www.typescriptlang.org/" target="_blank">TypeScript</a>.</p>
       </div>
 
@@ -81,6 +78,14 @@ OPCIONES:
       </div>
 
       <div class="technologies_content_details">
+        <h5 class="technologies_content_details_header">Testing</h5>
+        <ul class="technologies_content_details_text">
+          <li><a href="https://jasmine.github.io/" target="_blank">Jasmine</a>: testing suit used to test part of the project <a href="https://i.gyazo.com/bfd4f3ee562abfae04612c86d7cc4244.png" target="_blank">(100% GitHub app code-coverage!)</a></li>
+          <li><a href="https://karma-runner.github.io/latest/index.html" target="_blank">Karma</a>: as Jasmine's test-runner</li>
+        </ul>
+      </div>
+
+      <div class="technologies_content_details">
         <h5 class="technologies_content_details_header">APIs</h5>
         <ul class="technologies_content_details_text">
           <li><a href="https://docs.github.com/en/rest" target="_blank">GitHub</a>: open API used to scout profile's surface</li>
@@ -90,10 +95,18 @@ OPCIONES:
       </div>
 
     </div>
+
+    <app-display-controls
+    backText="Back to Home"
+    nextText="Project apps"
+    nextDisplay="display-apps"
+    (backClick)="goBackHome('display-technologies')"
+    (nextClick)="goNextDisplay($event)"
+    ></app-display-controls>
   </div>
 
   <!-- Apps en el proyecto -->
-  <div class="apps">
+  <div class="apps" id="display-apps">
     <h3 class="apps_title">APPs inside this project</h3>
     <p class="apps_text">You can find 3 mini-apps inside this project</p>
 
@@ -118,10 +131,17 @@ OPCIONES:
       </div>
     </div>
 
+    <app-display-controls
+    backText="Back to Home"
+    nextText="About me"
+    nextDisplay="display-about-me"
+    (backClick)="goBackHome('display-apps')"
+    (nextClick)="goNextDisplay($event)"
+    ></app-display-controls>
   </div>
 
   <!-- Sobre mí -->
-  <div class="about-me">
+  <div class="about-me" id="display-about-me">
     <h3 class="about-me_title">About me</h3>
     <div class="about-me_content">
       <p>Hey hey hey!! Thanks for taking a look on my <code>small-but-learned-a-lot</code> project web app!</p>
@@ -147,6 +167,15 @@ OPCIONES:
       <br>
       <p>Any tips about app developing in general are super welcome! I'm always looking for ways to improve</p>
       <p>Developing this personal project was challenging but exciting, can't wait for next one!</p>
+
+      <br>
+      <app-display-controls
+      backText="Back to Home"
+      nextText="Technologies used"
+      nextDisplay="display-technologies"
+      (backClick)="goBackHome('display-about-me')"
+      (nextClick)="goNextDisplay($event)"
+      ></app-display-controls>
     </div>
   </div>
 </div>

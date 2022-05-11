@@ -23,6 +23,7 @@ import { SharedModule } from './shared/shared.module';
 import { AuthInterceptor } from './tasklist/auth.interceptor';
 import { TasklistService } from './tasklist/services/tasklist.service';
 import { InfoCardComponent } from './home/info-card/info-card.component';
+import { DisplayControlsComponent } from './home/display-controls/display-controls.component';
 
 @NgModule({
   declarations: [
@@ -30,6 +31,7 @@ import { InfoCardComponent } from './home/info-card/info-card.component';
     NavbarComponent,
     HomeComponent,
     InfoCardComponent,
+    DisplayControlsComponent,
   ],
   imports: [
     BrowserModule,

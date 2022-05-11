@@ -1,0 +1,25 @@
+.controls {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.button {
+  background-color: #2f2f2f;
+  border-radius: 4px;
+  color: #fff;
+  cursor: pointer;
+  font-family: "Farfetch Basis","Helvetica Neue",Arial,sans-serif;
+  font-weight: 700;
+  overflow: hidden;
+  padding: 9px 20px;
+  text-align: center;
+}
+
+.button:hover,
+.button:focus {
+  opacity: .75;
+}
+.button:active {
+  opacity: .90;
+}

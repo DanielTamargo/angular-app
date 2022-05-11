@@ -13,7 +13,13 @@
 /* Home - Tratar las displays como páginas */
 
 .displays {
-  width: 100%;
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  max-width: 100vw;
+  overflow-x: hidden;
 
   & > div {
     position: absolute;
@@ -49,6 +55,9 @@
 // ------------------------------------------------------
 /* Home - About me */
 .about-me {
+  transform: translateX(110vw);
+  transition: 250ms ease-in-out;
+
   &_content {
     max-width: 1000px;
     margin-top: 1em;
@@ -76,7 +85,8 @@
 // ------------------------------------------------------
 /* Home - Apps */
 .apps {
-  display: none !important; // TODO remove
+  transform: translateX(110vw);
+  transition: 250ms ease-in-out;
 
   &_content {
     max-width: 1000px;
@@ -111,12 +121,8 @@
 // ------------------------------------------------------
 /* Home - Tecnologías */
 .technologies {
-  display: none !important; // TODO remove
-
-  &_title {
-    font-weight: bold;
-    font-size: 2.5em;
-  }
+  transform: translateX(110vw);
+  transition: 250ms ease-in-out;
 
   &_content {
     max-width: 1000px;
@@ -180,7 +186,8 @@ $info-card-transition-duration: 200ms;
 $info-card-transition-timing-function: ease-in;
 
 .home-content {
-  display: none !important; // TODO remove
+  transform: translateX(0);
+  transition: 250ms ease-in-out;
 
   & > * {
     padding: 0;
@@ -264,13 +271,13 @@ $info-card-transition-timing-function: ease-in;
       }
     }
 
-    &.techs {
+    &#technologies {
       border-color: #ee8128;
     }
-    &.projects {
+    &#apps {
       border-color: #113f94;
     }
-    &.about-me {
+    &#about-me {
       border-color: #197219;
     }
 

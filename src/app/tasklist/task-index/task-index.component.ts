@@ -80,7 +80,7 @@ export class TaskIndexComponent implements OnInit, OnDestroy {
       this.loading = false;
 
       this.filterTasks();
-    });    
+    });
   }
 
   ngOnDestroy(): void {
@@ -112,7 +112,7 @@ export class TaskIndexComponent implements OnInit, OnDestroy {
       // Si confirma, eliminamos
       if (result.isDenied) this.taskListService.deleteTask(task);
     });
-    
+
   }
 
   onCompleteTask(task: TaskInterface): void {
@@ -148,7 +148,7 @@ export class TaskIndexComponent implements OnInit, OnDestroy {
       .subscribe(task => {
         if (!task) {
           // TODO notificar error
-          
+
           return;
         }
 
@@ -166,7 +166,7 @@ export class TaskIndexComponent implements OnInit, OnDestroy {
     // TODO Confirmación
     Swal.fire({
       title: 'Be careful!',
-      html: `You're about to delete <b>${todayTasks.length}</b> tasks.<br>Deleting them will be <b>irreversible</b>`,
+      html: `You're about to delete <b>${todayTasks.length}</b> task(s).<br>Deleting them will be <b>irreversible</b>`,
       // text: `You're about to delete <b>${todayTasks.length}</b> tasks. Deleting them will be irreversible`,
       customClass: 'tasklist-swal',
       showCancelButton: true,
@@ -187,7 +187,7 @@ export class TaskIndexComponent implements OnInit, OnDestroy {
   }
 
   filterTasks(): void {
-    this.displayTasks 
+    this.displayTasks
       = this.tasks
         .filter(task => {
           if (this.filterName) return task.activity.toLocaleLowerCase().includes(this.filterName.toLowerCase());
