@@ -55,7 +55,7 @@
 // ------------------------------------------------------
 /* Home - About me */
 .about-me {
-  transform: translateX(110vw);
+  transform: translateX(-110vw);
   transition: 250ms ease-in-out;
 
   &_content {
@@ -63,6 +63,7 @@
     margin-top: 1em;
     font-family: Roboto;
     padding-inline: 20px;
+    margin-bottom: 2em;
 
     & p {
       margin-bottom: 0;
@@ -92,6 +93,7 @@
     max-width: 1000px;
 
     font-family: Roboto;
+    margin-bottom: 2em;
 
     &_info {
       margin-top: 1em;
@@ -121,7 +123,7 @@
 // ------------------------------------------------------
 /* Home - Tecnologías */
 .technologies {
-  transform: translateX(110vw);
+  transform: translateX(-110vw);
   transition: 250ms ease-in-out;
 
   &_content {
@@ -129,6 +131,7 @@
     padding-inline: 20px;
 
     font-family: Roboto;
+    margin-bottom: 2em;
 
     &_details {
       background-color: whitesmoke;

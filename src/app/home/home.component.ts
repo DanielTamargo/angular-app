@@ -10,7 +10,10 @@ export class HomeComponent implements OnInit {
   transition = 'transition: 250ms ease-in-out';
   homeDisplay: HTMLElement;
   currentDisplay: HTMLElement;
+
   slideLeft: string = 'translateX(-110vw)';
+  slideRight: string = 'translateX(110vw)';
+  direction: 'left' | 'right'
 
   constructor() { }
 
@@ -22,18 +25,15 @@ export class HomeComponent implements OnInit {
   }
 
   goBackHome(id: string): void {
-    document.getElementById(id).style.transform = this.slideLeft;
-    this.homeDisplay.style.transform = 'translateX(0)';
+    if (this.direction == 'left') document.getElementById(id).style.transform = this.slideRight;
+    else  document.getElementById(id).style.transform = this.slideLeft;
 
-    this.resetPosition(this.currentDisplay);
+    this.homeDisplay.style.transform = 'translateX(0)';
   }
 
   goNextDisplay(id: string) {
     const nextDisplay = document.getElementById(id);
-
-    nextDisplay.style.transition = '';
-    nextDisplay.style.transform = `translateX(110vw)`;
-    nextDisplay.style.transition = this.transition;
+    this.resetPosition(nextDisplay);
 
     this.currentDisplay.style.transform = this.slideLeft;
     nextDisplay.style.transform = 'translateX(0)';
@@ -51,8 +51,17 @@ export class HomeComponent implements OnInit {
     const infoCards = document.querySelectorAll('.info-card');
     for (let i = 0; i < infoCards.length; i++) {
       infoCards[i].addEventListener('click', () => {
+        if (i % 2 == 0) this.direction = 'right'
+        else this.direction = 'left'
+
         this.currentDisplay = document.getElementById(`display-${infoCards[i].id}`);
-        this.homeDisplay.style.transform = this.slideLeft;
+
+        if (this.direction == 'left') {
+          this.homeDisplay.style.transform = this.slideLeft;
+        } else {
+          this.homeDisplay.style.transform = this.slideRight;
+        }
+
         this.currentDisplay.style.transform = 'translateX(0)';
       })
     }
