@@ -258,7 +258,13 @@ $info-card-transition-timing-function: ease-in;
     }
 
     &:hover {
-      transform: scale(1.1);
+      -webkit-transform: scale(1.2);
+      -moz-transform: scale(1.2);
+      -o-transform: scale(1.2);
+      transform: scale(1.2);
+      -webkit-transform-origin: 100% 0%;
+      transform-origin: 100% 0%;
+
 
       &:nth-child(even) {
         &::before {
@@ -275,13 +281,13 @@ $info-card-transition-timing-function: ease-in;
     }
 
     &#technologies {
-      border-color: #ee8128;
+      border-color: rgb(8, 0, 169);
     }
     &#apps {
-      border-color: #113f94;
+      border-color: rgb(25, 135, 84);
     }
     &#about-me {
-      border-color: #197219;
+      border-color: rgb(255, 64, 129);
     }
 
   }

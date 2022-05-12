@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  styleUrls: ['./home.component.scss', './home.component.animations.scss']
 })
 export class HomeComponent implements OnInit {
 
@@ -15,6 +15,8 @@ export class HomeComponent implements OnInit {
   slideRight: string = 'translateX(110vw)';
   direction: 'left' | 'right'
 
+  displayState = ''
+
   constructor() { }
 
   ngOnInit(): void {
@@ -24,24 +26,25 @@ export class HomeComponent implements OnInit {
     this.technologiesSectionClickEvents();
   }
 
-  goBackHome(id: string): void {
+  public goBackHome(id: string): void {
     if (this.direction == 'left') document.getElementById(id).style.transform = this.slideRight;
     else  document.getElementById(id).style.transform = this.slideLeft;
 
     this.homeDisplay.style.transform = 'translateX(0)';
   }
 
-  goNextDisplay(id: string) {
+  public goNextDisplay(id: string) {
     const nextDisplay = document.getElementById(id);
     this.resetPosition(nextDisplay);
 
+    this.currentDisplay.style.display = 'block'
     this.currentDisplay.style.transform = this.slideLeft;
     nextDisplay.style.transform = 'translateX(0)';
 
     this.currentDisplay = nextDisplay;
   }
 
-  resetPosition(elm: HTMLElement) {
+  private resetPosition(elm: HTMLElement) {
     elm.style.transition = '';
     elm.style.transform = `translateX(110vw)`;
     elm.style.transition = this.transition;
