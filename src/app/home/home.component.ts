@@ -1,9 +1,54 @@
+import { animate, sequence, state, style, transition, trigger } from '@angular/animations';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss', './home.component.animations.scss']
+  styleUrls: ['./home.component.scss', './home.component.animations.scss'],
+  animations: [
+    trigger('slideLeft', [
+      transition(':enter', [
+        sequence([
+          animate(`0s`, style({
+            display: 'inline-flex',
+            transform: 'translateX(110vw)',
+            opacity: 0
+          })),
+          animate(`200ms ease-in-out`, style({
+            transform: 'translateX(0)',
+            opacity: 1
+          })),
+        ])
+      ]),
+      transition(':leave', [
+        sequence([
+          animate(`200ms ease-in-out`, style({ transform: 'translateX(110vw)' })),
+          animate(`0s`, style({ display: 'none !important' })),
+        ])
+      ]),
+    ]),
+    trigger('slideRight', [
+      transition(':enter', [
+        sequence([
+          animate(`0s`, style({
+            display: 'inline-flex',
+            transform: 'translateX(-110vw)',
+            opacity: 0
+          })),
+          animate(`200ms ease-in-out`, style({
+            transform: 'translateX(0)',
+            opacity: 1
+          })),
+        ])
+      ]),
+      transition(':leave', [
+        sequence([
+          animate(`200ms ease-in-out`, style({ transform: 'translateX(-110vw)' })),
+          animate(`0s`, style({ display: 'none !important' })),
+        ])
+      ]),
+    ]),
+  ]
 })
 export class HomeComponent implements OnInit {
 
@@ -15,7 +60,7 @@ export class HomeComponent implements OnInit {
   slideRight: string = 'translateX(110vw)';
   direction: 'left' | 'right'
 
-  displayState = ''
+  displayState = 'home'
 
   constructor() { }
 
@@ -27,9 +72,7 @@ export class HomeComponent implements OnInit {
   }
 
   public goBackHome(id: string): void {
-    if (this.direction == 'left') document.getElementById(id).style.transform = this.slideRight;
-    else  document.getElementById(id).style.transform = this.slideLeft;
-
+    this.displayState = 'home'
     this.homeDisplay.style.transform = 'translateX(0)';
   }
 
@@ -54,10 +97,11 @@ export class HomeComponent implements OnInit {
     const infoCards = document.querySelectorAll('.info-card');
     for (let i = 0; i < infoCards.length; i++) {
       infoCards[i].addEventListener('click', () => {
+        this.displayState = infoCards[i].id;
         if (i % 2 == 0) this.direction = 'right'
         else this.direction = 'left'
 
-        this.currentDisplay = document.getElementById(`display-${infoCards[i].id}`);
+        //this.currentDisplay = document.getElementById(`display-${infoCards[i].id}`);
 
         if (this.direction == 'left') {
           this.homeDisplay.style.transform = this.slideLeft;
@@ -65,7 +109,7 @@ export class HomeComponent implements OnInit {
           this.homeDisplay.style.transform = this.slideRight;
         }
 
-        this.currentDisplay.style.transform = 'translateX(0)';
+        //this.currentDisplay.style.transform = 'translateX(0)';
       })
     }
   }
@@ -77,6 +121,10 @@ export class HomeComponent implements OnInit {
           this.parentElement.classList.toggle('selected');
         });
       });
+  }
+
+  public technologiesSectionExpandEvent(evt: any): void {
+    (evt.target as HTMLElement)?.parentElement?.classList.toggle('selected');
   }
 
 }

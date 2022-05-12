@@ -36,7 +36,7 @@
   </div>
 
   <!-- Tecnologías utilizadas -->
-  <div class="technologies" id="display-technologies"v>
+  <div class="technologies" id="display-technologies" *ngIf="displayState == 'technologies'" [@slideRight]>
     <h3 class="technologies_title">Technologies used</h3>
     <br>
     <div class="technologies_content">
@@ -45,14 +45,14 @@
       <p>My objective was to leave my comfort zone and try new things. So... What did I use?</p>
 
       <div class="technologies_content_details">
-        <h5 class="technologies_content_details_header">Framework</h5>
+        <h5 class="technologies_content_details_header" (click)="technologiesSectionExpandEvent($event)">Framework</h5>
         <p class="technologies_content_details_text">
           <a href="https://angular.io/" target="_blank">Angular</a> was my choice and I tried to use all its features like angular animations, services, guards, interceptors, custom pipes, routes, modules...<br>
           Also it was a perfect oportunity to learn more <a href="https://www.typescriptlang.org/" target="_blank">TypeScript</a>.</p>
       </div>
 
       <div class="technologies_content_details">
-        <h5 class="technologies_content_details_header">App State</h5>
+        <h5 class="technologies_content_details_header" (click)="technologiesSectionExpandEvent($event)">App State</h5>
         <ul class="technologies_content_details_text">
           <li><a href="https://rxjs.dev/" target="_blank">RxJS</a>: observables, observers, operators... hard at the beggining, loved it at the end!</li>
           <li><a href="https://ngrx.io/" target="_blank">NgRx</a>: wanted to learn about this Angular's Redux version so I decided to use it in one of the three mini-apps</li>
@@ -60,7 +60,7 @@
       </div>
 
       <div class="technologies_content_details">
-        <h5 class="technologies_content_details_header">Style</h5>
+        <h5 class="technologies_content_details_header" (click)="technologiesSectionExpandEvent($event)">Style</h5>
         <ul class="technologies_content_details_text">
           <li><a href="https://sass-lang.com/" target="_blank">SASS</a>: applying cool styles was not the objective here but Sass is such a powerful way to develop CSS</li>
           <li><a href="https://getbootstrap.com/" target="_blank">Bootstrap</a>: fast styling with this classic toolkit</li>
@@ -69,7 +69,7 @@
       </div>
 
       <div class="technologies_content_details">
-        <h5 class="technologies_content_details_header">Libraries</h5>
+        <h5 class="technologies_content_details_header" (click)="technologiesSectionExpandEvent($event)">Libraries</h5>
         <ul class="technologies_content_details_text">
           <li><a href="https://openlayers.org/" target="_blank">Open Layers</a>: loading map and its layers (awesome library! an alternative would be <a href="https://leafletjs.com/" target="_blank">Leaflet</a>)</li>
           <li><a href="https://github.com/angular/angularfire" target="_blank">AngularFire</a>: to implement firebase with Angular in a easy way</li>
@@ -78,7 +78,7 @@
       </div>
 
       <div class="technologies_content_details">
-        <h5 class="technologies_content_details_header">Testing</h5>
+        <h5 class="technologies_content_details_header" (click)="technologiesSectionExpandEvent($event)">Testing</h5>
         <ul class="technologies_content_details_text">
           <li><a href="https://jasmine.github.io/" target="_blank">Jasmine</a>: testing suit used to test part of the project <a href="https://i.gyazo.com/bfd4f3ee562abfae04612c86d7cc4244.png" target="_blank">(100% GitHub app code-coverage!)</a></li>
           <li><a href="https://karma-runner.github.io/latest/index.html" target="_blank">Karma</a>: as Jasmine's test-runner</li>
@@ -86,7 +86,7 @@
       </div>
 
       <div class="technologies_content_details">
-        <h5 class="technologies_content_details_header">APIs</h5>
+        <h5 class="technologies_content_details_header" (click)="technologiesSectionExpandEvent($event)">APIs</h5>
         <ul class="technologies_content_details_text">
           <li><a href="https://docs.github.com/en/rest" target="_blank">GitHub</a>: open API used to scout profile's surface</li>
           <li><a href="https://data.opendatasoft.com/api/v2/console" target="_blank">OpenDataSoft</a>: used to load GeoJSONs as feature layers for the maps</li>
@@ -106,7 +106,7 @@
   </div>
 
   <!-- Apps en el proyecto -->
-  <div class="apps" id="display-apps">
+  <div class="apps" id="display-apps" *ngIf="displayState == 'apps'" [@slideLeft]>
     <h3 class="apps_title">APPs inside this project</h3>
     <p class="apps_text">You can find 3 mini-apps inside this project</p>
 
@@ -142,7 +142,7 @@
   </div>
 
   <!-- Sobre mí -->
-  <div class="about-me" id="display-about-me">
+  <div class="about-me" id="display-about-me" *ngIf="displayState == 'about-me'" [@slideRight]>
     <h3 class="about-me_title">About me</h3>
     <div class="about-me_content">
       <p>Hey hey hey!! Thanks for taking a look on my <code>small-but-learned-a-lot</code> project web app!</p>
@@ -150,7 +150,7 @@
       <br>
       <p>These are some other languages and softwares/frameworks I already used for APP development:<br>PHP (Laravel), Swift (Xcode), C# (Unity and ASP.NET), Java (Multithread Desktop Apps), Python (Pandas, PowerBI), etc!</p>
       <br>
-      <p>I'll be updating my info on my:</p>
+      <p>I'll be updating my info on:</p>
       <div class="about-me_content_contact">
         <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512"><title>Logo Github</title><path d="M256 32C132.3 32 32 134.9 32 261.7c0 101.5 64.2 187.5 153.2 217.9a17.56 17.56 0 003.8.4c8.3 0 11.5-6.1 11.5-11.4 0-5.5-.2-19.9-.3-39.1a102.4 102.4 0 01-22.6 2.7c-43.1 0-52.9-33.5-52.9-33.5-10.2-26.5-24.9-33.6-24.9-33.6-19.5-13.7-.1-14.1 1.4-14.1h.1c22.5 2 34.3 23.8 34.3 23.8 11.2 19.6 26.2 25.1 39.6 25.1a63 63 0 0025.6-6c2-14.8 7.8-24.9 14.2-30.7-49.7-5.8-102-25.5-102-113.5 0-25.1 8.7-45.6 23-61.6-2.3-5.8-10-29.2 2.2-60.8a18.64 18.64 0 015-.5c8.1 0 26.4 3.1 56.6 24.1a208.21 208.21 0 01112.2 0c30.2-21 48.5-24.1 56.6-24.1a18.64 18.64 0 015 .5c12.2 31.6 4.5 55 2.2 60.8 14.3 16.1 23 36.6 23 61.6 0 88.2-52.4 107.6-102.3 113.3 8 7.1 15.2 21.1 15.2 42.5 0 30.7-.3 55.5-.3 63 0 5.4 3.1 11.5 11.4 11.5a19.35 19.35 0 004-.4C415.9 449.2 480 363.1 480 261.7 480 134.9 379.7 32 256 32z"/></svg>
         <a href="https://www.linkedin.com/in/daniel-tamargo-saiz/" target="_blank">GitHub profile</a>

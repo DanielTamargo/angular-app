@@ -55,7 +55,6 @@
 // ------------------------------------------------------
 /* Home - About me */
 .about-me {
-  transform: translateX(-110vw);
   transition: 250ms ease-in-out;
 
   &_content {
@@ -86,7 +85,6 @@
 // ------------------------------------------------------
 /* Home - Apps */
 .apps {
-  transform: translateX(110vw);
   transition: 250ms ease-in-out;
 
   &_content {
@@ -123,7 +121,6 @@
 // ------------------------------------------------------
 /* Home - Tecnologías */
 .technologies {
-  transform: translateX(-110vw);
   transition: 250ms ease-in-out;
 
   &_content {
