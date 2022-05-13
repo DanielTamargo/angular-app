@@ -322,6 +322,7 @@ $info-card-transition-timing-function: ease-in;
   }
 }
 
+/* Triquiñuela para conseguir un 'font-max-size' ya que la fuente es de tamaño dinámico (con vw) */
 @media (min-width: 1437px) {
   .home-content {
     & #author {
