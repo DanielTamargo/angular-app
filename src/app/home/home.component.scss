@@ -322,6 +322,19 @@ $info-card-transition-timing-function: ease-in;
   }
 }
 
+@media (min-width: 1437px) {
+  .home-content {
+    & #author {
+      font-size: 4.49em !important;
+      letter-spacing: 0.14em !important;
+    }
+    & #app-title {
+      font-size: 8.98em !important;
+      letter-spacing: 0.05em !important;
+    }
+  }
+}
+
 @media (max-width: 640px) {
   .info-card-container {
     width: 100% !important;
