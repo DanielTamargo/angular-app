@@ -322,19 +322,7 @@ $info-card-transition-timing-function: ease-in;
   }
 }
 
-/* Triquiñuela para conseguir un 'font-max-size' ya que la fuente es de tamaño dinámico (con vw) */
-@media (min-width: 1437px) {
-  .home-content {
-    & #author {
-      font-size: 4.49em !important;
-      letter-spacing: 0.14em !important;
-    }
-    & #app-title {
-      font-size: 8.98em !important;
-      letter-spacing: 0.05em !important;
-    }
-  }
-}
+
 
 @media (max-width: 640px) {
   .info-card-container {
@@ -345,16 +333,32 @@ $info-card-transition-timing-function: ease-in;
   }
 }
 
+
+/* Triquiñuela para conseguir un 'font-max-size' ya que la fuente es de tamaño dinámico (con vw) */
+@media (min-width: 1437px) {
+  .home-content {
+    & #author.custom-letter-spacing {
+      font-size: 4.49em !important;
+      letter-spacing: 0.14em;
+    }
+    & #app-title.custom-letter-spacing {
+      font-size: 8.98em !important;
+      letter-spacing: 0.05em;
+    }
+  }
+}
+
 @media (max-width: 450px) {
   .home-content {
-    & > h1#app-title {
-      font-size: 20vw;
-      letter-spacing: 0.5vw;
-    }
-    & > h3#author {
+    & #author {
       font-size: 10vw;
       letter-spacing: 1.15vw;
     }
+    & #app-title {
+      font-size: 20vw;
+      letter-spacing: 0.5vw;
+    }
   }
-
 }
+
+
