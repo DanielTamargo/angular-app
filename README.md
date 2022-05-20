@@ -1,6 +1,6 @@
 # Angular APP
 
-> [¡Si quieres leer el README en español haz clic aquí!](./README.md)
+> [¡Si quieres leer el README en español haz clic aquí!](./README_es.md)
 
 **Hi there!** 😊  
 This is the *'personal, improvising while learning, random but cool'* mini-app I'm developing for myself as a way to learn Angular. If you're interested, have time or just bored you can give me any tips about angular, development in general (backend, frontend...) or any other programming stuff and it will help me so much!  
