@@ -69,5 +69,5 @@ This is the *'personal, improvising while learning, random but cool'* mini-app I
   - [Part 3: Profiling and runtime performances](https://blog.ninja-squad.com/2018/09/20/angular-performances-part-3/)
   - [Part 4: Change detection strategies](https://blog.ninja-squad.com/2018/09/27/angular-performances-part-4/)
   - [Part 5: Pure pipes, attribute decorator and other tips](https://blog.ninja-squad.com/2018/10/04/angular-performances-part-5/)
-- [RxJS operadores de mapeo más utilizados, cuándo utilizar cada uno y por qué](https://blog.angular-university.io/rxjs-higher-order-mapping/)
-- [Unit testing en Angular con Jasmine y Karma (35 vídeos cortos)](https://www.youtube.com/playlist?list=PL8jcXf-CLpxolmjV5_taFP0c5LyCveDF1)
+- [RxJS most used map operators, when to use them and why](https://blog.angular-university.io/rxjs-higher-order-mapping/)
+- [Unit testing in Angular with Jasmine and Karma (35 short vids)](https://www.youtube.com/playlist?list=PL8jcXf-CLpxolmjV5_taFP0c5LyCveDF1)
