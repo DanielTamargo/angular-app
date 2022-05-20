@@ -34,7 +34,7 @@ This is the *'personal, improvising while learning, random but cool'* mini-app I
 >  
 > In Angular, in order to preserve this state allowing to connect your components to eachother, sharing information, you have two ways to achieve this, using RxJS with observables and suscriptions, or use NgRx (reactive aplication state manager built in Angular inspired by Redux).   
 > 
-> Takind advangate of the fact that the project has three mini-applications built inside of it *(as if they were independent applications)* I decided to use **RxJS** for GitHub and Map and use **NgRx** for TaskList. Trying to learn as much as possible, because that was the goal of this project, **to learn**.
+> Taking advangate of the fact that the project has three mini-applications built inside of it *(as if they were independent applications)* I decided to use **RxJS** for GitHub and Map and use **NgRx** for TaskList. Trying to learn as much as possible, because that was the goal of this project, **to learn**.
 
 ----
 
@@ -51,15 +51,15 @@ This is the *'personal, improvising while learning, random but cool'* mini-app I
   - [Store](https://ngrx.io/guide/store)
   - [Effects](https://ngrx.io/guide/effects)
   - [Actions](https://ngrx.io/guide/store/actions)
-  - [Migraciones (ya que inicialmente me basé en ejemplos obsoletos)](https://ngrx.io/guide/migration/v13)
-  - [Guía NgRx en castellano](https://academia-binaria.com/el-patron-redux-con-ngrx-en-angular/)
+  - [Migrations (I started using deprecated examples hehe)](https://ngrx.io/guide/migration/v13)
+  - [Guía NgRx in spanish](https://academia-binaria.com/el-patron-redux-con-ngrx-en-angular/)
 - OpenLayers
-  - [Generar VectorSource con un GeoJSON (+ estilos básicos)](https://openlayers.org/en/latest/examples/geojson.html)
-  - [Centrar y posicionar una vista de un mapa](https://openlayers.org/en/latest/examples/center.html)
+  - [Generate VectorSource with a GeoJSON (+ basic styles)](https://openlayers.org/en/latest/examples/geojson.html)
+  - [Center on map's view](https://openlayers.org/en/latest/examples/center.html)
 - Jasmine (testing)
   - [Spy on properties](https://jasmine.github.io/tutorials/spying_on_properties)
-  - [Testeando timers con FakeAsync](https://www.damirscorner.com/blog/posts/20210917-TestingTimersWithFakeAsync.html)
-  - [Cómo tratar la asincronía en Unit Testing en Angular](https://codecraft.tv/courses/angular/unit-testing/asynchronous/#_summary)
+  - [Testing timers with FakeAsync](https://www.damirscorner.com/blog/posts/20210917-TestingTimersWithFakeAsync.html)
+  - [How to manage async with Unit Testing in Angular](https://codecraft.tv/courses/angular/unit-testing/asynchronous/#_summary)
 
 ## Another posts and guides
 
