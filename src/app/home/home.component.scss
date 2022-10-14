@@ -228,13 +228,15 @@ $info-card-transition-timing-function: ease-in;
         & .info-card::before {
           transform: scale(1) translateY(-15%) rotate(-90deg);
           right: 10px;
+          opacity: 1;
         }
       }
       &:nth-of-type(odd) {
         & .info-card::before {
           transform: scale(1) translateY(-15%) rotate(90deg);
           left: 10px;
-        }
+          opacity: 1;
+      }
       }
     }
 
@@ -242,12 +244,14 @@ $info-card-transition-timing-function: ease-in;
       & .info-card::before {
         transform: scale(0) translateY(-40%) rotate(45deg);
         left: 0;
+        opacity: 0;
       }
     }
     &:nth-child(even) {
       & .info-card::before {
         transform: scale(0) translateY(-40%) rotate(-45deg);
         right: 0;
+        opacity: 0;
       }
     }
 
